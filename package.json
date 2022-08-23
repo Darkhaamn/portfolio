@@ -2,6 +2,9 @@
   "name": "darkhaa-homepage",
   "version": "1.0.0",
   "description": "Darkhanbayar's website",
+  "engines" : { 
+    "node" : "16.15.1" 
+  },
   "scripts": {
     "dev": "next dev -H 0.0.0.0",
     "build": "next build",
