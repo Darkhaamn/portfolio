@@ -16,6 +16,9 @@ import Layout from '../components/layouts/article'
 import Paragraph from '../components/paragraph'
 import Section from '../components/section'
 
+import AWS from '/public/images/aws.jpeg'
+import CKA from '/public/images/linux.png'
+
 const ProfileImage = chakra(Image, {
   shouldForwardProp: prop => ['width', 'height', 'src', 'alt'].includes(prop)
 })
@@ -32,7 +35,6 @@ const Home = () => (
       >
         Hello, I&apos;m a full-stack developer based in Ulaanbaatar!
       </Box>
-
       <Box display={{ md: 'flex' }}>
         <Box flexGrow={1}>
           <Heading as="h2" variant="page-title">
@@ -66,7 +68,6 @@ const Home = () => (
           </Box>
         </Box>
       </Box>
-
       <Section delay={0.1}>
         <Heading as="h3" variant="section-title">
           DARKHAAAA END BAIW
@@ -78,7 +79,7 @@ const Home = () => (
           designing all the way to solving real-life problems with code.
         </Paragraph>
       </Section>
- DARKHAAAA END BAIW DARKHAAAA END BAIW DARKHAAAA END BAIW
+      DARKHAAAA END BAIW DARKHAAAA END BAIW DARKHAAAA END BAIW
       <Section delay={0.2}>
         <Heading as="h3" variant="section-title">
           Bio
@@ -100,37 +101,25 @@ const Home = () => (
           </Link>
         </BioSection>
       </Section>
-
       <Section delay={0.3}>
         <Heading as="h3" variant="section-title">
           Certification
         </Heading>
         <BioSection>
           <BioYear>
-            <Image
-              src={require('/public/images/aws.jpeg')}
-              alt={'aws'}
-              width={35}
-              height={35}
-            />
+            <Image src={AWS} alt={'aws'} width={35} height={35} />
           </BioYear>
           AWS Certified Developer - Associate - Amazon Web Services (AWS)
           <BioDescription>Issued May 2020 – Expires Apr 2023</BioDescription>
         </BioSection>
         <BioSection>
           <BioYear>
-            <Image
-              src={require('/public/images/linux.png')}
-              alt={'linux'}
-              width={35}
-              height={35}
-            />
+            <Image src={CKA} alt={'linux'} width={35} height={35} />
           </BioYear>
           CKA: Certified Kubernetes Administrator - The Linux Foundation
           <BioDescription>Issued Mar 2022 – Expires Mar 2025</BioDescription>
         </BioSection>
       </Section>
-
       <Section delay={0.3}>
         <Heading as="h3" variant="section-title">
           I ♥
@@ -147,7 +136,6 @@ const Home = () => (
           </a>
         </Paragraph>
       </Section>
-
       <Section delay={0.4}>
         <Heading as="h3" variant="section-title">
           On the web
