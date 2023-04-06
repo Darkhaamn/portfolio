@@ -70,7 +70,7 @@ const Home = () => (
       </Box>
       <Section delay={0.1}>
         <Heading as="h3" variant="section-title">
-          DARKHAAAA END BAIW
+          Work
         </Heading>
         <Paragraph>
           Darkhanbayar is full-stack developer based at Ulaanbaatar with a
@@ -79,7 +79,6 @@ const Home = () => (
           designing all the way to solving real-life problems with code.
         </Paragraph>
       </Section>
-      DARKHAAAA END BAIW DARKHAAAA END BAIW DARKHAAAA END BAIW
       <Section delay={0.2}>
         <Heading as="h3" variant="section-title">
           Bio
