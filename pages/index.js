@@ -73,7 +73,7 @@ const Home = () => (
           Work
         </Heading>
         <Paragraph>
-          Darkhanbayar is SUGA BLYTA hoko darhaa full-stack developer based at Ulaanbaatar with a
+          Darkhanbayar is SUGA BLYTA hoko darhaa GOD full-stack developer based at Ulaanbaatar with a
           passion for building digital services/stuff he wants. He has
           interested in all things launching products, from planning and
           designing all the way to solving real-life problems with code.
