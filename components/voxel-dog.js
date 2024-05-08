@@ -11,20 +11,11 @@ function easeOutCirc(x) {
 const VoxelDog = () => {
   const refContainer = useRef()
   const [loading, setLoading] = useState(true)
-  const [renderer, setRenderer] = useState()
-  const [_camera, setCamera] = useState()
-  const [target] = useState(new THREE.Vector3(0, -0.5, 0))
-  const [initialCameraPosition] = useState(
-    new THREE.Vector3(
-      20 * Math.sin(0.2 * Math.PI),
-      10,
-      20 * Math.cos(0.2 * Math.PI)
-    )
-  )
-  const [scene] = useState(new THREE.Scene())
-  const [_controls, setControls] = useState()
+  const refRenderer = useRef()
+  const urlDogGLB = '/scene.glb'
 
   const handleWindowResize = useCallback(() => {
+    const { current: renderer } = refRenderer
     const { current: container } = refContainer
     if (container && renderer) {
       const scW = container.clientWidth
@@ -32,12 +23,12 @@ const VoxelDog = () => {
 
       renderer.setSize(scW, scH)
     }
-  }, [renderer])
+  }, [])
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const { current: container } = refContainer
-    if (container && !renderer) {
+    if (container) {
       const scW = container.clientWidth
       const scH = container.clientHeight
 
@@ -49,11 +40,19 @@ const VoxelDog = () => {
       renderer.setSize(scW, scH)
       renderer.outputEncoding = THREE.sRGBEncoding
       container.appendChild(renderer.domElement)
-      setRenderer(renderer)
+      refRenderer.current = renderer
+      const scene = new THREE.Scene()
+
+      const target = new THREE.Vector3(0, -0.5, 0)
+      const initialCameraPosition = new THREE.Vector3(
+        20 * Math.sin(0.2 * Math.PI),
+        10,
+        20 * Math.cos(0.2 * Math.PI)
+      )
 
       // 640 -> 240
       // 8   -> 6
-      const scale = scH * 0.003
+      const scale = scH * 0.004 
       const camera = new THREE.OrthographicCamera(
         -scale,
         scale,
@@ -64,17 +63,15 @@ const VoxelDog = () => {
       )
       camera.position.copy(initialCameraPosition)
       camera.lookAt(target)
-      setCamera(camera)
 
-      const ambientLight = new THREE.AmbientLight(0xcccccc, 1)
+      const ambientLight = new THREE.AmbientLight(0xcccccc, Math.PI)
       scene.add(ambientLight)
 
       const controls = new OrbitControls(camera, renderer.domElement)
       controls.autoRotate = true
       controls.target = target
-      setControls(controls)
 
-      loadGLTFModel(scene, '/scene.glb', {
+      loadGLTFModel(scene, urlDogGLB, {
         receiveShadow: false,
         castShadow: false
       }).then(() => {
@@ -107,8 +104,8 @@ const VoxelDog = () => {
       }
 
       return () => {
-        console.log('unmount')
         cancelAnimationFrame(req)
+        renderer.domElement.remove()
         renderer.dispose()
       }
     }
@@ -119,7 +116,7 @@ const VoxelDog = () => {
     return () => {
       window.removeEventListener('resize', handleWindowResize, false)
     }
-  }, [renderer, handleWindowResize])
+  }, [handleWindowResize])
 
   return (
     <DogContainer ref={refContainer}>{loading && <DogSpinner />}</DogContainer>

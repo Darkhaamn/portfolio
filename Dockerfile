@@ -1,7 +1,7 @@
-FROM mhart/alpine-node:14 as builder
+FROM node:18-alpine as builder
 WORKDIR /next/app
-ENV HUSKY_SKIP_INSTALL=1
 COPY package.json ./
+COPY yarn.lock ./
 RUN yarn
 COPY . .
 RUN yarn build

@@ -15,15 +15,14 @@ const Main = ({ children, router }) => {
     <Box as="main" pb={8}>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="Darkhanbayar's homepage" />
+        <meta name="description" content="Darkhaa's homepage" />
         <meta name="author" content="Darkhanbayar Erdenebat" />
         <meta name="author" content="darkhaa" />
-        <meta
-          property="og:site_name"
-          content="Darkhanbayar Erdenebat's Homepage"
-        />
+        <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+        <meta property="og:site_name" content="Darkhanbayar Erdenebat" />
+        <meta name="og:title" content="Darkhanbayar Erdenebat" />
         <meta property="og:type" content="website" />
-        <meta property="og:image" content="/card.png" />
+        <meta property="og:image" content="/public/images/darkhanbayar.jpeg" />
         <link
           rel="apple-touch-icon"
           sizes="57x57"
@@ -87,19 +86,12 @@ const Main = ({ children, router }) => {
           sizes="96x96"
           href="/images/favicon/favicon-96x96.png"
         />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="favicon-16x16.png"
-        />
         <link rel="manifest" href="/images/favicon/manifest.json" />
         <meta name="msapplication-TileColor" content="#ffffff" />
         <meta
           name="msapplication-TileImage"
           content="/images/favicon/ms-icon-144x144.png"
         />
-        <meta name="theme-color" content="#ffffff" />
         <title>Darkhanbayar Erdenebat - Homepage</title>
       </Head>
 

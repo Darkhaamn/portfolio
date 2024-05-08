@@ -1,8 +1,9 @@
 import {
   Box,
   Button,
-  chakra,
+  Center,
   Container,
+  Flex,
   Heading,
   Link,
   List,
@@ -10,18 +11,19 @@ import {
   useColorModeValue
 } from '@chakra-ui/react'
 import Image from 'next/image'
-import { IoLogoGithub, IoLogoInstagram, IoLogoLinkedin } from 'react-icons/io5'
-import { BioSection, BioYear, BioDescription } from '../components/bio'
+import {
+  IoLogoGithub,
+  IoLogoInstagram,
+  IoLogoLinkedin,
+  IoMail
+} from 'react-icons/io5'
+import { BioDescription, BioSection, BioYear } from '../components/bio'
 import Layout from '../components/layouts/article'
 import Paragraph from '../components/paragraph'
 import Section from '../components/section'
 
 import AWS from '/public/images/aws.jpeg'
 import CKA from '/public/images/linux.png'
-
-const ProfileImage = chakra(Image, {
-  shouldForwardProp: prop => ['width', 'height', 'src', 'alt'].includes(prop)
-})
 
 const Home = () => (
   <Layout>
@@ -32,13 +34,16 @@ const Home = () => (
         p={3}
         textAlign="center"
         bg={useColorModeValue('whiteAlpha.500', 'whiteAlpha.200')}
+        css={{ backdropFilter: 'blur(10px)' }}
       >
-        Hello, I&apos;m a full-stack developer based in Ulaanbaatar!
+        Hello, I&apos;m a full-stack developer and DevOps engineer based in
+        Ulaanbaatar!
       </Box>
+
       <Box display={{ md: 'flex' }}>
         <Box flexGrow={1}>
           <Heading as="h2" variant="page-title">
-            Darkhanbayar Erdenebat test#2
+            Darkhanbayar Erdenebat
           </Heading>
           <p>Cloud Engineer ( Architect / Developer )</p>
         </Box>
@@ -58,16 +63,16 @@ const Home = () => (
             borderRadius="full"
             overflow="hidden"
           >
-            <ProfileImage
+            <Image
               src="/images/darkhanbayar.jpeg"
               alt="Profile image"
-              borderRadius="full"
-              width="100%"
-              height="100%"
+              width="100"
+              height="100"
             />
           </Box>
         </Box>
       </Box>
+
       <Section delay={0.1}>
         <Heading as="h3" variant="section-title">
           Work
@@ -78,7 +83,19 @@ const Home = () => (
           interested in all things launching products, from planning and
           designing all the way to solving real-life problems with code.
         </Paragraph>
+        {/* <Box align="center" my={4}>
+          <Button
+            as={NextLink}
+            href="/works"
+            scroll={false}
+            rightIcon={<ChevronRightIcon />}
+            colorScheme="teal"
+          >
+            My portfolio
+          </Button>
+        </Box> */}
       </Section>
+
       <Section delay={0.2}>
         <Heading as="h3" variant="section-title">
           Bio
@@ -95,30 +112,56 @@ const Home = () => (
         <BioSection>
           <BioYear>2019 to present</BioYear>
           Worked at{' '}
-          <Link href="https://fibo.cloud/" target="_blank">
+          <Link
+            href="https://fibo.global/"
+            target="_blank"
+            style={{ textDecoration: 'underline' }}
+          >
             FIBO CLOUD!
           </Link>
         </BioSection>
       </Section>
+
       <Section delay={0.3}>
         <Heading as="h3" variant="section-title">
           Certification
         </Heading>
-        <BioSection>
-          <BioYear>
-            <Image src={AWS} alt={'aws'} width={35} height={35} />
-          </BioYear>
-          AWS Certified Developer - Associate - Amazon Web Services (AWS)
-          <BioDescription>Issued May 2020 – Expires Apr 2023</BioDescription>
-        </BioSection>
-        <BioSection>
-          <BioYear>
-            <Image src={CKA} alt={'linux'} width={35} height={35} />
-          </BioYear>
-          CKA: Certified Kubernetes Administrator - The Linux Foundation
-          <BioDescription>Issued Mar 2022 – Expires Mar 2025</BioDescription>
-        </BioSection>
+        <Flex>
+          <Image
+            src={AWS}
+            alt={'aws'}
+            width={40}
+            height={40}
+            style={{ width: 40, height: 40 }}
+          />
+          <Center ml="10px">
+            <Flex direction="column">
+              AWS Certified Developer - Associate - Amazon Web Services (AWS)
+              <BioDescription>
+                Issued May 2020 – Expires Apr 2023
+              </BioDescription>
+            </Flex>
+          </Center>
+        </Flex>
+        <Flex mt="15">
+          <Image
+            src={CKA}
+            alt={'linux'}
+            width={40}
+            height={40}
+            style={{ width: 40, height: 40 }}
+          />
+          <Center ml="10px">
+            <Flex direction="column">
+              CKA: Certified Kubernetes Administrator - The Linux Foundation
+              <BioDescription>
+                Issued Mar 2022 – Expires Mar 2025
+              </BioDescription>
+            </Flex>
+          </Center>
+        </Flex>
       </Section>
+
       <Section delay={0.3}>
         <Heading as="h3" variant="section-title">
           I ♥
@@ -126,7 +169,7 @@ const Home = () => (
         <Paragraph>
           Gaming, Music, DevOps Engineering,{' '}
           <a
-            href="https://www.instagram.com/bolorchimeg0419/"
+            href="https://www.instagram.com/chimegbolorr/"
             target="_blank"
             rel="noreferrer"
             style={{ textDecoration: 'underline' }}
@@ -135,11 +178,19 @@ const Home = () => (
           </a>
         </Paragraph>
       </Section>
+
       <Section delay={0.4}>
         <Heading as="h3" variant="section-title">
-          On the web
+          Contact
         </Heading>
         <List>
+          <ListItem>
+            <a href="mailto:darkhanbayarr@gmail.com">
+              <Button variant="ghost" colorScheme="teal" leftIcon={<IoMail />}>
+                darkhanbayarr@gmail.com
+              </Button>
+            </a>
+          </ListItem>
           <ListItem>
             <Link href="https://github.com/darkhaamn" target="_blank">
               <Button
