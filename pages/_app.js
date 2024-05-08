@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 import Chakra from '../components/chakra'
 import Payhip from '../components/payhip'
 import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 if (typeof window !== 'undefined') {
   window.history.scrollRestoration = 'manual'
@@ -27,6 +28,7 @@ function Website({ Component, pageProps, router }) {
           <Component {...pageProps} key={router.route} />
         </AnimatePresence>
         <Analytics />
+        <SpeedInsights />
       </Layout>
     </Chakra>
   )
