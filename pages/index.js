@@ -23,6 +23,7 @@ import Paragraph from '../components/paragraph'
 import Section from '../components/section'
 
 import AWS from '/public/images/aws.jpeg'
+import AWSPro from '/public/images/aws-pro.png'
 import CKA from '/public/images/linux.png'
 
 const Home = () => (
@@ -36,8 +37,10 @@ const Home = () => (
         bg={useColorModeValue('whiteAlpha.500', 'whiteAlpha.200')}
         css={{ backdropFilter: 'blur(10px)' }}
       >
-        Hello, I&apos;m a full-stack developer and DevOps engineer based in
-        Ulaanbaatar!
+        Hello,
+        <br />
+        I&apos;m a Full-Stack Developer and DevOps Engineer Based in Mongolia
+        🇲🇳, Specializing in Crafting Innovative Digital Solutions
       </Box>
 
       <Box display={{ md: 'flex' }}>
@@ -45,7 +48,7 @@ const Home = () => (
           <Heading as="h2" variant="page-title">
             Darkhanbayar Erdenebat
           </Heading>
-          <p>Cloud Engineer ( Architect / Developer )</p>
+          <p>Cloud Engineer ( Architect / Developer / DevOps )</p>
         </Box>
         <Box
           flexShrink={0}
@@ -78,10 +81,11 @@ const Home = () => (
           Work
         </Heading>
         <Paragraph>
-          Darkhanbayar is full-stack developer based at Ulaanbaatar with a
-          passion for building digital services/stuff he wants. He has
-          interested in all things launching products, from planning and
-          designing all the way to solving real-life problems with code.
+          Based in Ulaanbaatar, Darkhanbayar is a passionate full-stack
+          developer dedicated to creating innovative digital solutions. With a
+          keen interest in every aspect of product development, he excels in
+          planning, designing, and coding to solve real-world problems
+          efficiently.
         </Paragraph>
         {/* <Box align="center" my={4}>
           <Button
@@ -157,6 +161,21 @@ const Home = () => (
               <BioDescription>
                 Issued Mar 2022 – Expires Mar 2025
               </BioDescription>
+            </Flex>
+          </Center>
+        </Flex>
+        <Flex mt="15">
+          <Image
+            src={AWSPro}
+            alt={'AWSPro'}
+            width={40}
+            height={40}
+            style={{ width: 40, height: 40 }}
+          />
+          <Center ml="10px">
+            <Flex direction="column">
+              AWS Certified Solutions Architect - Professional
+              <BioDescription>Soon ...</BioDescription>
             </Flex>
           </Center>
         </Flex>
