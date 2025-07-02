@@ -8,7 +8,11 @@ A modern, visually appealing portfolio website for Darkhanbayar Erdenebat, a Ful
 
 - **Showcase of Projects:** Detailed pages for apps, collaborations, and old works, including:
   - [Cloud.mn](pages/works/cloudmn.js): Mongolia's first public cloud platform, serving 3000+ companies
-- **Digital Products:** Coding wallpaper packs ([cherry blossoms](pages/wallpapers/cherry-blossoms.js), [machiya](pages/wallpapers/machiya.js))
+  - [TTC Cloud](pages/works/ttc.js): Kazakhstan's public cloud platform for enterprise, integrated with local payment and compliance
+  - [iTrip](pages/works/itrip.js): Mongolia's unified online travel platform for booking hotels, flights, and tours
+  - [EasySim.mn](pages/works/easysim.js): International eSIM platform for travelers, integrated in a Mongolian super app
+  - [MedTech Partner LLC](pages/works/medtech.js): Medical supply management and order ecosystem for the pharmaceutical industry
+  - [UFE AWS Case Study](pages/works/ufe_aws.js): Migrated Mongolia's university LMS to AWS cloud during COVID-19 lockdown
 - **Responsive Design:** Mobile-friendly and accessible
 - **Dark/Light Mode:** Custom Chakra UI theming
 - **Animated UI:** Smooth transitions with Framer Motion
@@ -26,34 +30,6 @@ A modern, visually appealing portfolio website for Darkhanbayar Erdenebat, a Ful
 - [Three.js](https://threejs.org/) (for 3D/voxel dog)
 - [Vercel Analytics & Speed Insights](https://vercel.com/analytics)
 - [Docker](https://www.docker.com/) + [Nginx](https://nginx.org/)
-
----
-
-## 📦 Folder Structure
-
-```
-portfolio/
-  components/      # Reusable UI components
-  lib/             # Theme and model logic
-  pages/           # Next.js pages (routes)
-    works/         # Project detail pages
-    wallpapers/    # Digital product pages
-  public/
-    images/        # Profile, project, and wallpaper images
-  ...
-```
-
----
-
-## 🖥️ Screenshots
-
-> _Add your own screenshots below!_
-
-| Home Page                                | Works Page                                         | Project Detail                                      |
-| ---------------------------------------- | -------------------------------------------------- | --------------------------------------------------- |
-| ![Home](public/images/darkhanbayar.jpeg) | ![Works](public/images/works/inkdrop_eyecatch.png) | ![Detail](public/images/works/margelo_eyecatch.png) |
-
----
 
 ## 📄 License
 
