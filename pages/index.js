@@ -22,8 +22,8 @@ import Layout from '../components/layouts/article'
 import Paragraph from '../components/paragraph'
 import Section from '../components/section'
 
-import AWS from '/public/images/aws.jpeg'
 import AWSPro from '/public/images/aws-pro.png'
+import AWS from '/public/images/aws.jpeg'
 import CKA from '/public/images/linux.png'
 
 const Home = () => (
@@ -186,7 +186,7 @@ const Home = () => (
           I ♥
         </Heading>
         <Paragraph>
-          Gaming, Music, DevOps Engineering,{' '}
+          Gaming, Coding, DevOps Engineering,
           <a
             href="https://www.instagram.com/chimegbolorr/"
             target="_blank"
