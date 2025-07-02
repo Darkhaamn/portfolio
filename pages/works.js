@@ -1,6 +1,14 @@
-import { Container, Heading } from '@chakra-ui/react'
+import { Container, Heading, SimpleGrid } from '@chakra-ui/react'
+import { WorkGridItem } from '../components/grid-item'
 import Layout from '../components/layouts/article'
 import Section from '../components/section'
+
+import thumbCloudmn from '../public/images/works/cloudmn.png'
+import thumbEasysim from '../public/images/works/easysim.png'
+import thumbItrip from '../public/images/works/itrip.png'
+import thumbMedtech from '../public/images/works/medtech.png'
+import thumbTtc from '../public/images/works/ttc.png'
+import thumbUfe from '../public/images/works/ufe.jpg'
 
 const Works = () => (
   <Layout title="Works">
@@ -9,103 +17,65 @@ const Works = () => (
         Works
       </Heading>
 
-      <Section>Coming soon ... 😊</Section>
-      {/* <SimpleGrid columns={[1, 1, 2]} gap={6}>
+      <SimpleGrid columns={[1, 1, 2]} gap={6}>
         <Section>
-          <WorkGridItem id="inkdrop" title="Inkdrop" thumbnail={thumbInkdrop}>
-            A Markdown note-taking app with 100+ plugins, cross-platform and
-            encrypted data sync support
+          <WorkGridItem id="cloudmn" title="Cloud.mn" thumbnail={thumbCloudmn}>
+            Mongolia&apos;s first public cloud platform, allowing users to
+            create and manage virtual machines, storage, and networks.
           </WorkGridItem>
         </Section>
         <Section>
-          <WorkGridItem
-            id="walknote"
-            title="walknote"
-            thumbnail={thumbWalknote}
-          >
-            Music recommendation app for iOS
-          </WorkGridItem>
-        </Section>
-
-        <Section delay={0.1}>
-          <WorkGridItem
-            id="fourpainters"
-            title="The four painters"
-            thumbnail={thumbFourPainters}
-          >
-            A video work generated with deep learning, imitating famous four
-            painters like Van Gogh
-          </WorkGridItem>
-        </Section>
-        <Section delay={0.1}>
-          <WorkGridItem id="menkiki" thumbnail={thumbMenkiki} title="Menkiki">
-            An app that suggests ramen(noodle) shops based on a given photo of
-            the ramen you want to eat
+          <WorkGridItem id="ttc" title="TTC Cloud" thumbnail={thumbTtc}>
+            Kazakhstan’s leading public cloud platform for enterprises.
           </WorkGridItem>
         </Section>
       </SimpleGrid>
 
-      <Section delay={0.2}>
-        <Divider my={6} />
-
-        <Heading as="h3" fontSize={20} mb={4}>
-          Collaborations
-        </Heading>
-      </Section>
-
       <SimpleGrid columns={[1, 1, 2]} gap={6}>
-        <Section delay={0.3}>
-          <WorkGridItem id="margelo" thumbnail={thumbMargelo} title="Margelo">
-            A website of the elite app development and contracting agency based
-            in Austria
-          </WorkGridItem>
-        </Section>
-        <Section delay={0.3}>
+        <Section>
           <WorkGridItem
-            id="modetokyo"
-            thumbnail={thumbModeTokyo}
-            title="mode.tokyo"
+            id="ufe_aws"
+            title="UFE Online Learning on AWS"
+            thumbnail={thumbUfe}
           >
-            The mode magazine for understanding to personally enjoy Japan
+            Migrated one of Mongolia’s largest universities to AWS during
+            COVID-19, ensuring reliable online learning for thousands of
+            students.
           </WorkGridItem>
         </Section>
-        <Section delay={0.3}>
-          <WorkGridItem id="styly" thumbnail={thumbStyly} title="Styly">
-            A VR Creative tools for fashion brands
+
+        <Section>
+          <WorkGridItem
+            id="easysim"
+            title="EasySim.mn"
+            thumbnail={thumbEasysim}
+          >
+            International eSIM services for travelers, powered by a Mongolian
+            super app.
+          </WorkGridItem>
+        </Section>
+
+        <Section>
+          <WorkGridItem
+            id="medtech"
+            title="MedOrder Eco System"
+            thumbnail={thumbMedtech}
+          >
+            How Innovative Tech Solutions are Changing the HealthCare industry
+            Game
+          </WorkGridItem>
+        </Section>
+
+        <Section>
+          <WorkGridItem
+            id="itrip"
+            title="Itrip.mn"
+            thumbnail={thumbItrip}
+          >
+            Mongolia’s all-in-one travel booking platform.
           </WorkGridItem>
         </Section>
       </SimpleGrid>
-
-      <Section delay={0.4}>
-        <Divider my={6} />
-
-        <Heading as="h3" fontSize={20} mb={4}>
-          Old works
-        </Heading>
-      </Section>
-
-      <SimpleGrid columns={[1, 1, 2]} gap={6}>
-        <Section delay={0.5}>
-          <WorkGridItem id="pichu2" thumbnail={thumbPichu2} title="Pichu*Pichu">
-            Twitter client app for iPhone Safari
-          </WorkGridItem>
-        </Section>
-        <Section delay={0.5}>
-          <WorkGridItem
-            id="freedbtagger"
-            thumbnail={thumbFreeDBTagger}
-            title="freeDBTagger"
-          >
-            Automatic audio file tagging tool using FreeDB for Windows
-          </WorkGridItem>
-        </Section>
-        <Section delay={0.6}>
-          <WorkGridItem id="amembo" thumbnail={thumbAmembo} title="Amembo">
-            P2P private file sharing tool with MSN Messenger integration for
-            Windows
-          </WorkGridItem>
-        </Section>
-      </SimpleGrid> */}
     </Container>
   </Layout>
 )
