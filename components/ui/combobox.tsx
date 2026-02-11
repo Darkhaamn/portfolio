@@ -1,9 +1,8 @@
 "use client"
 
+import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox"
 import * as React from "react"
-import { Combobox as ComboboxPrimitive } from "@base-ui/react"
 
-import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   InputGroup,
@@ -11,7 +10,8 @@ import {
   InputGroupButton,
   InputGroupInput,
 } from "@/components/ui/input-group"
-import { IconChevronDown, IconX, IconCheck } from "@tabler/icons-react"
+import { cn } from "@/lib/utils"
+import { IconCheck, IconChevronDown, IconX } from "@tabler/icons-react"
 
 const Combobox = ComboboxPrimitive.Root
 
@@ -275,20 +275,8 @@ function useComboboxAnchor() {
 }
 
 export {
-  Combobox,
-  ComboboxInput,
-  ComboboxContent,
-  ComboboxList,
-  ComboboxItem,
-  ComboboxGroup,
-  ComboboxLabel,
-  ComboboxCollection,
-  ComboboxEmpty,
-  ComboboxSeparator,
-  ComboboxChips,
-  ComboboxChip,
-  ComboboxChipsInput,
-  ComboboxTrigger,
+  Combobox, ComboboxChip, ComboboxChips, ComboboxChipsInput, ComboboxCollection, ComboboxContent, ComboboxEmpty, ComboboxGroup, ComboboxInput, ComboboxItem, ComboboxLabel, ComboboxList, ComboboxSeparator, ComboboxTrigger,
   ComboboxValue,
-  useComboboxAnchor,
+  useComboboxAnchor
 }
+

@@ -2,6 +2,8 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
   IconArrowUpRight,
+  IconBrandGithub,
+  IconBrandLinkedin,
   IconBriefcase,
   IconHeart,
   IconMail,
@@ -11,6 +13,7 @@ import {
   IconTimeline,
 } from "@tabler/icons-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Page() {
   const links = {
@@ -33,13 +36,13 @@ export default function Page() {
             <span>Darkhanbayar.E</span>
           </a>
           <div className="flex items-center gap-2">
-            <Button asChild size="sm" className="rounded-full">
-              <a href={`mailto:${links.email}`}>
-                <IconMail data-icon="inline-start" />
-                Connect
-              </a>
+            <Button asChild size="sm" className="cursor-pointer">
+              <Link href="/works">
+                <IconBriefcase data-icon="inline-start" />
+                Works
+              </Link>
             </Button>
-            <Button asChild size="sm" variant="outline" className="rounded-full">
+            <Button asChild size="sm" variant="outline" className="cursor-pointer">
               <a href={links.resume} target="_blank" rel="noreferrer">
                 <IconPdf data-icon="inline-start" />
                 Resume
@@ -54,10 +57,10 @@ export default function Page() {
         <section id="about" className="mb-16 scroll-mt-24">
           <div className="flex flex-col md:flex-row gap-8 items-start md:items-center justify-between">
             <div className="space-y-4 max-w-lg">
-              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-zinc-100/70 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-zinc-100/70 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
                 <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+                  <span className="animate-ping absolute inline-flex h-full w-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 bg-emerald-500" />
                 </span>
                 Available for new projects
               </div>
@@ -75,7 +78,7 @@ export default function Page() {
 
               <div className="flex items-center gap-4 pt-2">
                 <a
-                  href="#works"
+                  href="/works"
                   className="group flex items-center gap-2 text-sm text-zinc-950 dark:text-zinc-100 border-b border-zinc-300 dark:border-zinc-700 pb-0.5 hover:border-zinc-950 dark:hover:border-zinc-100 transition-colors"
                 >
                   View Works
@@ -113,7 +116,7 @@ export default function Page() {
               </div>
             </div>
 
-            <div className="relative w-full h-full md:w-56 md:h-56 shrink-0 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 rotate-3 hover:rotate-0 transition-transform duration-500">
+            <div className="relative w-full h-full md:w-56 md:h-56 shrink-0 overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 rotate-3 hover:rotate-0 transition-transform duration-500">
               <Image
                 src="/profile.jpg"
                 alt="Darkhanbayar Erdenebat"
@@ -130,9 +133,9 @@ export default function Page() {
           id="works"
           className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-16 scroll-mt-24"
         >
-          <div className="p-6 rounded-xl md:col-span-2 shadow-[0_0_40px_-10px_rgba(255,255,255,0.05)] flex flex-col justify-between h-full bg-white/70 dark:bg-[rgba(24,24,27,0.6)] backdrop-blur-xl border border-zinc-200/70 dark:border-white/10">
+          <div className="p-6 md:col-span-2 shadow-[0_0_40px_-10px_rgba(255,255,255,0.05)] flex flex-col justify-between h-full bg-white/70 dark:bg-[rgba(24,24,27,0.6)] backdrop-blur-xl border border-zinc-200/70 dark:border-white/10">
             <div className="flex justify-between items-start mb-6">
-              <div className="p-2 bg-zinc-100 dark:bg-zinc-900/80 rounded-lg border border-zinc-200 dark:border-zinc-800 text-zinc-950 dark:text-zinc-100">
+              <div className="p-2 bg-zinc-100 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 text-zinc-950 dark:text-zinc-100">
                 <IconBriefcase className="size-5" aria-hidden />
               </div>
               <span className="text-xs font-mono text-zinc-500">OCT 2025 — PRESENT</span>
@@ -154,7 +157,7 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="p-6 rounded-xl flex flex-col justify-between bg-white/70 dark:bg-[rgba(24,24,27,0.6)] backdrop-blur-xl border border-zinc-200/70 dark:border-white/10">
+          <div className="p-6 flex flex-col justify-between bg-white/70 dark:bg-[rgba(24,24,27,0.6)] backdrop-blur-xl border border-zinc-200/70 dark:border-white/10">
             <div>
               <h3 className="text-zinc-950 dark:text-zinc-200 font-medium text-sm mb-4 flex items-center gap-2">
                 <IconHeart className="size-4 text-rose-500/80" aria-hidden />
@@ -174,7 +177,7 @@ export default function Page() {
                 ].map((item) => (
                   <span
                     key={item}
-                    className="px-2.5 py-1 rounded-md bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-700 dark:text-zinc-400"
+                    className="px-2.5 py-1 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-700 dark:text-zinc-400"
                   >
                     {item}
                   </span>
@@ -199,7 +202,7 @@ export default function Page() {
             </h2>
             <div className="relative border-l border-zinc-200 dark:border-zinc-800 ml-3 space-y-8 pb-4">
               <div className="relative pl-8">
-                <div className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950" />
+                <div className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950" />
                 <span className="text-xs font-mono text-zinc-500 mb-1 block">
                   2014 — 2018
                 </span>
@@ -212,7 +215,7 @@ export default function Page() {
               </div>
 
               <div className="relative pl-8">
-                <div className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950" />
+                <div className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950" />
                 <span className="text-xs font-mono text-zinc-500 mb-1 block">
                   APR 2018 — MAR 2019
                 </span>
@@ -222,7 +225,7 @@ export default function Page() {
               </div>
 
               <div className="relative pl-8">
-                <div className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950" />
+                <div className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950" />
                 <span className="text-xs font-mono text-zinc-500 mb-1 block">
                   JUN 2021 — FEB 2025
                 </span>
@@ -232,7 +235,7 @@ export default function Page() {
               </div>
 
               <div className="relative pl-8">
-                <div className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950" />
+                <div className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950" />
                 <span className="text-xs font-mono text-zinc-500 mb-1 block">
                   OCT 2021 — APR 2022
                 </span>
@@ -242,7 +245,7 @@ export default function Page() {
               </div>
 
               <div className="relative pl-8">
-                <div className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950" />
+                <div className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950" />
                 <span className="text-xs font-mono text-zinc-500 mb-1 block">
                   APR 2022 — MAR 2024
                 </span>
@@ -252,7 +255,7 @@ export default function Page() {
               </div>
 
               <div className="relative pl-8">
-                <div className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 rounded-full border border-zinc-400 dark:border-zinc-500 bg-zinc-950 dark:bg-zinc-100" />
+                <div className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 border border-zinc-400 dark:border-zinc-500 bg-zinc-950 dark:bg-zinc-100" />
                 <span className="text-xs font-mono text-emerald-500 mb-1 block">
                   OCT 2025 — Present
                 </span>
@@ -269,8 +272,8 @@ export default function Page() {
               Certifications
             </h2>
             <div className="space-y-4">
-              <div className="group flex items-center gap-4 p-3 rounded-lg border hover:bg-zinc-100/60 transition-colors">
-                <div className="w-10 h-10 rounded flex items-center justify-center">
+              <div className="group flex items-center gap-4 p-3 border hover:bg-zinc-100/60 transition-colors">
+                <div className="w-10 h-10 flex items-center justify-center">
                   <Image src="/aws.jpeg" alt="AWS" width={30} height={30} />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -279,13 +282,13 @@ export default function Page() {
                   </h4>
                   <p className="text-xs text-zinc-500">Associate Level</p>
                 </div>
-                <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-800">
+                <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800">
                   MAY 2020
                 </span>
               </div>
 
-              <div className="group flex items-center gap-4 p-3 rounded-lg bg-white/70 dark:bg-zinc-900/20 border border-zinc-200/70 dark:border-zinc-800/60">
-                <div className="w-10 h-10 rounded flex items-center justify-center">
+              <div className="group flex items-center gap-4 p-3 bg-white/70 dark:bg-zinc-900/20 border border-zinc-200/70 dark:border-zinc-800/60">
+                <div className="w-10 h-10 flex items-center justify-center">
                   <Image src="/linux.png" alt="Linux" width={30} height={30} />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -296,13 +299,13 @@ export default function Page() {
                     The Linux Foundation
                   </p>
                 </div>
-                <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-800">
+                <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800">
                   MAR 2022
                 </span>
               </div>
 
-              <div className="group flex items-center gap-4 p-3 rounded-lg bg-white/70 dark:bg-zinc-900/20 border border-zinc-200/70 dark:border-zinc-800/60">
-                <div className="w-10 h-10 rounded flex items-center justify-center">
+              <div className="group flex items-center gap-4 p-3 bg-white/70 dark:bg-zinc-900/20 border border-zinc-200/70 dark:border-zinc-800/60">
+                <div className="w-10 h-10 flex items-center justify-center">
                   <Image src="/aws-pro.png" alt="AWS_PRO" width={30} height={30} />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -313,13 +316,13 @@ export default function Page() {
                     Amazon Web Services
                   </p>
                 </div>
-                <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-800">
+                <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800">
                   SOON...
                 </span>
               </div>
 
-              <div className="group flex items-center gap-4 p-3 rounded-lg bg-white/70 dark:bg-zinc-900/20 border border-zinc-200/70 dark:border-zinc-800/60">
-                <div className="w-10 h-10 rounded flex items-center justify-center">
+              <div className="group flex items-center gap-4 p-3 bg-white/70 dark:bg-zinc-900/20 border border-zinc-200/70 dark:border-zinc-800/60">
+                <div className="w-10 h-10 flex items-center justify-center">
                   <Image src="/kubestronaut.png" alt="Linux" width={30} height={30} />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -330,7 +333,7 @@ export default function Page() {
                     The Linux Foundation
                   </p>
                 </div>
-                <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-800">
+                <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800">
                   SOON...
                 </span>
               </div>
@@ -342,8 +345,8 @@ export default function Page() {
                 Education
               </h3>
               <div className="space-y-4">
-                <div className="group flex items-center gap-4 p-3 rounded-lg hover:bg-zinc-100/60 dark:hover:bg-zinc-900/50 transition-colors border border-zinc-200/70 dark:border-transparent hover:border-zinc-300 dark:hover:border-zinc-800/50 bg-white/70 dark:bg-transparent">
-                  <div className="w-10 h-10 rounded bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-zinc-500 border border-zinc-200 dark:border-zinc-800">
+                <div className="group flex items-center gap-4 p-3 hover:bg-zinc-100/60 dark:hover:bg-zinc-900/50 transition-colors border border-zinc-200/70 dark:border-transparent hover:border-zinc-300 dark:hover:border-zinc-800/50 bg-white/70 dark:bg-transparent">
+                  <div className="w-10 h-10 bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-zinc-500 border border-zinc-200 dark:border-zinc-800">
                     <IconSchool className="size-5" aria-hidden />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -352,13 +355,13 @@ export default function Page() {
                     </h4>
                     <p className="text-xs text-zinc-500">Fairfield (Currently studying)</p>
                   </div>
-                  <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-800">
+                  <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800">
                     FEB 2026
                   </span>
                 </div>
 
-                <div className="group flex items-center gap-4 p-3 rounded-lg hover:bg-zinc-100/60 dark:hover:bg-zinc-900/50 transition-colors border border-zinc-200/70 dark:border-transparent hover:border-zinc-300 dark:hover:border-zinc-800/50 bg-white/70 dark:bg-transparent">
-                  <div className="w-10 h-10 rounded bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-zinc-500 border border-zinc-200 dark:border-zinc-800">
+                <div className="group flex items-center gap-4 p-3 hover:bg-zinc-100/60 dark:hover:bg-zinc-900/50 transition-colors border border-zinc-200/70 dark:border-transparent hover:border-zinc-300 dark:hover:border-zinc-800/50 bg-white/70 dark:bg-transparent">
+                  <div className="w-10 h-10 bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center text-zinc-500 border border-zinc-200 dark:border-zinc-800">
                     <IconSchool className="size-5" aria-hidden />
                   </div>
                   <div className="flex-1 min-w-0">
@@ -367,7 +370,7 @@ export default function Page() {
                     </h4>
                     <p className="text-xs text-zinc-500">Information Technology</p>
                   </div>
-                  <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded border border-zinc-200 dark:border-zinc-800">
+                  <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800">
                     2014 — 2018
                   </span>
                 </div>
@@ -376,34 +379,53 @@ export default function Page() {
           </section>
         </div>
 
-        <footer className="mt-20 pt-8 border-t border-zinc-200 dark:border-zinc-900 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-zinc-600 dark:text-zinc-600">
-          <p>
-            &copy; {new Date().getFullYear()} Darkhanbayar Erdenebat. All rights
-            reserved.
-          </p>
-          <div className="flex gap-6">
-            <a
-              href={`mailto:${links.email}`}
-              className="hover:text-zinc-950 dark:hover:text-zinc-400 transition-colors"
-            >
-              Email
-            </a>
-            <a
-              href={links.linkedin}
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-zinc-950 dark:hover:text-zinc-400 transition-colors"
-            >
-              LinkedIn
-            </a>
-            <a
-              href={links.github}
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-zinc-950 dark:hover:text-zinc-400 transition-colors"
-            >
-              GitHub
-            </a>
+        <footer className="mt-20">
+          <div className="bg-white/70 dark:bg-[rgba(24,24,27,0.6)] backdrop-blur-xl border border-zinc-200/70 dark:border-white/10 p-5 md:p-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-zinc-950 dark:text-zinc-100">
+                  Let&apos;s build something.
+                </p>
+                <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                  &copy; {new Date().getFullYear()} Darkhanbayar Erdenebat. All rights reserved.
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="justify-start"
+                >
+                  <a href={`mailto:${links.email}`}>
+                    <IconMail data-icon="inline-start" />
+                    {links.email}
+                  </a>
+                </Button>
+
+                <Button asChild variant="ghost" size="sm" >
+                  <a href={links.linkedin} target="_blank" rel="noreferrer">
+                    <IconBrandLinkedin data-icon="inline-start" />
+                    LinkedIn
+                  </a>
+                </Button>
+
+                <Button asChild variant="ghost" size="sm" >
+                  <a href={links.github} target="_blank" rel="noreferrer">
+                    <IconBrandGithub data-icon="inline-start" />
+                    GitHub
+                  </a>
+                </Button>
+
+                <Button asChild variant="ghost" size="sm" >
+                  <a href={links.resume} target="_blank" rel="noreferrer">
+                    <IconPdf data-icon="inline-start" />
+                    Resume
+                  </a>
+                </Button>
+              </div>
+            </div>
           </div>
         </footer>
       </main>

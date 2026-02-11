@@ -39,7 +39,6 @@ export function ThemeToggle() {
       onClick={toggle}
       variant="outline"
       size="icon-sm"
-      className="rounded-full"
       aria-label={nextLabel}
       title={nextLabel}
     >
