@@ -122,5 +122,15 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image: radial-gradient(var(--dot-color) 1px, transparent 1px);
+    background-size: 24px 24px;
   }
+}
+
+:root {
+  --dot-color: oklch(0.9 0 0); /* light zinc-ish */
+}
+
+.dark {
+  --dot-color: #27272a; /* zinc 800-ish */
 }
