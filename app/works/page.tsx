@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 
 export default function WorksPage() {
   return (
-    <main className="max-w-4xl mx-auto px-6 pt-24 pb-20">
+    <main className="max-w-4xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32 pb-20">
       <div className="flex items-center justify-between gap-4 mb-8">
         <div className="space-y-1">
           <h1 className="text-2xl font-medium text-zinc-950 dark:text-zinc-100 tracking-tight">
