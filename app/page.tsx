@@ -10,6 +10,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
+import { Button } from "@/components/ui/button";
+
 export default function Page() {
   return (
     <main className="max-w-4xl mx-auto px-4 sm:px-6 pt-24 sm:pt-32">
@@ -156,10 +158,15 @@ export default function Page() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12">
         <section id="timeline" className="scroll-mt-24">
-          <h2 className="text-lg font-medium text-zinc-950 dark:text-zinc-100 mb-6 flex items-center gap-2">
-            <IconTimeline className="size-5 text-zinc-500" aria-hidden />
-            Timeline
-          </h2>
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <h2 className="text-lg font-medium text-zinc-950 dark:text-zinc-100 flex items-center gap-2">
+              <IconTimeline className="size-5 text-zinc-500" aria-hidden />
+              Timeline
+            </h2>
+            <Button asChild variant="outline" size="sm">
+              <Link href="/timeline">Show details</Link>
+            </Button>
+          </div>
           <div className="relative border-l border-zinc-200 dark:border-zinc-800 ml-3 space-y-8 pb-4">
             <div className="relative pl-8">
               <div className="absolute -left-[5px] top-1.5 h-2.5 w-2.5 border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-950" />
