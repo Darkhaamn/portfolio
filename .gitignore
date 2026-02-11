@@ -56,3 +56,4 @@ dist
 .vercel
 .env
 .DS_Store
+/.next/*
