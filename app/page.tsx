@@ -8,6 +8,7 @@ import {
   IconTimeline,
 } from "@tabler/icons-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -35,13 +36,13 @@ export default function Page() {
             </p>
 
             <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 pt-2">
-              <a
+              <Link
                 href="/works"
                 className="group flex items-center gap-2 text-sm text-zinc-950 dark:text-zinc-100 border-b border-zinc-300 dark:border-zinc-700 pb-0.5 w-fit hover:border-zinc-950 dark:hover:border-zinc-100 transition-colors"
               >
                 View Works
                 <IconArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </a>
+              </Link>
               <div className="flex flex-wrap gap-2 sm:gap-3">
                 <a
                   href={siteLinks.github}
@@ -80,6 +81,7 @@ export default function Page() {
               alt="Darkhanbayar Erdenebat"
               fill
               priority
+              sizes="(min-width: 768px) 224px, 0px"
               className="object-contain hover:opacity-100 transition-opacity"
             />
             <div className="absolute inset-0 bg-linear-to-tr from-black/10 dark:from-zinc-950/80 to-transparent" />
@@ -240,7 +242,7 @@ export default function Page() {
                 </h4>
                 <p className="text-xs text-zinc-500">Associate Level</p>
               </div>
-              <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800">
+              <span className="text-[10px] uppercase tracking-wider text-zinc-700 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800">
                 MAY 2020
               </span>
             </div>
@@ -257,7 +259,7 @@ export default function Page() {
                   The Linux Foundation
                 </p>
               </div>
-              <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800">
+              <span className="text-[10px] uppercase tracking-wider text-zinc-700 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800">
                 MAR 2022
               </span>
             </div>
@@ -274,7 +276,7 @@ export default function Page() {
                   Amazon Web Services
                 </p>
               </div>
-              <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800">
+              <span className="text-[10px] uppercase tracking-wider text-zinc-700 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800">
                 SOON...
               </span>
             </div>
@@ -291,7 +293,7 @@ export default function Page() {
                   The Linux Foundation
                 </p>
               </div>
-              <span className="text-[10px] uppercase tracking-wider text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800">
+              <span className="text-[10px] uppercase tracking-wider text-zinc-700 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800">
                 SOON...
               </span>
             </div>
