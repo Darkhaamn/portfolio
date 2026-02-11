@@ -4,6 +4,7 @@ import Script from "next/script";
 
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const siteUrl =
@@ -108,6 +109,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Analytics />
         <div className="scroll-smooth min-h-dvh text-zinc-700 dark:text-zinc-400 selection:bg-zinc-200 dark:selection:bg-zinc-700 selection:text-zinc-950 dark:selection:text-white pb-10">
           <SiteHeader />
           {children}
