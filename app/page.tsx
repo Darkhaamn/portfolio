@@ -229,7 +229,7 @@ export default function Page() {
             <IconSchool className="size-5 text-zinc-500" aria-hidden />
             Certifications
           </h2>
-          <div className="space-y-3 sm:space-y-4">
+          <div className="space-y-3 sm:space-y-4 grid grid-cols-2 md:grid-cols-1 gap-4">
             <div className="group flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 p-3 border hover:bg-zinc-100/60 transition-colors">
               <div className="w-10 h-10 flex items-center justify-center">
                 <Image src="/aws.jpeg" alt="AWS" width={30} height={30} />
