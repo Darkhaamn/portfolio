@@ -51,7 +51,7 @@ export default function WorksPage() {
                   src={work.thumbnail.src}
                   alt={work.thumbnail.alt}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                  className="object-contain transition-transform duration-500 p-20"
                   sizes="(max-width: 640px) 100vw, 512px"
                   priority={work.id === "cloudmn"}
                 />

@@ -1,4 +1,4 @@
-export type WorkId = 'cloudmn' | 'ttc' | 'ufe_aws' | 'easysim' | 'medtech' | 'itrip';
+export type WorkId = 'cloudmn' | 'ttc' | 'ufe_aws' | 'mobilife_aws' | 'easysim' | 'medtech' | 'itrip';
 
 export type WorkLink = {
   label: string;
@@ -30,7 +30,7 @@ export const works: Work[] = [
     status: 'Completed',
     launched: '2019',
     logo: { src: '/works/cloudmn.svg', alt: 'Cloud.mn logo' },
-    thumbnail: { src: '/works/cloudmn.png', alt: 'Cloud.mn dashboard' },
+    thumbnail: { src: '/works/svg/cloudmn.svg', alt: 'Cloud.mn dashboard' },
     summary: "Mongolia's first public cloud platform, allowing users to create and manage virtual machines, storage, and networks.",
     paragraphs: [
       "Cloud.mn is Mongolia's first public cloud service, enabling users to register and create virtual machines, disks, networks, and other resources as needed—essentially a smaller-scale AWS for Mongolia.",
@@ -58,7 +58,7 @@ export const works: Work[] = [
     status: 'Completed',
     launched: '2021',
     logo: { src: '/works/ttc.svg', alt: 'TTC Cloud logo' },
-    thumbnail: { src: '/works/ttc.png', alt: 'TTC Cloud dashboard' },
+    thumbnail: { src: '/works/svg/ttc.svg', alt: 'TTC Cloud dashboard' },
     summary: 'Kazakhstan’s leading public cloud platform for enterprises.',
     paragraphs: [
       'TTC Cloud is the public cloud platform of Kazakhstan’s largest data center, Transtelecom (TTC). I contributed to the development of this platform, which offers a broad suite of cloud services for businesses and developers across Kazakhstan.',
@@ -91,7 +91,7 @@ export const works: Work[] = [
     period: '2020',
     status: 'Completed',
     logo: { src: '/works/ufe-logo.png', alt: 'UFE logo' },
-    thumbnail: { src: '/works/ufe.jpg', alt: 'UFE Online Learning Dashboard' },
+    thumbnail: { src: '/works/svg/ufe.svg', alt: 'UFE Online Learning Dashboard' },
     summary: 'Migrated one of Mongolia’s largest universities to AWS during COVID-19, ensuring reliable online learning for thousands of students.',
     paragraphs: [
       'In late January 2020, Mongolia announced a nationwide lockdown, closing all educational institutions within a week. The University of Finance and Economics (UFE) faced the urgent challenge of maintaining uninterrupted, high-quality education for its students.',
@@ -116,13 +116,46 @@ export const works: Work[] = [
     gallery: [{ src: '/works/ufe.jpg', alt: 'UFE Online Learning Dashboard' }],
   },
   {
+    id: 'mobilife_aws',
+    title: 'Mobilife AWS EC2 Architecture Runbook',
+    period: '2025',
+    status: 'Completed',
+    launched: '2025',
+    thumbnail: {
+      src: '/works/svg/mobilife.svg',
+      alt: 'Mobilife AWS architecture overview',
+    },
+    summary:
+      'Designed a production-grade AWS runbook for Mobilife focused on scalability, caching, cost optimization, secure deployments, and operational readiness.',
+    paragraphs: [
+      'This work focused on formalizing a new AWS EC2-based production architecture for Mobilife and turning it into a practical handover document that infrastructure and operations teams can run with confidence.',
+      'The target setup uses Route 53, ACM, an Application Load Balancer, Target Groups, an Auto Scaling Group, and EC2 Launch Templates to replace a more fragile single-instance model with a scalable, high-availability deployment pattern.',
+      'The runbook also emphasizes professional operating practices such as cache-aware application design, resource right-sizing to reduce monthly cost, secure secret delivery, repeatable Docker-based deployments, health checks, rollback procedures, and layered monitoring for infrastructure and application availability.',
+    ],
+    highlights: [
+      'Defined a Route 53 -> ALB -> Target Group -> Auto Scaling Group -> EC2 deployment architecture with TLS termination and API health checks.',
+      'Documented Launch Template bootstrap flow for Docker startup, ECR login, Secrets Manager environment loading, container replacement, and repeatable instance provisioning.',
+      'Included caching considerations for reducing database and application load, improving response times, and supporting more efficient scaling under peak traffic.',
+      'Outlined cost-optimization guidance through Auto Scaling, instance right-sizing, minimizing idle capacity, and reducing operational waste in the deployment flow.',
+      'Specified scaling policy recommendations using ASG target tracking with CPU-based scale-out behavior and safer deregistration for graceful traffic draining.',
+      'Added security and operational hardening guidance around TLS termination, controlled network access, secret handling, and SSM-based administration.',
+      'Added testing server observability guidance with Prometheus, Grafana, and Node Exporter for CPU, memory, disk, and network visibility.',
+      'Included production domain health-check strategy using Route 53 Health Checks and Prometheus Blackbox Exporter.',
+      'Specified AWS alerting patterns for ASG lifecycle events, service health degradation, and RDS CPU thresholds using CloudWatch and SNS.',
+      'Documented deployment, troubleshooting, and rollback steps so releases can be executed faster with lower operational risk.',
+    ],
+    stack:
+      'AWS Route 53, ACM, Application Load Balancer, EC2, Auto Scaling, Launch Templates, ECR, SSM, Secrets Manager, Docker, Prometheus, Grafana, Node Exporter, Blackbox Exporter, CloudWatch, SNS, RDS, S3',
+    links: [{ label: 'mobilife.mn', href: 'https://mobilife.mn' }],
+  },
+  {
     id: 'easysim',
     title: 'EasySim.mn',
     period: '2025–Present',
     status: 'Active',
     launched: '2025',
     logo: { src: '/works/easysim.svg', alt: 'EasySim logo' },
-    thumbnail: { src: '/works/easysim.png', alt: 'EasySim dashboard' },
+    thumbnail: { src: '/works/svg/easysim.svg', alt: 'EasySim dashboard' },
     summary: 'International eSIM services for travelers, powered by a Mongolian super app.',
     paragraphs: [
       'EasySim Data Provider LLC is a technology-driven company offering international eSIM services tailored for travelers.',
@@ -150,7 +183,7 @@ export const works: Work[] = [
     period: '2021–2025',
     status: 'Completed',
     logo: { src: '/works/medtech.svg', alt: 'MedTech Partner LLC logo' },
-    thumbnail: { src: '/works/medtech.png', alt: 'MedTech Partner LLC Dashboard' },
+    thumbnail: { src: '/works/svg/mrp.svg', alt: 'MedTech Partner LLC Dashboard' },
     summary: 'MedOrder ecosystem: admin & supplier portals with real-time order tracking and scalable microservices.',
     paragraphs: [
       'At MedTech Partner LLC, I take pride in my contributions to the pharmaceutical industry. I’ve developed innovative solutions to enhance medical supply management and streamline operations, leading to significant improvements in efficiency and sales.',
@@ -179,7 +212,7 @@ export const works: Work[] = [
     status: 'Launched & Ongoing',
     logo: { src: '/works/itrip.svg', alt: 'iTrip logo' },
     logoDark: { src: '/works/itrip-white.svg', alt: 'iTrip logo (dark)' },
-    thumbnail: { src: '/works/itrip.png', alt: 'iTrip dashboard' },
+    thumbnail: { src: '/works/svg/itrip.svg', alt: 'iTrip dashboard' },
     summary: 'Mongolia’s all-in-one travel booking platform.',
     paragraphs: [
       'iTrip is a comprehensive online travel platform developed and launched by our IT agency in close collaboration with a talented team of designers, engineers, and business stakeholders.',
