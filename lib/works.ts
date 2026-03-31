@@ -87,7 +87,7 @@ export const works: Work[] = [
   },
   {
     id: 'ufe_aws',
-    title: 'UFE Online Learning on AWS',
+    title: 'UFE Online Learning on AWS High Availability Architecture',
     period: '2020',
     status: 'Completed',
     logo: { src: '/works/ufe-logo.png', alt: 'UFE logo' },
