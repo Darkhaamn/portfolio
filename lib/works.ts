@@ -117,7 +117,7 @@ export const works: Work[] = [
   },
   {
     id: 'mobilife_aws',
-    title: 'Mobilife AWS EC2 Architecture Runbook',
+    title: 'Mobilife AWS High Availability Architecture',
     period: '2025',
     status: 'Completed',
     launched: '2025',
