@@ -18,14 +18,6 @@ export default function Page() {
       <section id="about" className="mb-12 sm:mb-16 scroll-mt-24">
         <div className="flex flex-col md:flex-row gap-6 sm:gap-8 items-start md:items-center justify-between">
           <div className="space-y-4 max-w-lg">
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 bg-zinc-100/70 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 bg-emerald-500" />
-              </span>
-              Available for new projects
-            </div>
-
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-medium text-zinc-950 dark:text-zinc-100 tracking-tight leading-[1.1]">
               Architecting digital <br />
               <span className="text-zinc-600 dark:text-zinc-500">infrastructure.</span>
