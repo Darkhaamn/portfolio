@@ -263,7 +263,7 @@ export default function Page() {
               </span>
             </div>
 
-            <div className="group flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 p-3 bg-white/70 dark:bg-zinc-900/20 border border-zinc-200/70 dark:border-zinc-800/60">
+            {/* <div className="group flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 p-3 bg-white/70 dark:bg-zinc-900/20 border border-zinc-200/70 dark:border-zinc-800/60">
               <div className="w-10 h-10 flex items-center justify-center">
                 <Image src="/aws-pro.png" alt="AWS_PRO" width={30} height={30} />
               </div>
@@ -295,7 +295,7 @@ export default function Page() {
               <span className="text-[10px] uppercase tracking-wider text-zinc-700 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 border border-zinc-200 dark:border-zinc-800">
                 SOON...
               </span>
-            </div>
+            </div> */}
           </div>
 
           {/* <div className="mt-10">
