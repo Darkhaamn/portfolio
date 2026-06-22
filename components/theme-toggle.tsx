@@ -16,7 +16,7 @@ function applyTheme(theme: Theme) {
   window.localStorage.setItem("theme", theme);
 }
 
-export function ThemeToggle() {
+export function ThemeToggle({ className }: { className?: string }) {
   const [theme, setTheme] = React.useState<Theme | null>(null);
 
   React.useEffect(() => {
@@ -37,8 +37,9 @@ export function ThemeToggle() {
     <Button
       type="button"
       onClick={toggle}
-      variant="outline"
+      variant="ghost"
       size="icon-sm"
+      className={className}
       aria-label={nextLabel}
       title={nextLabel}
     >

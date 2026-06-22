@@ -3,8 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 
 import { CursorFollower } from "@/components/cursor-follower";
+import { FloatingNav } from "@/components/floating-nav";
 import { SiteFooter } from "@/components/site-footer";
-import { SiteHeader } from "@/components/site-header";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import "./globals.css";
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     template: "%s | Darkhanbayar Erdenebat",
   },
   description:
-    "Personal portfolio of Darkhanbayar Erdenebat. Projects, experience, and ways to get in touch.",
+    "Cloud & DevOps engineer portfolio. AWS, Kubernetes, CI/CD, and infrastructure projects by Darkhanbayar Erdenebat.",
   icons: {
     apple: [{ url: "/favicons/apple-touch-icon.png", sizes: "180x180" }],
     icon: [
@@ -80,10 +80,12 @@ export const metadata: Metadata = {
   publisher: "Darkhanbayar Erdenebat",
   keywords: [
     "Darkhanbayar Erdenebat",
+    "cloud engineer",
+    "devops engineer",
+    "AWS",
+    "Kubernetes",
+    "CI/CD",
     "portfolio",
-    "software engineer",
-    "projects",
-    "web development",
   ],
 };
 
@@ -112,10 +114,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <CursorFollower />
-        <div className="scroll-smooth min-h-dvh text-zinc-700 dark:text-zinc-400 selection:bg-zinc-200 dark:selection:bg-zinc-700 selection:text-zinc-950 dark:selection:text-white pb-10">
-          <SiteHeader />
+        <div className="scroll-smooth min-h-dvh text-zinc-700 dark:text-zinc-400 selection:bg-zinc-200 dark:selection:bg-zinc-700 selection:text-zinc-950 dark:selection:text-white pb-28">
           {children}
           <SiteFooter />
+          <FloatingNav />
         </div>
         <Analytics />
         <SpeedInsights />
