@@ -140,7 +140,7 @@ export default function Page() {
       {/* Selected work */}
       <section className="mb-10">
         <div className="flex items-end justify-between gap-4 mb-3">
-          <h2 className="text-lg font-medium text-zinc-950 dark:text-zinc-100">Selected work</h2>
+          <h2 className="text-lg font-medium text-zinc-950 dark:text-zinc-100">Case Studies</h2>
           <Link
             href="/works"
             className="group flex items-center gap-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100 transition-colors shrink-0"
