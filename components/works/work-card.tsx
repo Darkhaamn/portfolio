@@ -16,7 +16,7 @@ function MetricRow({ work }: { work: Work }) {
     <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-zinc-100 dark:border-zinc-900 pt-3">
       {work.metrics.map((m) => (
         <div key={m.label} className="flex items-baseline gap-1.5">
-          <span className={cn("text-sm font-semibold tracking-tight", work.theme.accent)}>
+          <span className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
             {m.value}
           </span>
           <span className="text-[11px] text-zinc-500 leading-tight">{m.label}</span>

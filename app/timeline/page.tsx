@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 
 // Content below is sourced from `public/resume.pdf` (rendered as text).
 const professionalSummary =
-  "DevOps and Cloud Engineer with 7+ years across cloud infrastructure, platform engineering, and full-stack development. Built and launched Cloud.mn — Mongolia’s first public cloud platform — growing it to 300+ enterprise clients and expanding to Kazakhstan. Hands-on with AWS, Kubernetes, OpenStack, and CI/CD automation.";
+  "Cloud & DevOps Engineer with 7+ years building highly available cloud platforms, Kubernetes infrastructure, and CI/CD automation on AWS and OpenStack. Built and launched Cloud.mn — Mongolia’s first public cloud — growing it to 300+ enterprise clients and expanding to Kazakhstan.";
 
 const employment = [
   {
@@ -141,7 +141,7 @@ export default function TimelinePage() {
             <h1 className="text-2xl sm:text-3xl font-medium tracking-tight text-zinc-950 dark:text-zinc-100">
               Darkhanbayar Erdenebat
             </h1>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400 max-w-2xl leading-relaxed">
+            <p className="text-sm text-zinc-600 dark:text-zinc-400 leading-relaxed">
               {professionalSummary}
             </p>
           </div>

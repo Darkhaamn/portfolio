@@ -112,11 +112,11 @@ export default function Page() {
         <h1 className="text-3xl sm:text-4xl font-medium text-zinc-950 dark:text-zinc-100 tracking-tight leading-[1.1]">
           Darkhanbayar Erdenebat
         </h1>
-        <p className="mt-4 text-base text-zinc-700 dark:text-zinc-300 leading-relaxed max-w-2xl">
+        <p className="mt-4 text-base text-zinc-700 dark:text-zinc-300 leading-relaxed">
           Cloud &amp; DevOps Engineer with 7+ years designing highly available cloud platforms,
-          Kubernetes infrastructure, CI/CD pipelines, and automated operations on AWS and OpenStack.
+          Kubernetes infrastructure, CI/CD pipelines, and automated operations on AWS.
         </p>
-        <p className="mt-2 text-base text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl">
+        <p className="mt-2 text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
           Built and launched{" "}
           <span className="font-medium text-zinc-900 dark:text-zinc-100">Cloud.mn</span>, Mongolia’s
           first public cloud, serving 300+ enterprise customers.
