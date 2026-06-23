@@ -8,6 +8,7 @@ import {
   IconArrowLeft,
   IconBriefcase,
   IconCertificate,
+  IconExternalLink,
   IconFileText,
   IconSchool,
   IconStack2,
@@ -105,11 +106,13 @@ const certifications = [
     src: "/kubernetes.svg",
     title: "CKA: Certified Kubernetes Administrator",
     meta: "The Linux Foundation · Mar 2022",
+    href: "https://www.credly.com/badges/e2a30bdf-bfdc-4817-9d2d-588b294a3c7a",
   },
   {
     src: "/aws.svg",
     title: "AWS Certified Developer — Associate",
     meta: "Amazon Web Services · May 2020",
+    href: "https://cp.certmetrics.com/amazon/en/public/verify/credential/PX0DJTMC3EEQ123V",
   },
 ] as const;
 
@@ -235,9 +238,12 @@ export default function TimelinePage() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {certifications.map((cert) => (
-              <div
+              <a
                 key={cert.title}
-                className="flex items-center gap-4 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950"
+                href={cert.href}
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center gap-4 p-4 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition-colors hover:border-zinc-300 dark:hover:border-zinc-700"
               >
                 <div className="flex items-center justify-center size-11 rounded-lg bg-white border border-zinc-200 shrink-0">
                   <Image src={cert.src} alt={cert.title} width={26} height={26} className="object-contain" />
@@ -246,7 +252,11 @@ export default function TimelinePage() {
                   <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-200">{cert.title}</h3>
                   <p className="text-xs text-zinc-500">{cert.meta}</p>
                 </div>
-              </div>
+                <span className="flex items-center gap-1 text-[11px] text-zinc-400 transition-colors group-hover:text-zinc-600 dark:group-hover:text-zinc-300 shrink-0">
+                  Verify
+                  <IconExternalLink className="size-3.5" />
+                </span>
+              </a>
             ))}
           </div>
         </section>

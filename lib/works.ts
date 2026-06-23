@@ -10,6 +10,13 @@ export type WorkMetric = {
   label: string;
 };
 
+export type WorkArchNode = { label: string; sub?: string };
+
+export type WorkArchitecture = {
+  caption?: string;
+  tiers: { label?: string; nodes: WorkArchNode[] }[];
+};
+
 export type WorkTheme = {
   accent: string;
   accentMuted: string;
@@ -28,6 +35,7 @@ export type Work = {
   thumbnail: { src: string; alt: string; objectPosition?: string };
   summary: string;
   metrics?: WorkMetric[];
+  architecture?: WorkArchitecture;
   paragraphs: string[];
   highlights?: string[];
   stack?: string;
@@ -58,6 +66,23 @@ export const works: Work[] = [
       { value: '99.95%', label: 'uptime' },
       { value: '90%', label: 'less manual provisioning' },
     ],
+    architecture: {
+      caption: 'Self-service portal on an OpenStack + KVM private cloud',
+      tiers: [
+        { nodes: [{ label: 'Dashboard + API', sub: 'React · self-service portal' }] },
+        { nodes: [{ label: 'Backend services', sub: 'Python · Go · billing · auth' }] },
+        {
+          label: 'OpenStack APIs',
+          nodes: [
+            { label: 'Compute' },
+            { label: 'Network' },
+            { label: 'Identity' },
+            { label: 'Storage' },
+          ],
+        },
+        { nodes: [{ label: 'KVM hypervisors', sub: 'Ansible-provisioned hosts' }] },
+      ],
+    },
     paragraphs: [
       "Cloud.mn is Mongolia's first public cloud service, enabling users to register and create virtual machines, disks, networks, and other resources on demand — essentially a smaller-scale AWS for Mongolia.",
       'The goal was to establish a public cloud where none existed before. Our company built the first solution, and I was involved from day one — contributing across frontend, backend, DevOps, and integrations, then leading a team of 10+ engineers to scale it.',
@@ -140,6 +165,21 @@ export const works: Work[] = [
       { value: 'Zero', label: 'downtime' },
       { value: 'AWS', label: 'official case study' },
     ],
+    architecture: {
+      caption: 'AWS high-availability architecture, migrated in 10 days',
+      tiers: [
+        { nodes: [{ label: 'Route 53', sub: 'DNS' }] },
+        {
+          nodes: [
+            { label: 'CloudFront', sub: 'CDN' },
+            { label: 'S3', sub: 'static assets' },
+          ],
+        },
+        { nodes: [{ label: 'Elastic Load Balancer', sub: 'traffic distribution' }] },
+        { nodes: [{ label: 'Auto Scaling — EC2', sub: 'web / app tier' }] },
+        { nodes: [{ label: 'RDS', sub: 'MySQL database' }] },
+      ],
+    },
     paragraphs: [
       'In early 2020, Mongolia announced a nationwide lockdown, closing all educational institutions within a week. The University of Finance and Economics (UFE) faced the urgent challenge of keeping education running for thousands of students.',
       'UFE made the critical decision to migrate its entire online learning management system to AWS, ensuring accessibility and reliability for thousands of students and staff.',
@@ -170,7 +210,7 @@ export const works: Work[] = [
     status: 'Active',
     launched: '2025',
     thumbnail: {
-      src: '/works/mobilife.webp',
+      src: '/works/mobilife.png',
       alt: 'Mobilife AWS architecture overview',
     },
     theme: {
@@ -186,6 +226,25 @@ export const works: Work[] = [
       { value: 'Multi-AZ', label: 'high availability' },
       { value: 'Zero-downtime', label: 'rollouts' },
     ],
+    architecture: {
+      caption: 'Route 53 → CloudFront → ALB → Auto Scaling → EC2',
+      tiers: [
+        { nodes: [{ label: 'Route 53', sub: 'DNS + health checks' }] },
+        { nodes: [{ label: 'CloudFront', sub: 'CDN / edge caching' }] },
+        { nodes: [{ label: 'Application Load Balancer', sub: 'TLS termination + routing' }] },
+        { nodes: [{ label: 'Auto Scaling Group', sub: 'CPU target tracking' }] },
+        { nodes: [{ label: 'EC2', sub: 'Launch Template · Docker' }] },
+        {
+          label: 'Backing services',
+          nodes: [
+            { label: 'ECR', sub: 'container images' },
+            { label: 'Redis', sub: 'in-memory cache' },
+            { label: 'RDS — MySQL', sub: 'Multi-AZ' },
+            { label: 'SSM', sub: 'params + secure access' },
+          ],
+        },
+      ],
+    },
     paragraphs: [
       'This work formalized a new AWS EC2-based production architecture for Mobilife and turned it into a practical handover document that infrastructure and operations teams can run with confidence.',
       'The setup uses Route 53, ACM, an Application Load Balancer, Target Groups, an Auto Scaling Group, and EC2 Launch Templates — replacing a fragile single-instance model with a scalable, high-availability deployment pattern.',

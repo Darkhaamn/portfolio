@@ -1,7 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import { IconArrowUpRight, IconCertificate, IconMail, IconUsersGroup } from "@tabler/icons-react";
+import {
+  IconArrowUpRight,
+  IconCertificate,
+  IconExternalLink,
+  IconMail,
+  IconUsersGroup,
+} from "@tabler/icons-react";
 
 import { siteLinks } from "@/lib/site-links";
 import { getWorkById } from "@/lib/works";
@@ -9,22 +15,25 @@ import { getWorkById } from "@/lib/works";
 const techTags = [
   "AWS",
   "Kubernetes",
-  "Terraform",
   "Docker",
-  "Ansible",
   "CI/CD",
-  "Golang",
   "OpenStack",
   "Prometheus",
   "Grafana",
   "Nginx",
   "Linux",
+  "Golang",
+  "Python",
+  "Node.js",
+  "React",
+  "Next.js",
+  "PostgreSQL",
 ] as const;
 
 const featuredWorks = [
-  { id: "cloudmn", metric: "300+", sub: "enterprise clients · 99.95% uptime" },
-  { id: "ufe_aws", metric: "10 days", sub: "zero-downtime AWS migration · official case study" },
-  { id: "mobilife_aws", metric: "30%", sub: "fewer deploy incidents · Multi-AZ AWS HA" },
+  { id: "cloudmn", title: "Cloud.mn", metric: "300+", sub: "enterprise clients" },
+  { id: "ufe_aws", title: "UFE on AWS", metric: "10-day", sub: "zero-downtime migration" },
+  { id: "mobilife_aws", title: "Mobilife AWS HA", metric: "30%", sub: "fewer deploy incidents" },
 ] as const;
 
 const timeline: {
@@ -59,11 +68,13 @@ const certifications = [
     src: "/aws.svg",
     title: "AWS Certified Developer",
     meta: "Associate · May 2020",
+    href: "https://cp.certmetrics.com/amazon/en/public/verify/credential/PX0DJTMC3EEQ123V",
   },
   {
     src: "/kubernetes.svg",
     title: "CKA: Kubernetes Administrator",
     meta: "Linux Foundation · Mar 2022",
+    href: "https://www.credly.com/badges/e2a30bdf-bfdc-4817-9d2d-588b294a3c7a",
   },
 ] as const;
 
@@ -139,7 +150,7 @@ export default function Page() {
           </Link>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {featuredWorks.map(({ id, metric, sub }) => {
+          {featuredWorks.map(({ id, title, metric, sub }) => {
             const work = getWorkById(id);
             if (!work) return null;
             return (
@@ -149,20 +160,20 @@ export default function Page() {
                 className="group flex flex-col overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition-colors hover:border-zinc-300 dark:hover:border-zinc-700"
               >
                 <div className={`h-1 w-full ${work.theme.accentBar}`} />
-                <div className="flex flex-1 flex-col p-4">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">
-                    {work.theme.label}
-                  </span>
-                  <div className="mt-1 flex items-start justify-between gap-2">
-                    <h3 className="line-clamp-2 text-sm font-medium text-zinc-950 dark:text-zinc-100">
-                      {work.title}
-                    </h3>
+                <div className="flex flex-1 flex-col p-5">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">
+                      {work.theme.label}
+                    </span>
                     <IconArrowUpRight className="size-4 shrink-0 text-zinc-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </div>
-                  <div className="mt-auto pt-4 text-2xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-100">
-                    {metric}
-                  </div>
-                  <p className="mt-0.5 text-xs text-zinc-500 leading-snug">{sub}</p>
+                  <h3 className="mt-2 truncate text-base font-medium text-zinc-950 dark:text-zinc-100">
+                    {title}
+                  </h3>
+                  <p className="mt-1 text-sm text-zinc-500">
+                    <span className="font-semibold text-zinc-900 dark:text-zinc-100">{metric}</span>{" "}
+                    {sub}
+                  </p>
                 </div>
               </Link>
             );
@@ -288,9 +299,12 @@ export default function Page() {
             </h2>
             <div className="space-y-3">
               {certifications.map((cert) => (
-                <div
+                <a
                   key={cert.title}
-                  className="flex items-center gap-3 p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950"
+                  href={cert.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group flex items-center gap-3 p-3 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition-colors hover:border-zinc-300 dark:hover:border-zinc-700"
                 >
                   <div className="flex items-center justify-center size-9 rounded-lg bg-white border border-zinc-200 shrink-0">
                     <Image src={cert.src} alt={cert.title} width={22} height={22} className="object-contain" />
@@ -299,7 +313,8 @@ export default function Page() {
                     <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-200 truncate">{cert.title}</h3>
                     <p className="text-xs text-zinc-500">{cert.meta}</p>
                   </div>
-                </div>
+                  <IconExternalLink className="size-4 shrink-0 text-zinc-400 transition-colors group-hover:text-zinc-600 dark:group-hover:text-zinc-300" />
+                </a>
               ))}
             </div>
           </section>

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import type { Work } from "@/lib/works";
 import {
   IconArrowLeft,
+  IconChevronDown,
   IconExternalLink,
   IconPhoto,
 } from "@tabler/icons-react";
@@ -27,6 +28,53 @@ function MetricBand({ work }: WorkDetailProps) {
         </div>
       ))}
     </div>
+  );
+}
+
+function WorkArchitecture({ work }: WorkDetailProps) {
+  const arch = work.architecture;
+  if (!arch?.tiers?.length) return null;
+
+  return (
+    <section className="mt-12">
+      <h2 className="text-sm font-medium text-zinc-950 dark:text-zinc-100">Architecture</h2>
+      {arch.caption ? (
+        <p className="mt-1 mb-5 text-xs font-mono text-zinc-500">{arch.caption}</p>
+      ) : (
+        <div className="mb-5" />
+      )}
+      <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-white/[0.02] p-6 sm:p-8">
+        <div className="flex flex-col items-center">
+          {arch.tiers.map((tier, i) => (
+            <div key={tier.label ?? i} className="flex w-full flex-col items-center">
+              {tier.label ? (
+                <span className="mb-2 text-[10px] font-mono uppercase tracking-widest text-zinc-400">
+                  {tier.label}
+                </span>
+              ) : null}
+              <div className="flex w-full flex-wrap justify-center gap-3">
+                {tier.nodes.map((node) => (
+                  <div
+                    key={node.label}
+                    className="min-w-[160px] max-w-[280px] flex-1 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2.5 text-center shadow-sm"
+                  >
+                    <div className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                      {node.label}
+                    </div>
+                    {node.sub ? (
+                      <div className="mt-0.5 text-[11px] font-mono text-zinc-500">{node.sub}</div>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+              {i < arch.tiers.length - 1 ? (
+                <IconChevronDown className={cn("my-2 size-4", work.theme.accent)} aria-hidden />
+              ) : null}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -175,6 +223,9 @@ export function WorkDetail({ work }: WorkDetailProps) {
       <div className="mt-6">
         <MetricBand work={work} />
       </div>
+
+      {/* Architecture diagram */}
+      <WorkArchitecture work={work} />
 
       {/* Body: narrative + sticky meta */}
       <div className="mt-12 grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-10">
