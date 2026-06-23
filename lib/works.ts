@@ -217,7 +217,7 @@ export const works: Work[] = [
       accent: 'text-emerald-500',
       accentMuted: 'bg-emerald-500/10 border-emerald-500/20',
       accentBar: 'bg-emerald-500',
-      label: 'AWS Runbook',
+      label: 'AWS Operations',
     },
     summary:
       'Designed a production-grade AWS architecture and operational runbook for Mobilife — scalable, observable, and safe to deploy.',

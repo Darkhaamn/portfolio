@@ -4,36 +4,35 @@ import Link from "next/link";
 import {
   IconArrowUpRight,
   IconCertificate,
+  IconCheck,
   IconExternalLink,
   IconMail,
+  IconTrophy,
   IconUsersGroup,
 } from "@tabler/icons-react";
 
 import { siteLinks } from "@/lib/site-links";
 import { getWorkById } from "@/lib/works";
 
-const techTags = [
-  "AWS",
-  "Kubernetes",
-  "Docker",
-  "CI/CD",
-  "OpenStack",
-  "Prometheus",
-  "Grafana",
-  "Nginx",
-  "Linux",
-  "Golang",
-  "Python",
-  "Node.js",
-  "React",
-  "Next.js",
-  "PostgreSQL",
+const techGroups = [
+  { label: "Cloud & Infrastructure", items: ["AWS", "OpenStack", "Kubernetes", "Docker", "Linux", "Nginx"] },
+  { label: "CI/CD & Observability", items: ["GitHub Actions", "GitLab CI", "Prometheus", "Grafana"] },
+  { label: "Languages & Data", items: ["Golang", "Python", "Node.js", "React", "Next.js", "PostgreSQL", "Redis"] },
+  { label: "Security", items: ["OWASP", "Snyk"] },
+] as const;
+
+const achievements = [
+  "Built Mongolia’s first public cloud — Cloud.mn",
+  "Served 300+ enterprise customers",
+  "Maintained 99.95% platform uptime",
+  "Reduced manual provisioning by 90%",
+  "Led zero-downtime AWS migrations",
 ] as const;
 
 const featuredWorks = [
   { id: "cloudmn", title: "Cloud.mn", metric: "300+", sub: "enterprise clients" },
-  { id: "ufe_aws", title: "UFE on AWS", metric: "10-day", sub: "zero-downtime migration" },
-  { id: "mobilife_aws", title: "Mobilife AWS HA", metric: "30%", sub: "fewer deploy incidents" },
+  { id: "ufe_aws", title: "LMS Migration to AWS", metric: "10-day", sub: "zero-downtime migration" },
+  { id: "mobilife_aws", title: "Highly Available AWS Platform", metric: "30%", sub: "fewer deploy incidents" },
 ] as const;
 
 const timeline: {
@@ -41,8 +40,15 @@ const timeline: {
   title: string;
   company: string;
   active?: boolean;
+  note?: string;
 }[] = [
-  { range: "OCT 2025 — JUN 2026", title: "Senior DevOps / Cloud Engineer", company: "Tech Partners", active: true },
+  {
+    range: "OCT 2025 — JUN 2026",
+    title: "Senior DevOps / Cloud Engineer",
+    company: "Tech Partners",
+    active: true,
+    note: "Managing AWS infrastructure, CI/CD pipelines, Kubernetes workloads, monitoring, and production reliability.",
+  },
   { range: "APR 2022 — MAR 2024", title: "Chief Technology Officer", company: "Fibo Cloud" },
   { range: "OCT 2021 — APR 2022", title: "Senior Software Engineer / Team Lead", company: "Fibo Cloud" },
   { range: "JUN 2021 — FEB 2025", title: "Senior Engineer (Part-time)", company: "Tech Partners" },
@@ -53,7 +59,6 @@ const community = {
   name: "AWS Community Mongolia",
   role: "Organizer",
   location: "Ulaanbaatar",
-  tagline: "Building Mongolia’s Cloud Future",
   href: "https://www.aws.mn/",
   stats: [
     { value: "1,200+", label: "members" },
@@ -95,10 +100,10 @@ export default function Page() {
             />
           </div>
           <div>
-            <p className="text-xs font-mono uppercase tracking-widest text-zinc-500">
+            <p className="text-xs font-mono uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
               Cloud &amp; DevOps Engineer
             </p>
-            <p className="mt-1 text-xs text-emerald-600 dark:text-emerald-400">
+            <p className="mt-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
               ● Open to remote &amp; relocation · Fairfield, Iowa
             </p>
           </div>
@@ -107,10 +112,14 @@ export default function Page() {
         <h1 className="text-3xl sm:text-4xl font-medium text-zinc-950 dark:text-zinc-100 tracking-tight leading-[1.1]">
           Darkhanbayar Erdenebat
         </h1>
-        <p className="mt-3 text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl">
-          DevOps / Cloud engineer with 7+ years across full-stack development, cloud infrastructure,
-          and platform engineering. Built and launched Cloud.mn — Mongolia&apos;s first public cloud
-          platform.
+        <p className="mt-4 text-base text-zinc-700 dark:text-zinc-300 leading-relaxed max-w-2xl">
+          Cloud &amp; DevOps Engineer with 7+ years designing highly available cloud platforms,
+          Kubernetes infrastructure, CI/CD pipelines, and automated operations on AWS and OpenStack.
+        </p>
+        <p className="mt-2 text-base text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-2xl">
+          Built and launched{" "}
+          <span className="font-medium text-zinc-900 dark:text-zinc-100">Cloud.mn</span>, Mongolia’s
+          first public cloud, serving 300+ enterprise customers.
         </p>
 
         <div className="mt-6 flex flex-wrap items-center gap-3">
@@ -137,7 +146,7 @@ export default function Page() {
         </div>
       </section>
 
-      {/* Selected work */}
+      {/* Case Studies */}
       <section className="mb-10">
         <div className="flex items-end justify-between gap-4 mb-3">
           <h2 className="text-lg font-medium text-zinc-950 dark:text-zinc-100">Case Studies</h2>
@@ -162,7 +171,7 @@ export default function Page() {
                 <div className={`h-1 w-full ${work.theme.accentBar}`} />
                 <div className="flex flex-1 flex-col p-5">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-500">
+                    <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
                       {work.theme.label}
                     </span>
                     <IconArrowUpRight className="size-4 shrink-0 text-zinc-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
@@ -170,7 +179,7 @@ export default function Page() {
                   <h3 className="mt-2 truncate text-base font-medium text-zinc-950 dark:text-zinc-100">
                     {title}
                   </h3>
-                  <p className="mt-1 text-sm text-zinc-500">
+                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
                     <span className="font-semibold text-zinc-900 dark:text-zinc-100">{metric}</span>{" "}
                     {sub}
                   </p>
@@ -183,19 +192,42 @@ export default function Page() {
 
       {/* Tech stack */}
       <section className="mb-10">
-        <h2 className="text-lg font-medium text-zinc-950 dark:text-zinc-100 mb-3">
-          Tech stack
-        </h2>
-        <div className="flex flex-wrap gap-2">
-          {techTags.map((tag) => (
-            <span
-              key={tag}
-              className="px-2.5 py-1 text-xs font-mono rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-950"
-            >
-              {tag}
-            </span>
+        <h2 className="text-lg font-medium text-zinc-950 dark:text-zinc-100 mb-4">Tech stack</h2>
+        <div className="space-y-4">
+          {techGroups.map((group) => (
+            <div key={group.label} className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-2 sm:gap-4">
+              <p className="text-[11px] font-mono uppercase tracking-widest text-zinc-500 dark:text-zinc-400 sm:pt-1.5">
+                {group.label}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                {group.items.map((tag) => (
+                  <span
+                    key={tag}
+                    className="px-2.5 py-1 text-xs font-mono rounded-full border border-zinc-200 dark:border-zinc-800 text-zinc-700 dark:text-zinc-300 bg-white dark:bg-zinc-950"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
+      </section>
+
+      {/* Key Cloud Achievements */}
+      <section className="mb-10">
+        <h2 className="text-lg font-medium text-zinc-950 dark:text-zinc-100 mb-3 flex items-center gap-2">
+          <IconTrophy className="size-5 text-zinc-500" aria-hidden />
+          Key Cloud Achievements
+        </h2>
+        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5">
+          {achievements.map((item) => (
+            <li key={item} className="flex items-start gap-2.5 text-sm text-zinc-700 dark:text-zinc-300">
+              <IconCheck className="mt-0.5 size-4 shrink-0 text-emerald-500" aria-hidden />
+              <span>{item}</span>
+            </li>
+          ))}
+        </ul>
       </section>
 
       {/* Career + Community/Certs */}
@@ -216,24 +248,29 @@ export default function Page() {
             {timeline.map((item) => (
               <div
                 key={`${item.range}-${item.title}`}
-                className="flex items-center justify-between gap-4 px-4 py-2.5"
+                className="flex items-start justify-between gap-4 px-4 py-3"
               >
-                <div className="flex items-center gap-3 min-w-0">
+                <div className="flex items-start gap-3 min-w-0">
                   <span
                     className={
                       item.active
-                        ? "size-2 shrink-0 rounded-full bg-emerald-500"
-                        : "size-2 shrink-0 rounded-full border border-zinc-300 dark:border-zinc-700"
+                        ? "mt-1.5 size-2 shrink-0 rounded-full bg-emerald-500"
+                        : "mt-1.5 size-2 shrink-0 rounded-full border border-zinc-300 dark:border-zinc-700"
                     }
                   />
                   <div className="min-w-0">
-                    <h3 className="truncate text-sm font-medium text-zinc-900 dark:text-zinc-200">
+                    <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                       {item.title}
                     </h3>
-                    <p className="text-xs text-zinc-500">{item.company}</p>
+                    <p className="text-xs text-zinc-600 dark:text-zinc-400">{item.company}</p>
+                    {item.note ? (
+                      <p className="mt-1.5 text-xs text-zinc-600 dark:text-zinc-400 leading-relaxed">
+                        {item.note}
+                      </p>
+                    ) : null}
                   </div>
                 </div>
-                <span className="shrink-0 text-[10px] font-mono uppercase tracking-wider text-zinc-500">
+                <span className="mt-0.5 shrink-0 text-[11px] font-mono uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
                   {item.range}
                 </span>
               </div>
@@ -256,16 +293,16 @@ export default function Page() {
             >
               <div className="h-1 w-full bg-[#FF9900]" />
               <div className="p-4">
-                <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-zinc-200 bg-white">
-                      <Image src="/aws.svg" alt="AWS" width={24} height={24} className="object-contain" />
+                    <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-zinc-200 bg-white">
+                      <Image src="/aws.svg" alt="AWS" width={22} height={22} className="object-contain" />
                     </div>
                     <div className="min-w-0">
                       <h3 className="text-sm font-medium text-zinc-950 dark:text-zinc-100 truncate">
                         {community.name}
                       </h3>
-                      <p className="text-xs text-zinc-500 truncate">
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
                         <span className="text-amber-600 dark:text-amber-400">{community.role}</span> ·{" "}
                         {community.location}
                       </p>
@@ -274,17 +311,13 @@ export default function Page() {
                   <IconArrowUpRight className="size-4 shrink-0 text-zinc-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </div>
 
-                <p className="mt-3 text-sm font-medium text-zinc-800 dark:text-zinc-200">
-                  {community.tagline}
-                </p>
-
-                <div className="mt-3 grid grid-cols-4 gap-2 border-t border-zinc-100 dark:border-zinc-900 pt-3">
+                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 border-t border-zinc-100 dark:border-zinc-900 pt-3">
                   {community.stats.map((s) => (
-                    <div key={s.label}>
-                      <div className="text-base font-semibold tracking-tight text-amber-600 dark:text-amber-400">
+                    <div key={s.label} className="flex items-baseline gap-1">
+                      <span className="text-sm font-semibold text-amber-600 dark:text-amber-400">
                         {s.value}
-                      </div>
-                      <div className="text-[10px] text-zinc-500">{s.label}</div>
+                      </span>
+                      <span className="text-[11px] text-zinc-500 dark:text-zinc-400">{s.label}</span>
                     </div>
                   ))}
                 </div>
@@ -311,7 +344,7 @@ export default function Page() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-200 truncate">{cert.title}</h3>
-                    <p className="text-xs text-zinc-500">{cert.meta}</p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">{cert.meta}</p>
                   </div>
                   <IconExternalLink className="size-4 shrink-0 text-zinc-400 transition-colors group-hover:text-zinc-600 dark:group-hover:text-zinc-300" />
                 </a>
