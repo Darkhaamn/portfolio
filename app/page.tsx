@@ -4,11 +4,9 @@ import Link from "next/link";
 import {
   IconArrowUpRight,
   IconCertificate,
-  IconCheck,
   IconExternalLink,
   IconMail,
-  IconTrophy,
-  IconUsersGroup,
+  IconUsersGroup
 } from "@tabler/icons-react";
 
 import { siteLinks } from "@/lib/site-links";
@@ -30,7 +28,7 @@ const achievements = [
 ] as const;
 
 const featuredWorks = [
-  { id: "cloudmn", title: "Cloud.mn", metric: "300+", sub: "enterprise clients" },
+  { id: "cloudmn", title: "Mongolia’s First Public Cloud", metric: "300+", sub: "enterprise clients" },
   { id: "ufe_aws", title: "LMS Migration to AWS", metric: "10-day", sub: "zero-downtime migration" },
   { id: "mobilife_aws", title: "Highly Available AWS Platform", metric: "30%", sub: "fewer deploy incidents" },
 ] as const;
@@ -42,18 +40,18 @@ const timeline: {
   active?: boolean;
   note?: string;
 }[] = [
-  {
-    range: "OCT 2025 — JUN 2026",
-    title: "Senior DevOps / Cloud Engineer",
-    company: "Tech Partners",
-    active: true,
-    note: "Managing AWS infrastructure, CI/CD pipelines, Kubernetes workloads, monitoring, and production reliability.",
-  },
-  { range: "APR 2022 — MAR 2024", title: "Chief Technology Officer", company: "Fibo Cloud" },
-  { range: "OCT 2021 — APR 2022", title: "Senior Software Engineer / Team Lead", company: "Fibo Cloud" },
-  { range: "JUN 2021 — FEB 2025", title: "Senior Engineer (Part-time)", company: "Tech Partners" },
-  { range: "MAR 2019 — OCT 2021", title: "Frontend Engineer", company: "Fibo Cloud" },
-];
+    {
+      range: "OCT 2025 — JUN 2026",
+      title: "Senior DevOps / Cloud Engineer",
+      company: "Tech Partners",
+      active: true,
+      note: "Managing AWS infrastructure, CI/CD pipelines, Kubernetes workloads, monitoring, and production reliability.",
+    },
+    { range: "APR 2022 — MAR 2024", title: "Chief Technology Officer", company: "Fibo Cloud" },
+    { range: "OCT 2021 — APR 2022", title: "Senior Software Engineer / Team Lead", company: "Fibo Cloud" },
+    { range: "JUN 2021 — FEB 2025", title: "Senior Engineer (Part-time)", company: "Tech Partners" },
+    { range: "MAR 2019 — OCT 2021", title: "Frontend Engineer", company: "Fibo Cloud" },
+  ];
 
 const community = {
   name: "AWS Community Mongolia",
@@ -172,9 +170,8 @@ export default function Page() {
               <Link
                 key={id}
                 href={`/works/${id}`}
-                className="group flex flex-col overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition-colors hover:border-zinc-300 dark:hover:border-zinc-700"
+                className="group flex flex-col rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition-colors hover:border-zinc-300 dark:hover:border-zinc-700"
               >
-                <div className={`h-1 w-full ${work.theme.accentBar}`} />
                 <div className="flex flex-1 flex-col p-5">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-[11px] font-mono uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
@@ -182,11 +179,11 @@ export default function Page() {
                     </span>
                     <IconArrowUpRight className="size-4 shrink-0 text-zinc-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </div>
-                  <h3 className="mt-2 truncate text-base font-medium text-zinc-950 dark:text-zinc-100">
+                  <h3 className="mt-3 truncate text-base font-medium text-zinc-950 dark:text-zinc-100">
                     {title}
                   </h3>
-                  <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-                    <span className="font-semibold text-zinc-900 dark:text-zinc-100">{metric}</span>{" "}
+                  <p className="mt-2 flex items-baseline gap-1.5 text-sm text-zinc-600 dark:text-zinc-400">
+                    <span className="whitespace-nowrap text-xl font-semibold tracking-tight text-amber-600 dark:text-amber-500">{metric}</span>
                     {sub}
                   </p>
                 </div>
@@ -218,22 +215,6 @@ export default function Page() {
             </div>
           ))}
         </div>
-      </section>
-
-      {/* Key Cloud Achievements */}
-      <section className="mb-10">
-        <h2 className="text-lg font-medium text-zinc-950 dark:text-zinc-100 mb-3 flex items-center gap-2">
-          <IconTrophy className="size-5 text-zinc-500" aria-hidden />
-          Key Cloud Achievements
-        </h2>
-        <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-3 rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-5">
-          {achievements.map((item) => (
-            <li key={item} className="flex items-start gap-2.5 text-sm text-zinc-700 dark:text-zinc-300">
-              <IconCheck className="mt-0.5 size-4 shrink-0 text-emerald-500" aria-hidden />
-              <span>{item}</span>
-            </li>
-          ))}
-        </ul>
       </section>
 
       {/* Career + Community/Certs */}
