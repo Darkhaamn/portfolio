@@ -70,16 +70,22 @@ const community = {
 
 const certifications = [
   {
-    src: "/aws.svg",
-    title: "AWS Certified Developer",
-    meta: "Associate · May 2020",
-    href: "https://cp.certmetrics.com/amazon/en/public/verify/credential/PX0DJTMC3EEQ123V",
+    src: "/solution-architect-pro.webp",
+    title: "AWS Certified Solutions Architect - Professional",
+    meta: "Professional · Jun 2026",
+    href: "https://www.credly.com/earner/earned/badge/072e1564-888f-4be4-bc17-bb8cc1c598f2",
   },
   {
-    src: "/kubernetes.svg",
-    title: "CKA: Kubernetes Administrator",
+    src: "/cka.png",
+    title: "CKA: Certified Kubernetes Administrator",
     meta: "Linux Foundation · Mar 2022",
-    href: "https://www.credly.com/badges/e2a30bdf-bfdc-4817-9d2d-588b294a3c7a",
+    href: "https://www.credly.com/earner/earned/badge/7ae57de5-a301-4b67-98b5-510d8338a019",
+  },
+  {
+    src: "/dev-associate.webp",
+    title: "AWS Certified Developer - Associate",
+    meta: "Associate · May 2020",
+    href: "https://www.credly.com/badges/7f3721d2-2353-445f-a596-3e9d2e2df68f/public_url",
   },
 ] as const;
 
