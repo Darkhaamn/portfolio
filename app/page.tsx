@@ -9,8 +9,6 @@ import {
   IconUsersGroup
 } from "@tabler/icons-react";
 
-import { siteLinks } from "@/lib/site-links";
-import { getWorkById } from "@/lib/works";
 import {
   certifications,
   community,
@@ -19,6 +17,8 @@ import {
   identity,
   skillGroups,
 } from "@/lib/profile";
+import { siteLinks } from "@/lib/site-links";
+import { getWorkById } from "@/lib/works";
 
 const featuredWorks = [
   { id: "cloudmn", title: "Mongolia’s First Public Cloud", metric: "300+", sub: "enterprise clients" },
@@ -47,7 +47,7 @@ export default function Page() {
               {identity.tagline}
             </p>
             <p className="mt-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-              ● {identity.availability} · {identity.location}
+              ● {identity.availability}
             </p>
           </div>
         </div>
