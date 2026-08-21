@@ -129,7 +129,7 @@ export function CloudArchitecture({ work }: Props) {
                   ) : null}
 
                   {row.perZone ? (
-                    <div className="relative">
+                    <div>
                       <div
                         className="grid gap-3"
                         style={{ gridTemplateColumns: `repeat(${zoneCount}, minmax(0,1fr))` }}
@@ -147,14 +147,16 @@ export function CloudArchitecture({ work }: Props) {
                       {row.replicated && zoneCount === 2 ? (
                         <div
                           className={cn(
-                            "pointer-events-none absolute inset-x-0 top-1/2 flex -translate-y-1/2 items-center justify-center",
+                            "mt-2 flex items-center justify-center gap-2",
                             work.theme.accent,
                           )}
                           aria-hidden
                         >
-                          <span className="rounded-full bg-white px-2 font-mono text-[9px] uppercase tracking-widest dark:bg-zinc-900">
+                          <span className="h-px w-10 bg-current" style={{ opacity: 0.45 }} />
+                          <span className="font-mono text-[9px] uppercase tracking-widest">
                             ↔ {row.replicated}
                           </span>
+                          <span className="h-px w-10 bg-current" style={{ opacity: 0.45 }} />
                         </div>
                       ) : null}
                     </div>
