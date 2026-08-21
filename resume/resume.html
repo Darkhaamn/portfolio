@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Darkhanbayar Erdenebat — DevOps / AWS Cloud Engineer</title>
+<style>
+  @page { size: letter; margin: 0.5in 0.55in; }
+
+  :root {
+    --ink: #1a1a1a;
+    --muted: #4a4a4a;
+    --rule: #0f3d4a;
+    --accent: #0f3d4a;
+    --fill: #b3261e;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
+    font-size: 9.8pt;
+    line-height: 1.38;
+    color: var(--ink);
+    margin: 0;
+    padding: 0.5in 0.55in;
+    max-width: 8.5in;
+  }
+
+  @media print { body { padding: 0; } }
+
+  /* ---------- header ---------- */
+  header { text-align: center; margin-bottom: 18px; }
+
+  h1 {
+    font-size: 21pt;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    color: var(--accent);
+    margin: 0 0 3px;
+  }
+
+  .tagline {
+    font-size: 10.5pt;
+    color: var(--muted);
+    letter-spacing: 0.3px;
+    margin: 0 0 5px;
+  }
+
+  .contact {
+    font-size: 8.7pt;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .contact a { color: var(--accent); text-decoration: none; }
+
+
+  /* ---------- sections ---------- */
+  h2 {
+    font-size: 9.3pt;
+    font-weight: 700;
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 13px 0 5px;
+    padding-bottom: 2.5px;
+    border-bottom: 1.6px solid var(--rule);
+  }
+
+  p.summary { margin: 0 0 4px; text-align: justify; }
+
+  /* ---------- roles ---------- */
+  .role { margin-top: 10px; page-break-inside: avoid; }
+  .role:first-of-type { margin-top: 8px; }
+  .role:first-of-type li { margin-bottom: 5.5px; }
+
+  .role-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .title { font-size: 10pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2px; }
+  .dates { font-size: 8.8pt; color: var(--muted); white-space: nowrap; }
+  .company { font-weight: 700; color: var(--accent); font-size: 9.4pt; text-decoration: none; }
+  .location { font-size: 8.8pt; color: var(--muted); font-style: italic; white-space: nowrap; }
+  .descriptor { font-size: 8.7pt; color: var(--muted); font-style: italic; margin: 1px 0 0; }
+
+  ul { margin: 4px 0 0; padding-left: 15px; }
+  li { margin-bottom: 3px; }
+  li::marker { color: var(--accent); }
+
+  strong { font-weight: 700; }
+
+  /* ---------- skills ---------- */
+  .skills { margin: 0; }
+  .skills div { margin-bottom: 6px; }
+  .skills b { color: var(--accent); }
+
+  /* ---------- two-col rows ---------- */
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 5px;
+  }
+  .orglink { font-weight: 700; color: var(--accent); text-decoration: none; }
+  .row .sub { font-size: 8.8pt; color: var(--muted); font-style: italic; }
+
+  /* ---------- fill markers ---------- */
+  .fill {
+    color: var(--fill);
+    font-weight: 700;
+    background: #fdecea;
+    padding: 0 3px;
+    border-radius: 2px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Darkhanbayar Erdenebat</h1>
+  <p class="tagline">DevOps Engineer &nbsp;|&nbsp; AWS Cloud Engineer</p>
+  <div class="contact">
+    Fairfield, Iowa, USA &nbsp;•&nbsp;
+    <a href="mailto:darkhanbayarr@gmail.com">darkhanbayarr@gmail.com</a> &nbsp;•&nbsp;
+    +1 (641) 233-9944<br>
+    <a href="https://linkedin.com/in/darkhanbayar-erdenebat">linkedin.com/in/darkhanbayar-erdenebat</a> &nbsp;•&nbsp;
+    <a href="https://github.com/darkhaamn">github.com/darkhaamn</a> &nbsp;•&nbsp;
+    <a href="https://darkhaa.tech">darkhaa.tech</a>
+  </div>
+</header>
+
+<h2>Summary</h2>
+<p class="summary">
+DevOps and Cloud Engineer with 7 years in software engineering, 5 of them building and operating
+production cloud infrastructure. Built <strong>Cloud.mn — Mongolia’s first public cloud platform</strong> —
+from the ground up to 300+ enterprise clients, and led its expansion into Kazakhstan. AWS Certified
+Solutions Architect – Professional. Hands-on across AWS, Terraform, Kubernetes, OpenStack,
+CI/CD, and production observability.
+</p>
+
+<h2>Technical Skills</h2>
+<div class="skills">
+  <div><b>AWS:</b> EC2, ECS, ECR, Auto Scaling, Launch Templates, VPC, ALB/ELB, Route 53, CloudFront, ACM, RDS (Multi-AZ), S3, CloudWatch, SNS, IAM, Secrets Manager, SSM — and others across compute, networking, data, and security</div>
+  <div><b>Private Cloud &amp; Virtualization:</b> OpenStack, KVM</div>
+  <div><b>IaC &amp; CI/CD:</b> Terraform, Ansible, GitHub Actions, GitLab CI, container build &amp; scan pipelines, rolling &amp; zero-downtime deploys</div>
+  <div><b>Containers &amp; Orchestration:</b> Kubernetes, Docker, Helm</div>
+  <div><b>Observability &amp; Security:</b> Prometheus, Grafana, Node Exporter, Blackbox Exporter, OWASP, SonarQube, Snyk, IAM least-privilege</div>
+  <div><b>Languages &amp; Data:</b> Go, Python, TypeScript, Bash, PostgreSQL, MySQL/MariaDB, Redis, RabbitMQ</div>
+  <div><b>Systems:</b> Linux, Nginx, TLS, DNS, Distributed Systems, Microservices</div>
+</div>
+
+<h2>Experience</h2>
+
+<!-- ============ TECH PARTNERS ============ -->
+<div class="role">
+  <div class="role-head">
+    <span class="title">Senior DevOps / Cloud Engineer</span>
+    <span class="dates">Mar 2024 – Jan 2026</span>
+  </div>
+  <div class="role-head">
+    <a class="company" href="https://techpartners.asia/">Tech Partners</a>
+    <span class="location">Ulaanbaatar, Mongolia</span>
+  </div>
+  <ul>
+    <li>Architected and codified a <strong>multi-AZ AWS platform in Terraform</strong> (VPC, ALB, Auto Scaling, EC2 Launch Templates, RDS Multi-AZ, Route 53, ACM, ECR, Secrets Manager, SSM), replacing a fragile single-instance production setup with a highly available environment supporting zero-downtime releases.</li>
+    <li>Standardized CI/CD across <strong>5+ products</strong> on <strong>GitHub Actions and GitLab CI</strong> — build, test, OWASP-aligned scanning (SonarQube, Snyk), push to ECR, rolling deploy — reducing change failure rate by <strong>30%</strong>.</li>
+    <li>Established the production observability stack (Prometheus, Grafana, Node Exporter, Blackbox Exporter, CloudWatch, SNS) with alerting on ASG lifecycle events, RDS CPU, and endpoint health; authored the runbook that let the operations team own deploys and incident response independently.</li>
+    <li>Reduced monthly AWS spend by <strong>40%</strong> via instance right-sizing, Auto Scaling target tracking, caching to cut RDS load, and elimination of idle capacity.</li>
+    <li>Delivered <strong>MedOrder</strong>, a healthcare SaaS platform (Go, PostgreSQL, Redis, Kubernetes) processing <strong>40,000+ pharmaceutical orders</strong> under full regulatory compliance — owning both the application and its production infrastructure.</li>
+  </ul>
+</div>
+
+<!-- ============ EASYSIM ============ -->
+<div class="role">
+  <div class="role-head">
+    <span class="title">Founder &amp; Platform Engineer</span>
+    <span class="dates">Mar 2025 – Jun 2026</span>
+  </div>
+  <div class="role-head">
+    <a class="company" href="https://easysim.mn">EasySim.mn</a>
+    <span class="location">Remote · Ulaanbaatar, Mongolia</span>
+  </div>
+  <p class="descriptor">Independent venture, built and operated solo alongside full-time engineering work — international eSIM service delivering mobile data in 100+ countries through a Mongolian super app.</p>
+  <ul>
+    <li><strong>Ran the entire production platform single-handed</strong> — containerized services behind Nginx with TLS termination, centralized logging, health checks, and uptime monitoring. No ops team, no downtime budget.</li>
+    <li>Integrated multiple international eSIM supplier APIs for catalog sync, ordering, QR-code delivery, and activation tracking, enabling <strong>fully automated 24/7 fulfillment</strong> with zero manual steps in the purchase path.</li>
+    <li>Built the platform on Go, TypeScript, Node.js, PostgreSQL, Redis, and Docker, automating product, pricing, and data-plan management to remove manual catalog maintenance entirely.</li>
+  </ul>
+</div>
+
+<!-- ============ FIBO — CTO ============ -->
+<div class="role">
+  <div class="role-head">
+    <span class="title">Chief Technology Officer</span>
+    <span class="dates">Apr 2022 – Mar 2024</span>
+  </div>
+  <div class="role-head">
+    <a class="company" href="https://fibo.cloud/">Fibo Cloud</a>
+    <span class="location">Ulaanbaatar, Mongolia</span>
+  </div>
+  <p class="descriptor">Cloud provider behind Cloud.mn — Mongolia’s first public cloud platform.</p>
+  <ul>
+    <li>Directed platform engineering for <strong>Cloud.mn and TTC Cloud</strong> (OpenStack, KVM, Kubernetes, Docker, MariaDB, Redis, RabbitMQ), leading <strong>20+ engineers, architects, and PMs</strong>.</li>
+    <li>Took the company’s own cloud platform international, launching <strong>TTC Cloud on Transtelecom — Kazakhstan’s largest datacenter</strong> — coordinating datacenter operations, local payment providers, and regional compliance.</li>
+    <li>Owned platform reliability and the production on-call rotation, sustaining <strong>99.95% uptime</strong>.</li>
+    <li>Automated infrastructure provisioning and deployment workflows (Ansible, CI/CD), accelerating time-to-market for new cloud services by <strong>35%</strong>.</li>
+  </ul>
+</div>
+
+<!-- ============ FIBO — SR SWE ============ -->
+<div class="role">
+  <div class="role-head">
+    <span class="title">Senior Software Engineer / Team Lead</span>
+    <span class="dates">Oct 2021 – Apr 2022</span>
+  </div>
+  <div class="role-head">
+    <a class="company" href="https://fibo.cloud/">Fibo Cloud</a>
+    <span class="location">Ulaanbaatar, Mongolia</span>
+  </div>
+  <ul>
+    <li>Led the infrastructure build-out of <strong>Cloud.mn</strong> with <strong>10+ engineers</strong> (OpenStack, KVM, Ansible), building the provisioning automation that made customer onboarding self-service and cut manual provisioning time by <strong>90%</strong>.</li>
+    <li>Built backend services on OpenStack APIs (Compute, Networking, Identity, Storage) with Kubernetes orchestration, enabling self-service multi-tenant resource management at scale.</li>
+  </ul>
+</div>
+
+<!-- ============ FIBO — FE ============ -->
+<div class="role">
+  <div class="role-head">
+    <span class="title">Frontend Engineer</span>
+    <span class="dates">Mar 2019 – Oct 2021</span>
+  </div>
+  <div class="role-head">
+    <a class="company" href="https://fibo.cloud/">Fibo Cloud</a>
+    <span class="location">Ulaanbaatar, Mongolia</span>
+  </div>
+  <ul>
+    <li>Built the Cloud.mn control panel (React, TypeScript) from the platform’s earliest stage — the user-facing layer of Mongolia’s first public cloud.</li>
+    <li>Moved into infrastructure through self-directed work on Ansible and the OpenStack APIs, taking on cloud delivery alongside frontend work and transitioning into platform engineering within two years.</li>
+    <li>Led UFE’s migration to <strong>AWS</strong> (CloudFront, EC2, EBS, RDS for MySQL, Auto Scaling) during Mongolia’s COVID-19 lockdown — delivered in <strong>10 days</strong> for <strong>6,000+ students</strong>, since sustaining <strong>99.99% availability</strong>. <a class="orglink" href="https://web.archive.org/web/20210116032223/https://aws.amazon.com/solutions/case-studies/ufe-mongolia-case-study/">Published as an official AWS case study</a>.</li>
+  </ul>
+</div>
+
+<h2>Certifications</h2>
+<div class="row">
+  <span><a class="orglink" href="https://www.credly.com/badges/072e1564-888f-4be4-bc17-bb8cc1c598f2">AWS Certified Solutions Architect – Professional</a> &nbsp;·&nbsp; <span class="sub">Amazon Web Services</span></span>
+  <span class="dates">Jun 2026</span>
+</div>
+
+<h2>Community</h2>
+<div class="row">
+  <span><a class="orglink" href="https://www.aws.mn/">AWS Community Mongolia</a> — Organizer</span>
+  <span class="dates">2019 – Present</span>
+</div>
+<ul style="margin-top:2px">
+  <li>Grew Mongolia’s AWS user community to <strong>1,200+ members</strong>, ran <strong>50+ technical events</strong>, and mentored <strong>20+ engineers</strong> to AWS certification.</li>
+</ul>
+
+<h2>Education</h2>
+<div class="row">
+  <span><strong>M.S., Computer Science</strong> &nbsp;·&nbsp; <span class="sub">Maharishi International University, Fairfield, Iowa</span></span>
+  <span class="dates">Feb 2026 – Oct 2028 (expected)</span>
+</div>
+<div class="row">
+  <span><strong>B.S., Information Technology</strong> &nbsp;·&nbsp; <span class="sub">Mongolian University of Science and Technology</span></span>
+  <span class="dates">2014 – 2018</span>
+</div>
+
+</body>
+</html>

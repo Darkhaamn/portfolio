@@ -11,80 +11,19 @@ import {
 
 import { siteLinks } from "@/lib/site-links";
 import { getWorkById } from "@/lib/works";
-
-const techGroups = [
-  { label: "Cloud & Infrastructure", items: ["AWS", "OpenStack", "Kubernetes", "Docker", "Linux", "Nginx"] },
-  { label: "CI/CD & Observability", items: ["GitHub Actions", "GitLab CI", "Prometheus", "Grafana"] },
-  { label: "Languages & Data", items: ["Golang", "Python", "Node.js", "React", "Next.js", "PostgreSQL", "Redis"] },
-  { label: "Security", items: ["OWASP", "Snyk"] },
-] as const;
-
-const achievements = [
-  "Built Mongolia’s first public cloud — Cloud.mn",
-  "Served 300+ enterprise customers",
-  "Maintained 99.95% platform uptime",
-  "Reduced manual provisioning by 90%",
-  "Led zero-downtime AWS migrations",
-] as const;
+import {
+  certifications,
+  community,
+  employment,
+  heroSummary,
+  identity,
+  skillGroups,
+} from "@/lib/profile";
 
 const featuredWorks = [
   { id: "cloudmn", title: "Mongolia’s First Public Cloud", metric: "300+", sub: "enterprise clients" },
   { id: "ufe_aws", title: "LMS Migration to AWS", metric: "10-day", sub: "zero-downtime migration" },
-  { id: "mobilife_aws", title: "Highly Available AWS Platform", metric: "30%", sub: "fewer deploy incidents" },
-] as const;
-
-const timeline: {
-  range: string;
-  title: string;
-  company: string;
-  active?: boolean;
-  note?: string;
-}[] = [
-    {
-      range: "OCT 2025 — JUN 2026",
-      title: "Senior DevOps / Cloud Engineer",
-      company: "Tech Partners",
-      active: true,
-      note: "Managing AWS infrastructure, CI/CD pipelines, Kubernetes workloads, monitoring, and production reliability.",
-    },
-    { range: "APR 2022 — MAR 2024", title: "Chief Technology Officer", company: "Fibo Cloud" },
-    { range: "OCT 2021 — APR 2022", title: "Senior Software Engineer / Team Lead", company: "Fibo Cloud" },
-    { range: "JUN 2021 — FEB 2025", title: "Senior Engineer (Part-time)", company: "Tech Partners" },
-    { range: "MAR 2019 — OCT 2021", title: "Frontend Engineer", company: "Fibo Cloud" },
-  ];
-
-const community = {
-  name: "AWS Community Mongolia",
-  role: "Organizer",
-  location: "Ulaanbaatar",
-  href: "https://www.aws.mn/",
-  stats: [
-    { value: "1,200+", label: "members" },
-    { value: "50+", label: "events" },
-    { value: "5+", label: "years" },
-    { value: "20+", label: "certified" },
-  ],
-};
-
-const certifications = [
-  {
-    src: "/solution-architect-pro.webp",
-    title: "AWS Certified Solutions Architect - Professional",
-    meta: "Professional · Jun 2026",
-    href: "https://www.credly.com/earner/earned/badge/072e1564-888f-4be4-bc17-bb8cc1c598f2",
-  },
-  {
-    src: "/cka.png",
-    title: "CKA: Certified Kubernetes Administrator",
-    meta: "Linux Foundation · Mar 2022",
-    href: "https://www.credly.com/earner/earned/badge/7ae57de5-a301-4b67-98b5-510d8338a019",
-  },
-  {
-    src: "/dev-associate.webp",
-    title: "AWS Certified Developer - Associate",
-    meta: "Associate · May 2020",
-    href: "https://www.credly.com/badges/7f3721d2-2353-445f-a596-3e9d2e2df68f/public_url",
-  },
+  { id: "mobilife_aws", title: "Highly Available AWS Platform", metric: "30%", sub: "lower change failure rate" },
 ] as const;
 
 export default function Page() {
@@ -105,10 +44,10 @@ export default function Page() {
           </div>
           <div>
             <p className="text-xs font-mono uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-              Cloud &amp; DevOps Engineer
+              {identity.tagline}
             </p>
             <p className="mt-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
-              ● Open to remote &amp; relocation · Fairfield, Iowa
+              ● {identity.availability} · {identity.location}
             </p>
           </div>
         </div>
@@ -117,8 +56,7 @@ export default function Page() {
           Darkhanbayar Erdenebat
         </h1>
         <p className="mt-4 text-base text-zinc-700 dark:text-zinc-300 leading-relaxed">
-          Cloud &amp; DevOps Engineer with 7+ years designing highly available cloud platforms,
-          Kubernetes infrastructure, CI/CD pipelines, and automated operations on AWS.
+          {heroSummary}
         </p>
         <p className="mt-2 text-base text-zinc-600 dark:text-zinc-400 leading-relaxed">
           Built and launched{" "}
@@ -197,7 +135,7 @@ export default function Page() {
       <section className="mb-10">
         <h2 className="text-lg font-medium text-zinc-950 dark:text-zinc-100 mb-4">Tech stack</h2>
         <div className="space-y-4">
-          {techGroups.map((group) => (
+          {skillGroups.map((group) => (
             <div key={group.label} className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-2 sm:gap-4">
               <p className="text-[11px] font-mono uppercase tracking-widest text-zinc-500 dark:text-zinc-400 sm:pt-1.5">
                 {group.label}
@@ -232,19 +170,13 @@ export default function Page() {
             </Link>
           </div>
           <div className="rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 divide-y divide-zinc-100 dark:divide-zinc-900">
-            {timeline.map((item) => (
+            {employment.map((item) => (
               <div
                 key={`${item.range}-${item.title}`}
                 className="flex items-start justify-between gap-4 px-4 py-3"
               >
                 <div className="flex items-start gap-3 min-w-0">
-                  <span
-                    className={
-                      item.active
-                        ? "mt-1.5 size-2 shrink-0 rounded-full bg-emerald-500"
-                        : "mt-1.5 size-2 shrink-0 rounded-full border border-zinc-300 dark:border-zinc-700"
-                    }
-                  />
+                  <span className="mt-1.5 size-2 shrink-0 rounded-full border border-zinc-300 dark:border-zinc-700" />
                   <div className="min-w-0">
                     <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                       {item.title}

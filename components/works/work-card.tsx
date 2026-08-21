@@ -1,127 +1,164 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import type { Work } from "@/lib/works";
 import { IconArrowUpRight } from "@tabler/icons-react";
+
+import type { Work } from "@/lib/works";
 import { cn } from "@/lib/utils";
 
-type WorkCardProps = {
-  work: Work;
-  priority?: boolean;
-};
+type Size = NonNullable<Work["size"]>;
 
-function MetricRow({ work }: { work: Work }) {
+function Eyebrow({ work }: { work: Work }) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <span className={cn("h-px w-6 shrink-0", work.theme.accentBar)} aria-hidden />
+      <span
+        className={cn(
+          "truncate text-[10px] font-mono uppercase tracking-widest",
+          work.theme.accent,
+        )}
+      >
+        {work.theme.label}
+      </span>
+    </div>
+  );
+}
+
+function Metrics({ work, max }: { work: Work; max: number }) {
   if (!work.metrics?.length) return null;
   return (
-    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-zinc-100 dark:border-zinc-900 pt-3">
-      {work.metrics.map((m) => (
+    <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1.5">
+      {work.metrics.slice(0, max).map((m) => (
         <div key={m.label} className="flex items-baseline gap-1.5">
-          <span className="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+          <span className={cn("text-sm font-semibold tracking-tight", work.theme.accent)}>
             {m.value}
           </span>
-          <span className="text-[11px] text-zinc-500 leading-tight">{m.label}</span>
+          <span className="text-[11px] text-zinc-500 dark:text-zinc-400">{m.label}</span>
         </div>
       ))}
     </div>
   );
 }
 
-export function WorkCard({ work, priority }: WorkCardProps) {
-  const { theme } = work;
+function Shot({
+  work,
+  priority,
+  className,
+  sizes,
+}: {
+  work: Work;
+  priority?: boolean;
+  className?: string;
+  sizes: string;
+}) {
+  return (
+    <div className={cn("relative overflow-hidden bg-zinc-100 dark:bg-zinc-900", className)}>
+      <Image
+        src={work.thumbnail.src}
+        alt={work.thumbnail.alt}
+        fill
+        priority={priority}
+        sizes={sizes}
+        className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+      />
+      <span
+        className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-zinc-950/5 dark:ring-white/10"
+        aria-hidden
+      />
+    </div>
+  );
+}
 
-  if (work.featured) {
+const shell =
+  "group relative flex overflow-hidden rounded-2xl border border-zinc-200 bg-white transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700";
+
+export function WorkCard({
+  work,
+  size = "third",
+  priority,
+  flip,
+}: {
+  work: Work;
+  size?: Size;
+  priority?: boolean;
+  flip?: boolean;
+}) {
+  const href = `/works/${work.id}`;
+
+  /* ---------- feature: editorial split, alternating side ---------- */
+  if (size === "feature") {
     return (
-      <Link
-        href={`/works/${work.id}`}
-        className="group relative block sm:col-span-2 overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition-colors hover:border-zinc-300 dark:hover:border-zinc-700"
-      >
-        <div className={cn("h-1 w-full", theme.accentBar)} />
-        <div className="grid sm:grid-cols-2">
-          <div className="relative aspect-16/10 sm:aspect-auto sm:min-h-[280px] overflow-hidden bg-zinc-100 dark:bg-zinc-900">
-            <Image
-              src={work.thumbnail.src}
-              alt={work.thumbnail.alt}
-              fill
-              priority={priority}
-              className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
-              sizes="(max-width: 640px) 100vw, 448px"
-            />
-          </div>
-          <div className="flex flex-col justify-center p-6 sm:p-8">
-            <div className="flex items-center gap-2">
-              <span className={cn("text-[10px] font-mono uppercase tracking-widest", theme.accent)}>
-                {theme.label}
-              </span>
-              <span className="text-[10px] font-mono uppercase tracking-widest text-zinc-400">
-                · Featured
-              </span>
-            </div>
-            <h2 className="mt-2 text-2xl font-medium tracking-tight text-zinc-950 dark:text-zinc-100">
+      <Link href={href} className={cn(shell, "flex-col md:min-h-[320px] md:flex-row")}>
+        <span className={cn("h-1 w-full md:h-auto md:w-1", work.theme.accentBar)} aria-hidden />
+        <Shot
+          work={work}
+          priority={priority}
+          sizes="(max-width: 768px) 100vw, 55vw"
+          className={cn(
+            "aspect-16/9 w-full md:aspect-auto md:w-[55%]",
+            flip && "md:order-2",
+          )}
+        />
+        <div className="flex flex-1 flex-col justify-between gap-6 p-6 sm:p-7">
+          <div>
+            <Eyebrow work={work} />
+            <h2 className="mt-3 text-2xl font-medium tracking-tight text-zinc-950 dark:text-zinc-100">
               {work.title}
             </h2>
-            {work.role ? (
-              <p className="mt-1 text-xs font-mono text-zinc-500">
-                {work.role} · {work.period}
+            {work.role || work.period ? (
+              <p className="mt-1 font-mono text-[11px] uppercase tracking-wider text-zinc-400">
+                {[work.role, work.period].filter(Boolean).join(" · ")}
               </p>
             ) : null}
-            <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+            <p className="mt-3 max-w-md text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
               {work.summary}
             </p>
-            <MetricRow work={work} />
-            <span className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-zinc-700 dark:text-zinc-300 transition-colors group-hover:text-zinc-950 dark:group-hover:text-zinc-100">
-              View project
-              <IconArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </span>
+          </div>
+          <div className="flex items-end justify-between gap-4">
+            <Metrics work={work} max={3} />
+            <IconArrowUpRight className="size-5 shrink-0 text-zinc-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </div>
         </div>
       </Link>
     );
   }
 
+  /* ---------- half / third: image over content ---------- */
+  const isHalf = size === "half";
   return (
-    <Link
-      href={`/works/${work.id}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition-colors hover:border-zinc-300 dark:hover:border-zinc-700"
-    >
-      <div className="relative aspect-16/10 overflow-hidden bg-zinc-100 dark:bg-zinc-900">
-        <Image
-          src={work.thumbnail.src}
-          alt={work.thumbnail.alt}
-          fill
-          priority={priority}
-          className="object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
-          sizes="(max-width: 640px) 100vw, 448px"
-        />
-        <div className="absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-black/50 to-transparent" />
-        <span
-          className={cn(
-            "absolute top-3 left-3 rounded-full border px-2 py-0.5 text-[10px] font-mono uppercase tracking-widest backdrop-blur-sm",
-            theme.accentMuted,
-            theme.accent
-          )}
-        >
-          {theme.label}
-        </span>
-      </div>
-      <div className="flex flex-1 flex-col p-5">
-        <div className="flex items-start justify-between gap-3">
-          <h2 className="text-base font-medium tracking-tight text-zinc-950 dark:text-zinc-100">
+    <Link href={href} className={cn(shell, "flex-col")}>
+      <span className={cn("h-1 w-full", work.theme.accentBar)} aria-hidden />
+      <Shot
+        work={work}
+        priority={priority}
+        sizes={isHalf ? "(max-width: 768px) 100vw, 46vw" : "(max-width: 768px) 100vw, 30vw"}
+        className={isHalf ? "aspect-16/9 w-full" : "aspect-16/10 w-full"}
+      />
+      <div className="flex flex-1 flex-col justify-between gap-4 p-5">
+        <div>
+          <Eyebrow work={work} />
+          <h2
+            className={cn(
+              "mt-2.5 font-medium tracking-tight text-zinc-950 dark:text-zinc-100",
+              isHalf ? "text-lg" : "text-base",
+            )}
+          >
             {work.title}
           </h2>
-          <IconArrowUpRight className="size-4 shrink-0 text-zinc-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          {work.role || work.period ? (
+            <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-zinc-400">
+              {[work.role, work.period].filter(Boolean).join(" · ")}
+            </p>
+          ) : null}
+          {isHalf ? (
+            <p className="mt-2.5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+              {work.summary}
+            </p>
+          ) : null}
         </div>
-        {work.role ? (
-          <p className="mt-0.5 text-[11px] font-mono text-zinc-500">
-            {work.role} · {work.period}
-          </p>
-        ) : (
-          <p className="mt-0.5 text-[11px] font-mono text-zinc-500">{work.period}</p>
-        )}
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-          {work.summary}
-        </p>
-        <div className="mt-auto">
-          <MetricRow work={work} />
+        <div className="flex items-end justify-between gap-3">
+          <Metrics work={work} max={isHalf ? 2 : 1} />
+          <IconArrowUpRight className="size-4 shrink-0 text-zinc-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </div>
       </div>
     </Link>

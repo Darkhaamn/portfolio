@@ -24,6 +24,56 @@ export type WorkTheme = {
   label: string;
 };
 
+/** Each project gets a signature layout matching the shape of its engineering story. */
+export type WorkLayout =
+  | 'stack'      // layered platform (Cloud.mn)
+  | 'regions'    // same platform, second country (TTC)
+  | 'migration'  // before -> after under time pressure (UFE)
+  | 'flow'       // request path through an HA topology (Mobilife)
+  | 'pipeline'   // linear automated fulfilment (EasySim)
+  | 'topology'   // many clients over shared services (MedOrder)
+  | 'hub';       // one core, many integrations (iTrip)
+
+export type WorkNode = { label: string; sub?: string };
+
+/** How the detail page opens. */
+export type WorkHero =
+  | { kind: 'browser'; url: string; tabs?: string[] }
+  | { kind: 'split'; panes: { src: string; alt: string; url: string; caption: string }[] }
+  | { kind: 'numeral'; value: string; unit: string; note: string; url: string }
+  | { kind: 'none' };
+export type WorkHub = { center: string; centerSub?: string; spokes: WorkNode[] };
+export type WorkRegion = { name: string; sub: string; items: string[] };
+export type WorkBeforeAfter = {
+  before: { label: string; items: string[] };
+  after: { label: string; items: string[] };
+};
+export type WorkTopology = { clients: WorkNode[]; core: WorkNode; services: string[] };
+
+/** A full cloud architecture: edge, VPC subnets across AZs, ops rail, DR. */
+export type WorkCloudArch = {
+  caption?: string;
+  edge: WorkNode[];
+  /** Sits beside the edge, outside the VPC (object storage, etc). */
+  aside?: WorkNode;
+  vpc: {
+    label: string;
+    zones: string[];
+    rows: {
+      subnet: string;
+      kind: 'public' | 'private';
+      /** One card per AZ when true, otherwise a single card spanning them. */
+      perZone?: boolean;
+      group?: string;
+      nodes: WorkNode[];
+      /** Draw a replication link between the two AZ copies. */
+      replicated?: string;
+    }[];
+  };
+  ops?: WorkNode[];
+  dr?: { label: string; items: string[] };
+};
+
 export type Work = {
   id: WorkId;
   title: string;
@@ -42,18 +92,31 @@ export type Work = {
   links?: WorkLink[];
   gallery?: { src: string; alt: string }[];
   theme: WorkTheme;
+  hero?: WorkHero;
+  /** Tile weight on the /works index — drives the editorial rhythm. */
+  size?: 'feature' | 'half' | 'third';
+  layout?: WorkLayout;
+  pipeline?: WorkNode[];
+  hub?: WorkHub;
+  regions?: WorkRegion[];
+  beforeAfter?: WorkBeforeAfter;
+  topology?: WorkTopology;
+  cloud?: WorkCloudArch;
 };
 
 export const works: Work[] = [
   {
     id: 'cloudmn',
+    hero: { kind: 'browser', url: 'cloud.mn' },
+    size: 'feature',
+    layout: 'stack',
     title: 'Cloud.mn',
-    role: 'Founding Engineer → Team Lead',
-    period: '2019–2025',
+    role: 'Frontend Engineer → CTO',
+    period: '2019–2024',
     status: 'Completed',
     launched: '2019',
     featured: true,
-    thumbnail: { src: '/works/cloudmn.png', alt: 'Cloud.mn dashboard' },
+    thumbnail: { src: '/works/live/cloudmn.webp', alt: 'Cloud.mn — self-service public cloud portal' },
     theme: {
       accent: 'text-sky-500',
       accentMuted: 'bg-sky-500/10 border-sky-500/20',
@@ -69,8 +132,8 @@ export const works: Work[] = [
     architecture: {
       caption: 'Self-service portal on an OpenStack + KVM private cloud',
       tiers: [
-        { nodes: [{ label: 'Dashboard + API', sub: 'React · self-service portal' }] },
-        { nodes: [{ label: 'Backend services', sub: 'Python · Go · billing · auth' }] },
+        { label: 'Self-service', nodes: [{ label: 'Dashboard + API', sub: 'React · self-service portal' }] },
+        { label: 'Application', nodes: [{ label: 'Backend services', sub: 'Python · Go · billing · auth' }] },
         {
           label: 'OpenStack APIs',
           nodes: [
@@ -80,7 +143,7 @@ export const works: Work[] = [
             { label: 'Storage' },
           ],
         },
-        { nodes: [{ label: 'KVM hypervisors', sub: 'Ansible-provisioned hosts' }] },
+        { label: 'Infrastructure', nodes: [{ label: 'KVM hypervisors', sub: 'Ansible-provisioned hosts' }] },
       ],
     },
     paragraphs: [
@@ -104,12 +167,43 @@ export const works: Work[] = [
   },
   {
     id: 'ttc',
+    hero: {
+      kind: 'split',
+      panes: [
+        { src: '/works/live/cloudmn.webp', alt: 'Cloud.mn', url: 'cloud.mn', caption: 'Mongolia — the original' },
+        { src: '/works/live/ttc.webp', alt: 'TTC Cloud', url: 'cloud.ttc.kz', caption: 'Kazakhstan — the export' },
+      ],
+    },
+    size: 'half',
+    layout: 'regions',
+    regions: [
+      {
+        name: 'Cloud.mn — Mongolia',
+        sub: 'The original platform',
+        items: [
+          'OpenStack + KVM private cloud',
+          'Self-service VMs, storage, networking',
+          '300+ enterprise clients',
+        ],
+      },
+      {
+        name: 'TTC Cloud — Kazakhstan',
+        sub: 'Same platform, new market',
+        items: [
+          'Deployed on Transtelecom, the country’s largest datacenter',
+          'Local payment gateways and financial systems',
+          'Kazakh + Russian localization',
+          'Regional data-residency compliance',
+          'Broader service suite than the Mongolian cloud',
+        ],
+      },
+    ],
     title: 'TTC Cloud',
-    role: 'CTO → Platform Lead',
-    period: '2022–2025',
+    role: 'CTO',
+    period: '2022–2024',
     status: 'Completed',
     launched: '2021',
-    thumbnail: { src: '/works/ttc.png', alt: 'TTC Cloud dashboard' },
+    thumbnail: { src: '/works/live/ttc.webp', alt: 'TTC Cloud — Transtelecom public cloud' },
     theme: {
       accent: 'text-amber-500',
       accentMuted: 'bg-amber-500/10 border-amber-500/20',
@@ -148,22 +242,103 @@ export const works: Work[] = [
   },
   {
     id: 'ufe_aws',
+    hero: {
+      kind: 'numeral',
+      value: '10',
+      unit: 'days',
+      note: 'On-premises to AWS, zero downtime, mid-lockdown.',
+      url: 'ufe.edu.mn',
+    },
+    size: 'half',
+    layout: 'migration',
+    cloud: {
+      caption: 'Three-tier AWS deployment across two Availability Zones',
+      edge: [
+        { label: 'Route 53', sub: 'DNS + health checks' },
+        { label: 'CloudFront', sub: 'CDN — edge caching' },
+      ],
+      aside: { label: 'S3', sub: 'static assets · versioned' },
+      vpc: {
+        label: 'VPC',
+        zones: ['Availability Zone A', 'Availability Zone B'],
+        rows: [
+          {
+            subnet: 'Public subnet',
+            kind: 'public',
+            nodes: [{ label: 'Elastic Load Balancer', sub: 'TLS termination · health checks' }],
+          },
+          {
+            subnet: 'Private subnet — application',
+            kind: 'private',
+            perZone: true,
+            group: 'EC2 Auto Scaling group',
+            nodes: [{ label: 'EC2 — Nginx + PHP', sub: 'EBS volumes' }],
+          },
+          {
+            subnet: 'Private subnet — cache',
+            kind: 'private',
+            nodes: [{ label: 'ElastiCache — Redis', sub: 'session + query cache' }],
+          },
+          {
+            subnet: 'Private subnet — data',
+            kind: 'private',
+            perZone: true,
+            replicated: 'synchronous replication',
+            nodes: [{ label: 'RDS MySQL', sub: 'Multi-AZ' }],
+          },
+        ],
+      },
+      ops: [
+        { label: 'CloudWatch', sub: 'metrics · traffic patterns' },
+        { label: 'CloudTrail', sub: 'audit log · MFA on all accounts' },
+        { label: 'Inspector', sub: 'EC2 vulnerability scanning' },
+      ],
+      dr: {
+        label: 'Backup & disaster recovery',
+        items: [
+          'Automated RDS snapshots with point-in-time restore',
+          'Standby promoted automatically on primary failure',
+          'Versioned S3 copies of course content',
+          'Documented restore runbook, rehearsed with UFE staff',
+        ],
+      },
+    },
+    beforeAfter: {
+      before: {
+        label: 'Before — on-premises',
+        items: [
+          'Two servers in a local university data center',
+          'Overloaded past ~400 concurrent students — the whole LMS went offline',
+          'Unreliable power; manual restart after every outage',
+          'Nationwide lockdown closed every campus within a week',
+        ],
+      },
+      after: {
+        label: 'After — AWS, 10 days later',
+        items: [
+          'CloudFront, EC2 with EBS, and RDS for MySQL',
+          'EC2 Auto Scaling absorbs exam-period peaks automatically',
+          'Database in a private subnet; Inspector, CloudTrail and MFA across accounts',
+          '99.99% service availability; 90% of students online daily',
+        ],
+      },
+    },
     title: 'UFE Online Learning on AWS',
     role: 'AWS Migration Lead',
     period: '2020',
     status: 'Completed',
-    thumbnail: { src: '/works/ufe.jpg', alt: 'UFE Online Learning Dashboard' },
+    thumbnail: { src: '/works/live/ufe.webp', alt: 'UFE — online learning platform' },
     theme: {
       accent: 'text-orange-500',
       accentMuted: 'bg-orange-500/10 border-orange-500/20',
       accentBar: 'bg-orange-500',
       label: 'AWS Migration',
     },
-    summary: 'Migrated one of Mongolia’s largest universities to AWS in 10 days during COVID-19 — zero downtime, and an official AWS case study.',
+    summary: 'Migrated one of Mongolia’s oldest universities to AWS in 10 days during the COVID-19 lockdown — delivered with Fibo Cloud as UFE’s AWS Partner, and published as an official AWS case study.',
     metrics: [
       { value: '10 days', label: 'full migration' },
-      { value: 'Zero', label: 'downtime' },
-      { value: 'AWS', label: 'official case study' },
+      { value: '99.99%', label: 'service availability' },
+      { value: '90%', label: 'of students online daily' },
     ],
     architecture: {
       caption: 'AWS high-availability architecture, migrated in 10 days',
@@ -181,22 +356,27 @@ export const works: Work[] = [
       ],
     },
     paragraphs: [
-      'In early 2020, Mongolia announced a nationwide lockdown, closing all educational institutions within a week. The University of Finance and Economics (UFE) faced the urgent challenge of keeping education running for thousands of students.',
-      'UFE made the critical decision to migrate its entire online learning management system to AWS, ensuring accessibility and reliability for thousands of students and staff.',
-      'The migration was completed in just 10 days through close collaboration between UFE and AWS engineers — a rapid, seamless transition accomplished with zero downtime, later featured as an official AWS case study.',
+      'The University of Finance and Economics, founded in 1924, is one of Mongolia’s oldest institutions — over 6,000 students and more than 300 employees, running some online courses on on-premises technology since 2015.',
+      'That setup was two servers in a local data center. Past roughly 400 concurrent students the whole learning management system went offline, and an unreliable power supply meant someone had to restart the server manually after every outage.',
+      'In late January 2020 the government announced a nationwide lockdown. Every educational institution closed within the space of a week and overseas students were recalled home. UFE decided to move its entire learning management system to AWS.',
+      'Fibo Cloud was UFE’s AWS Partner for the migration. University IT engineers and IT professors worked alongside our team through the winter break — content migration alone took three days, and the full cutover landed in 10 days, ahead of the new semester. Procuring on-premises servers would have taken around 48 days.',
+      'After the migration 90% of students used the online services daily and 80% of the university’s workloads ran on AWS, at 99.99% service availability. In October 2020 the Ministry of Education invited UFE — one of five universities — to present its digital transformation.',
     ],
     highlights: [
-      'Migrated the learning management system to AWS with zero downtime, using EC2, S3, CloudFront, RDS, ELB, Auto Scaling, and Route 53.',
-      'Delivered a reliable, accessible online learning system with uninterrupted access to resources.',
-      'Built a streamlined data backup and recovery process for secure storage and fast retrieval.',
-      'Trained UFE staff and instructors on AWS basics and the new learning system.',
-      'Featured as an official AWS case study.',
+      'Delivered in 10 days, in time for the new semester — bypassing a server procurement cycle that would have taken around 48 days.',
+      'Content migration completed in three days, with UFE IT staff and professors working alongside the Fibo Cloud team.',
+      'Amazon CloudFront for content distribution, EC2 with EBS for the application tier, and Amazon RDS for MySQL.',
+      'EC2 Auto Scaling absorbs exam-time peaks on its own, removing the need for manual intervention.',
+      'Database isolated in a private subnet, reachable only from the application tier.',
+      'Amazon Inspector for EC2 vulnerability visibility; AWS CloudTrail action logs with multi-factor authentication enforced across all accounts.',
+      'Amazon CloudWatch gives departments traffic and usage data on when students are online and how they learn.',
+      'Published as an official AWS case study; UFE presented the transformation to Mongolia’s Ministry of Education in October 2020.',
     ],
     stack: 'AWS (EC2, S3, CloudFront, RDS, ELB, Auto Scaling, Route 53), Nginx, PHP, MySQL, Redis, CloudWatch',
     links: [
       {
         label: 'AWS Case Study',
-        href: 'https://aws.amazon.com/solutions/case-studies/ufe-mongolia-case-study/',
+        href: 'https://web.archive.org/web/20210116032223/https://aws.amazon.com/solutions/case-studies/ufe-mongolia-case-study/',
       },
       { label: 'UFE Reference', href: 'https://www.ufe.edu.mn/widgetDetail/295' },
     ],
@@ -204,15 +384,15 @@ export const works: Work[] = [
   },
   {
     id: 'mobilife_aws',
+    hero: { kind: 'none' },
+    size: 'third',
+    layout: 'flow',
     title: 'Mobilife AWS High-Availability Architecture',
-    role: 'Senior DevOps / Cloud Engineer',
+    role: 'Cloud Architect',
     period: '2025–2026',
     status: 'Active',
     launched: '2025',
-    thumbnail: {
-      src: '/works/mobilife.png',
-      alt: 'Mobilife AWS architecture overview',
-    },
+    thumbnail: { src: '/works/live/mobilife.webp', alt: 'Mobilife — production platform on AWS' },
     theme: {
       accent: 'text-emerald-500',
       accentMuted: 'bg-emerald-500/10 border-emerald-500/20',
@@ -222,7 +402,7 @@ export const works: Work[] = [
     summary:
       'Designed a production-grade AWS architecture and operational runbook for Mobilife — scalable, observable, and safe to deploy.',
     metrics: [
-      { value: '30%', label: 'fewer deploy incidents' },
+      { value: '30%', label: 'lower change failure rate' },
       { value: 'Multi-AZ', label: 'high availability' },
       { value: 'Zero-downtime', label: 'rollouts' },
     ],
@@ -257,7 +437,7 @@ export const works: Work[] = [
       'Cost optimization via Auto Scaling, instance right-sizing, and reducing idle capacity.',
       'Observability with Prometheus, Grafana, and Node Exporter; production health checks via Route 53 + Blackbox Exporter.',
       'CloudWatch + SNS alerting for ASG lifecycle events, service degradation, and RDS CPU thresholds.',
-      'Documented deployment, troubleshooting, and rollback steps — reducing deployment incidents by 30%.',
+      'Documented deployment, troubleshooting, and rollback steps — reducing change failure rate by 30%.',
     ],
     stack:
       'AWS Route 53, ACM, ALB, EC2, Auto Scaling, Launch Templates, ECR, SSM, Secrets Manager, Docker, Prometheus, Grafana, Node Exporter, Blackbox Exporter, CloudWatch, SNS, RDS, S3',
@@ -265,12 +445,23 @@ export const works: Work[] = [
   },
   {
     id: 'easysim',
+    hero: { kind: 'browser', url: 'easysim.mn' },
+    size: 'third',
+    layout: 'pipeline',
+    pipeline: [
+      { label: 'Purchase', sub: 'super app checkout' },
+      { label: 'Payment', sub: 'gateway settlement' },
+      { label: 'Supplier API', sub: 'catalog + order' },
+      { label: 'QR generation', sub: 'automated delivery' },
+      { label: 'Activation', sub: 'instant, no physical SIM' },
+      { label: 'Usage dashboard', sub: 'manage + track' },
+    ],
     title: 'EasySim.mn',
-    role: 'Platform Engineer',
-    period: '2025–Present',
+    role: 'Founder & Platform Engineer',
+    period: '2025–2026',
     status: 'Active',
     launched: '2025',
-    thumbnail: { src: '/works/easysim.png', alt: 'EasySim dashboard' },
+    thumbnail: { src: '/works/live/easysim.webp', alt: 'EasySim.mn — international eSIM store' },
     theme: {
       accent: 'text-teal-500',
       accentMuted: 'bg-teal-500/10 border-teal-500/20',
@@ -305,11 +496,29 @@ export const works: Work[] = [
   },
   {
     id: 'medtech',
+    hero: { kind: 'browser', url: 'mrp.mn', tabs: ['mrp.mn', 'admin.mrp.mn', 'supplier.mrp.mn'] },
+    size: 'third',
+    layout: 'topology',
+    topology: {
+      clients: [
+        { label: 'Customer site', sub: 'mrp.mn' },
+        { label: 'Admin Portal', sub: 'admin.mrp.mn' },
+        { label: 'Supplier Portal', sub: 'supplier.mrp.mn' },
+      ],
+      core: { label: 'Go microservices', sub: 'REST API · Docker · Kubernetes' },
+      services: [
+        'Orders + real-time tracking',
+        'Products + catalog',
+        'Suppliers + marketing',
+        'Notifications',
+        'License Management API',
+      ],
+    },
     title: 'MedOrder — MedTech Partner',
     role: 'Lead Engineer',
     period: '2021–2025',
     status: 'Completed',
-    thumbnail: { src: '/works/medtech.png', alt: 'MedTech Partner LLC Dashboard' },
+    thumbnail: { src: '/works/live/medtech.webp', alt: 'MedOrder — pharmaceutical wholesale platform' },
     theme: {
       accent: 'text-blue-500',
       accentMuted: 'bg-blue-500/10 border-blue-500/20',
@@ -344,11 +553,27 @@ export const works: Work[] = [
   },
   {
     id: 'itrip',
+    hero: { kind: 'browser', url: 'itrip.mn' },
+    size: 'feature',
+    layout: 'hub',
+    hub: {
+      center: 'iTrip',
+      centerSub: 'Go · .NET microservices on AWS + Kubernetes',
+      spokes: [
+        { label: 'Amadeus', sub: 'flight GDS' },
+        { label: 'Route24', sub: 'flight GDS' },
+        { label: 'Viator', sub: 'tours + attractions' },
+        { label: 'Trip.com', sub: 'hotel inventory' },
+        { label: 'Ihotel.mn', sub: 'hotel availability' },
+        { label: 'Bank gateways', sub: 'card payments' },
+        { label: 'Smart wallets', sub: 'digital payments' },
+      ],
+    },
     title: 'iTrip Travel Platform',
     role: 'Backend Architect',
     period: '2023',
     status: 'Launched & Ongoing',
-    thumbnail: { src: '/works/itrip.png', alt: 'iTrip dashboard' },
+    thumbnail: { src: '/works/live/itrip.webp', alt: 'iTrip — all-in-one travel platform' },
     theme: {
       accent: 'text-violet-500',
       accentMuted: 'bg-violet-500/10 border-violet-500/20',
