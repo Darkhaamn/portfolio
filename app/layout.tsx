@@ -9,9 +9,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import "./globals.css";
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.darkhaa.tech";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -64,16 +62,26 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     url: "/",
-    title: "Darkhanbayar Erdenebat",
+    title: "Darkhanbayar Erdenebat — DevOps & Cloud Engineer",
     description:
-      "Personal portfolio of Darkhanbayar Erdenebat. Projects, experience, and ways to get in touch.",
+      "Seven years in engineering, five building and running production cloud infrastructure — CI/CD, Terraform, Kubernetes, and observability on AWS and OpenStack.",
     siteName: "Darkhanbayar Erdenebat",
+    locale: "en_US",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Darkhanbayar Erdenebat — DevOps & Cloud Engineer",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Darkhanbayar Erdenebat",
+    title: "Darkhanbayar Erdenebat — DevOps & Cloud Engineer",
     description:
-      "Personal portfolio of Darkhanbayar Erdenebat. Projects, experience, and ways to get in touch.",
+      "Seven years in engineering, five building and running production cloud infrastructure — CI/CD, Terraform, Kubernetes, and observability on AWS and OpenStack.",
+    images: ["/og.png"],
   },
   authors: [{ name: "Darkhanbayar Erdenebat" }],
   creator: "Darkhanbayar Erdenebat",
