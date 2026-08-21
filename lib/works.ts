@@ -42,7 +42,14 @@ export type WorkHero =
   | { kind: 'split'; panes: { src: string; alt: string; url: string; caption: string }[] }
   | { kind: 'numeral'; value: string; unit: string; note: string; url: string }
   | { kind: 'none' };
-export type WorkHub = { center: string; centerSub?: string; spokes: WorkNode[] };
+export type WorkHub = {
+  center: string;
+  centerSub?: string;
+  /** Suppliers, grouped by what they provide. */
+  groups: { label: string; spokes: WorkNode[] }[];
+  /** What the fragmented market becomes once it is behind one core. */
+  outputs?: WorkNode[];
+};
 export type WorkRegion = { name: string; sub: string; items: string[] };
 export type WorkBeforeAfter = {
   before: { label: string; items: string[] };
@@ -70,7 +77,7 @@ export type WorkCloudArch = {
       replicated?: string;
     }[];
   };
-  ops?: WorkNode[];
+  ops?: { label: string; nodes: WorkNode[] }[];
   dr?: { label: string; items: string[] };
 };
 
@@ -289,9 +296,14 @@ export const works: Work[] = [
         ],
       },
       ops: [
-        { label: 'CloudWatch', sub: 'metrics · traffic patterns' },
-        { label: 'CloudTrail', sub: 'audit log · MFA on all accounts' },
-        { label: 'Inspector', sub: 'EC2 vulnerability scanning' },
+        {
+          label: 'Observability & security — across every tier',
+          nodes: [
+            { label: 'CloudWatch', sub: 'metrics · traffic patterns' },
+            { label: 'CloudTrail', sub: 'audit log · MFA on all accounts' },
+            { label: 'Inspector', sub: 'EC2 vulnerability scanning' },
+          ],
+        },
       ],
       dr: {
         label: 'Backup & disaster recovery',
@@ -387,6 +399,76 @@ export const works: Work[] = [
     hero: { kind: 'none' },
     size: 'third',
     layout: 'flow',
+    cloud: {
+      caption: 'Multi-AZ EC2 platform behind a load balancer, with the runbook that operates it',
+      edge: [
+        { label: 'Route 53', sub: 'DNS + health checks' },
+        { label: 'CloudFront', sub: 'CDN — edge caching' },
+      ],
+      aside: { label: 'S3 + ACM', sub: 'assets · TLS certificates' },
+      vpc: {
+        label: 'VPC',
+        zones: ['Availability Zone A', 'Availability Zone B'],
+        rows: [
+          {
+            subnet: 'Public subnet',
+            kind: 'public',
+            nodes: [{ label: 'Application Load Balancer', sub: 'TLS termination · target group routing' }],
+          },
+          {
+            subnet: 'Private subnet — application',
+            kind: 'private',
+            perZone: true,
+            group: 'Auto Scaling group — CPU target tracking',
+            nodes: [{ label: 'EC2 — Docker', sub: 'Launch Template bootstrap' }],
+          },
+          {
+            subnet: 'Private subnet — cache',
+            kind: 'private',
+            nodes: [{ label: 'Redis', sub: 'in-memory cache — cuts RDS load' }],
+          },
+          {
+            subnet: 'Private subnet — data',
+            kind: 'private',
+            perZone: true,
+            replicated: 'synchronous replication',
+            nodes: [{ label: 'RDS — MySQL', sub: 'Multi-AZ' }],
+          },
+        ],
+      },
+      ops: [
+        {
+          label: 'Monitoring & alerting',
+          nodes: [
+            { label: 'Prometheus', sub: 'metrics collection' },
+            { label: 'Grafana', sub: 'dashboards' },
+            { label: 'Node Exporter', sub: 'host metrics' },
+            { label: 'Blackbox Exporter', sub: 'endpoint probes' },
+            { label: 'CloudWatch', sub: 'ASG lifecycle · RDS CPU' },
+            { label: 'SNS', sub: 'alert delivery' },
+          ],
+        },
+        {
+          label: 'Config, secrets & delivery',
+          nodes: [
+            { label: 'ECR', sub: 'versioned container images' },
+            { label: 'Secrets Manager', sub: 'runtime secrets' },
+            { label: 'SSM', sub: 'parameters · secure access' },
+          ],
+        },
+      ],
+      dr: {
+        label: 'Recovery & rollback',
+        items: [
+          'RDS standby promoted automatically when the primary fails',
+          'Versioned images in ECR — roll back by redeploying the previous tag',
+          'Launch Templates rebuild any instance from scratch, repeatably',
+          'ASG health checks replace failed instances without intervention',
+          'Route 53 and Blackbox probes catch degradation before users do',
+          'Documented deployment, troubleshooting and rollback runbook',
+        ],
+      },
+    },
     title: 'Mobilife AWS High-Availability Architecture',
     role: 'Cloud Architect',
     period: '2025–2026',
@@ -478,6 +560,7 @@ export const works: Work[] = [
       'EasySim Data Provider LLC is a technology company offering international eSIM services tailored for travelers.',
       'The core project was a digital platform that lets users instantly purchase and activate eSIM data packages — no physical SIM card required.',
       'Launched inside a popular Mongolian super app, the platform makes mobile internet more convenient, affordable, and accessible across 100+ countries.',
+      'Customer support runs itself. An OpenAI-backed agent answers on social channels with retrieval over the product knowledge base and custom tools that can act on a real order — so the common questions resolve end to end without a human in the loop.',
     ],
     highlights: [
       'Seamless eSIM purchase and instant activation, with no physical SIM required.',
@@ -486,8 +569,10 @@ export const works: Work[] = [
       'Automated QR code generation and delivery for eSIM installation.',
       'Secure payment integration and real-time order processing.',
       'User-friendly dashboard for managing eSIMs and tracking usage.',
+      'Fully automated AI support on social channels, built on OpenAI with retrieval-augmented generation over the product knowledge base.',
+      'Custom tools give the agent real capability — it can look things up and act on an order rather than only answering from text.',
     ],
-    stack: 'React, TypeScript, Golang, PostgreSQL, REST API, QR Code Automation, Payment Gateway Integration, Super App SDK',
+    stack: 'React, TypeScript, Golang, PostgreSQL, Redis, Docker, Nginx, REST API, OpenAI API, RAG, Function calling, QR Code Automation, Payment Gateway Integration, Super App SDK',
     links: [{ label: 'easysim.mn', href: 'https://easysim.mn' }],
     gallery: [
       { src: '/works/easysim.png', alt: 'EasySim dashboard' },
@@ -557,16 +642,39 @@ export const works: Work[] = [
     size: 'feature',
     layout: 'hub',
     hub: {
-      center: 'iTrip',
+      center: 'iTrip booking core',
       centerSub: 'Go · .NET microservices on AWS + Kubernetes',
-      spokes: [
-        { label: 'Amadeus', sub: 'flight GDS' },
-        { label: 'Route24', sub: 'flight GDS' },
-        { label: 'Viator', sub: 'tours + attractions' },
-        { label: 'Trip.com', sub: 'hotel inventory' },
-        { label: 'Ihotel.mn', sub: 'hotel availability' },
-        { label: 'Bank gateways', sub: 'card payments' },
-        { label: 'Smart wallets', sub: 'digital payments' },
+      groups: [
+        {
+          label: 'Flights',
+          spokes: [
+            { label: 'Amadeus', sub: 'GDS' },
+            { label: 'Route24', sub: 'GDS' },
+          ],
+        },
+        {
+          label: 'Hotels',
+          spokes: [
+            { label: 'Trip.com', sub: 'inventory' },
+            { label: 'Ihotel.mn', sub: 'availability' },
+          ],
+        },
+        {
+          label: 'Tours',
+          spokes: [{ label: 'Viator', sub: 'tours + attractions' }],
+        },
+        {
+          label: 'Payments',
+          spokes: [
+            { label: 'Banks', sub: 'card gateways' },
+            { label: 'Smart wallets', sub: 'digital' },
+          ],
+        },
+      ],
+      outputs: [
+        { label: 'One search', sub: 'across every supplier' },
+        { label: 'One checkout', sub: 'cards + smart wallets' },
+        { label: 'One itinerary', sub: 'flights · hotels · tours' },
       ],
     },
     title: 'iTrip Travel Platform',

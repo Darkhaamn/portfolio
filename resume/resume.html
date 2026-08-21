@@ -20,8 +20,8 @@
 
   body {
     font-family: "Lato", "Helvetica Neue", Arial, sans-serif;
-    font-size: 9.8pt;
-    line-height: 1.38;
+    font-size: 9.5pt;
+    line-height: 1.34;
     color: var(--ink);
     margin: 0;
     padding: 0.5in 0.55in;
@@ -31,7 +31,7 @@
   @media print { body { padding: 0; } }
 
   /* ---------- header ---------- */
-  header { text-align: center; margin-bottom: 18px; }
+  header { text-align: center; margin-bottom: 15px; }
 
   h1 {
     font-size: 21pt;
@@ -74,7 +74,7 @@
   /* ---------- roles ---------- */
   .role { margin-top: 10px; page-break-inside: avoid; }
   .role:first-of-type { margin-top: 8px; }
-  .role:first-of-type li { margin-bottom: 5.5px; }
+  .role:first-of-type li { margin-bottom: 4px; }
 
   .role-head {
     display: flex;
@@ -97,7 +97,7 @@
 
   /* ---------- skills ---------- */
   .skills { margin: 0; }
-  .skills div { margin-bottom: 6px; }
+  .skills div { margin-bottom: 4.5px; }
   .skills b { color: var(--accent); }
 
   /* ---------- two-col rows ---------- */
@@ -191,7 +191,8 @@ CI/CD, and production observability.
   <ul>
     <li><strong>Ran the entire production platform single-handed</strong> — containerized services behind Nginx with TLS termination, centralized logging, health checks, and uptime monitoring. No ops team, no downtime budget.</li>
     <li>Integrated multiple international eSIM supplier APIs for catalog sync, ordering, QR-code delivery, and activation tracking, enabling <strong>fully automated 24/7 fulfillment</strong> with zero manual steps in the purchase path.</li>
-    <li>Built the platform on Go, TypeScript, Node.js, PostgreSQL, Redis, and Docker, automating product, pricing, and data-plan management to remove manual catalog maintenance entirely.</li>
+    <li>Built the platform on Go, TypeScript, Node.js, PostgreSQL, Redis, and Docker, automating product, pricing, and data-plan management.</li>
+    <li>Automated customer support with an <strong>OpenAI agent</strong> — RAG over the product knowledge base plus custom tools that act on real orders, resolving social-channel enquiries with no human in the loop.</li>
   </ul>
 </div>
 

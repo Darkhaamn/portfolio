@@ -354,61 +354,103 @@ export function HubDiagram({ work }: Props) {
   const hub = work.hub;
   if (!hub) return null;
 
-  const half = Math.ceil(hub.spokes.length / 2);
-  const left = hub.spokes.slice(0, half);
-  const right = hub.spokes.slice(half);
-
-  const card = (s: { label: string; sub?: string }) => (
-    <div className="flex-1 rounded-xl border border-zinc-200 bg-white px-3.5 py-2.5 shadow-sm dark:border-zinc-700 dark:bg-zinc-900">
-      <div className="text-sm font-medium text-zinc-900 dark:text-zinc-100">{s.label}</div>
-      {s.sub ? <div className="font-mono text-[11px] text-zinc-500">{s.sub}</div> : null}
-    </div>
-  );
-
   return (
     <DiagramSection
       title="Integration surface"
-      caption="One booking core in front of every supplier the market was scattered across"
+      caption="A market split across a dozen suppliers, put behind one booking core"
     >
       <Canvas>
-        <div className="grid grid-cols-1 items-center gap-4 md:grid-cols-[1fr_auto_1fr] md:gap-0">
-          <div className="space-y-2.5">
-            {left.map((s) => (
-              <div key={s.label} className="flex items-center">
-                {card(s)}
-                <div className="hidden w-8 items-center md:flex">
-                  <Lead accent={work.theme.accent} />
+        <div className="grid grid-cols-1 items-center gap-5 lg:grid-cols-[1fr_auto_minmax(0,215px)_auto_minmax(0,180px)] lg:gap-0">
+          {/* suppliers, grouped by what they provide */}
+          <div className="space-y-3">
+            {hub.groups.map((group) => (
+              <div key={group.label} className="flex items-center gap-3">
+                <span className="w-16 shrink-0 text-right font-mono text-[10px] uppercase tracking-widest text-zinc-400">
+                  {group.label}
+                </span>
+                <div className="grid flex-1 grid-cols-2 gap-2">
+                  {group.spokes.map((s) => (
+                    <div
+                      key={s.label}
+                      className={cn(
+                        "rounded-lg border border-zinc-200 bg-white px-3 py-2 shadow-sm dark:border-zinc-700 dark:bg-zinc-900",
+                        group.spokes.length === 1 && "col-span-2",
+                      )}
+                    >
+                      <div className="truncate text-[13px] font-medium text-zinc-900 dark:text-zinc-100">
+                        {s.label}
+                      </div>
+                      {s.sub ? (
+                        <div className="font-mono text-[10px] text-zinc-500">{s.sub}</div>
+                      ) : null}
+                    </div>
+                  ))}
                 </div>
               </div>
+            ))}
+          </div>
+
+          {/* collector bus: many suppliers onto one line */}
+          <div className="relative hidden h-full w-10 lg:block" aria-hidden>
+            <span
+              className={cn("absolute left-1/2 top-[10%] h-[80%] w-px", work.theme.accentBar)}
+              style={{ opacity: 0.6 }}
+            />
+            <span
+              className={cn("absolute left-1/2 top-1/2 h-px w-1/2", work.theme.accentBar)}
+              style={{ opacity: 0.6 }}
+            />
+            {[10, 36.7, 63.3, 90].map((t) => (
+              <span
+                key={t}
+                className={cn("absolute left-1/2 h-px w-1/2 -translate-x-full", work.theme.accentBar)}
+                style={{ top: `${t}%`, opacity: 0.45 }}
+              />
             ))}
           </div>
 
           <div
             className={cn(
-              "mx-auto w-full max-w-[220px] rounded-2xl border px-4 py-6 text-center shadow-sm md:w-[210px]",
+              "mx-auto w-full rounded-2xl border px-4 py-6 text-center shadow-sm",
               work.theme.accentMuted,
             )}
           >
-            <div className={cn("text-lg font-semibold tracking-tight", work.theme.accent)}>
+            <div className={cn("text-base font-semibold tracking-tight", work.theme.accent)}>
               {hub.center}
             </div>
             {hub.centerSub ? (
-              <div className="mt-1 font-mono text-[11px] leading-snug text-zinc-500">
+              <div className="mt-1 font-mono text-[10px] leading-snug text-zinc-500">
                 {hub.centerSub}
               </div>
             ) : null}
+            <div className="mt-3 border-t border-current/15 pt-2.5 font-mono text-[10px] uppercase tracking-widest text-zinc-500">
+              search · normalize · orchestrate
+            </div>
           </div>
 
-          <div className="space-y-2.5">
-            {right.map((s) => (
-              <div key={s.label} className="flex items-center">
-                <div className="hidden w-8 items-center md:flex">
-                  <Lead accent={work.theme.accent} dir="left" />
-                </div>
-                {card(s)}
-              </div>
-            ))}
+          {/* one core out to one product */}
+          <div className="hidden w-10 items-center lg:flex" aria-hidden>
+            <Lead accent={work.theme.accent} />
           </div>
+
+          {hub.outputs?.length ? (
+            <div className="space-y-2.5">
+              {hub.outputs.map((o) => (
+                <div
+                  key={o.label}
+                  className={cn(
+                    "rounded-lg border bg-white px-3 py-2 dark:bg-zinc-950",
+                    work.theme.accentMuted,
+                  )}
+                >
+                  <div className={cn("text-[13px] font-medium", work.theme.accent)}>{o.label}</div>
+                  {o.sub ? (
+                    <div className="font-mono text-[10px] text-zinc-500">{o.sub}</div>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+          ) : null}
         </div>
       </Canvas>
     </DiagramSection>
@@ -440,6 +482,6 @@ export function WorkDiagram({ work }: Props) {
       return <HubDiagram work={work} />;
     case "flow":
     default:
-      return <FlowDiagram work={work} />;
+      return work.cloud ? <CloudArchitecture work={work} /> : <FlowDiagram work={work} />;
   }
 }

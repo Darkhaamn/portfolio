@@ -172,18 +172,27 @@ export function CloudArchitecture({ work }: Props) {
 
           {/* ---------- cross-cutting ---------- */}
           {arch.ops?.length ? (
-            <div className="mt-5">
-              <div className="mb-2 font-mono text-[9px] uppercase tracking-widest text-zinc-400">
-                Observability &amp; security — across every tier
-              </div>
-              <div
-                className="grid gap-3"
-                style={{ gridTemplateColumns: `repeat(${arch.ops.length}, minmax(0,1fr))` }}
-              >
-                {arch.ops.map((n) => (
-                  <Box key={n.label} label={n.label} sub={n.sub} className="border-dashed shadow-none" />
-                ))}
-              </div>
+            <div className="mt-5 space-y-4">
+              {arch.ops.map((rail) => (
+                <div key={rail.label}>
+                  <div className="mb-2 flex items-center gap-2.5">
+                    <span className="font-mono text-[9px] uppercase tracking-widest text-zinc-400">
+                      {rail.label}
+                    </span>
+                    <span className="h-px flex-1 bg-zinc-200 dark:bg-zinc-800" aria-hidden />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                    {rail.nodes.map((n) => (
+                      <Box
+                        key={n.label}
+                        label={n.label}
+                        sub={n.sub}
+                        className="border-dashed shadow-none"
+                      />
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           ) : null}
 

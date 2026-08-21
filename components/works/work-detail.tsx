@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
@@ -6,11 +5,11 @@ import type { Work } from "@/lib/works";
 import {
   IconArrowLeft,
   IconExternalLink,
-  IconPhoto,
 } from "@tabler/icons-react";
 
 import { WorkDiagram } from "@/components/works/diagrams";
 import { WorkHeroBlock } from "@/components/works/hero";
+import { WorkGallery as GalleryCarousel } from "@/components/works/gallery";
 import { cn } from "@/lib/utils";
 
 type WorkDetailProps = {
@@ -87,35 +86,6 @@ function WorkMeta({ work }: WorkDetailProps) {
   );
 }
 
-function WorkGallery({ work }: WorkDetailProps) {
-  if (!work.gallery?.length) return null;
-
-  return (
-    <section className="mt-12">
-      <h2 className="mb-4 flex items-center gap-2 text-sm font-medium text-zinc-950 dark:text-zinc-100">
-        <IconPhoto className="size-4 text-zinc-500" aria-hidden />
-        Screenshots
-      </h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {work.gallery.map((img) => (
-          <div
-            key={img.src}
-            className="relative aspect-16/10 overflow-hidden rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900"
-          >
-            <Image
-              src={img.src}
-              alt={img.alt}
-              fill
-              className="object-contain"
-              sizes="(max-width: 640px) 100vw, 512px"
-            />
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
-
 function WorkHighlights({ work }: WorkDetailProps) {
   if (!work.highlights?.length) return null;
 
@@ -177,7 +147,15 @@ export function WorkDetail({ work }: WorkDetailProps) {
         <WorkMeta work={work} />
       </div>
     ),
-    gallery: <WorkGallery key="gallery" work={work} />,
+    gallery: (
+      <GalleryCarousel
+        key="gallery"
+        accentBar={work.theme.accentBar}
+        images={[work.thumbnail, ...(work.gallery ?? [])].filter(
+          (img, i, all) => all.findIndex((x) => x.src === img.src) === i,
+        )}
+      />
+    ),
   };
 
   return (

@@ -223,7 +223,8 @@ const doc = new Document({
         bullets: [
           '**Ran the entire production platform single-handed** — containerized services behind Nginx with TLS termination, centralized logging, health checks, and uptime monitoring. No ops team, no downtime budget.',
           'Integrated multiple international eSIM supplier APIs for catalog sync, ordering, QR-code delivery, and activation tracking, enabling **fully automated 24/7 fulfillment** with zero manual steps in the purchase path.',
-          'Built the platform on Go, TypeScript, Node.js, PostgreSQL, Redis, and Docker, automating product, pricing, and data-plan management to remove manual catalog maintenance entirely.',
+          'Built the platform on Go, TypeScript, Node.js, PostgreSQL, Redis, and Docker, automating product, pricing, and data-plan management.',
+          'Automated customer support with an **OpenAI agent** — RAG over the product knowledge base plus custom tools that act on real orders, resolving social-channel enquiries with no human in the loop.',
         ],
       }),
 
