@@ -20,7 +20,8 @@ export function generateMetadata({
         title: work.title,
         description: work.summary,
         url: `/works/${work.id}`,
-        images: [{ url: work.thumbnail.src }],
+        // JPEG twin: LinkedIn and several other crawlers ignore WebP previews.
+        images: [{ url: work.thumbnail.src.replace(/\.webp$/, '.jpg') }],
       },
     };
   });
