@@ -829,7 +829,7 @@ export const works: Work[] = [
     period: '2026',
     status: 'Live',
     launched: '2026',
-    thumbnail: { src: '/works/live/duutaa-home.png', alt: 'Duutaa — a round in play: the waveform, the clip-length ladder and the round filters' },
+    thumbnail: { src: '/works/duutaa-home.png', alt: 'Duutaa — a round in play: the waveform, the clip-length ladder and the round filters' },
     theme: {
       accent: 'text-yellow-500',
       accentMuted: 'bg-yellow-500/10 border-yellow-500/20',
