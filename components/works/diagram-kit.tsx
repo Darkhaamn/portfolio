@@ -1,3 +1,4 @@
+import { H2 } from "@/lib/typography";
 import { cn } from "@/lib/utils";
 
 /**
@@ -258,8 +259,12 @@ export function DiagramSection({
 }) {
   return (
     <section className="mt-12">
-      <h2 className="text-sm font-medium text-zinc-950 dark:text-zinc-100">{title}</h2>
-      {caption ? <p className="mt-1 font-mono text-xs text-zinc-500">{caption}</p> : null}
+      <div className="mx-auto w-full max-w-2xl">
+        <h2 className={H2}>{title}</h2>
+        {caption ? (
+          <p className="mt-2 font-mono text-xs text-zinc-500 dark:text-zinc-400">{caption}</p>
+        ) : null}
+      </div>
       <div className="mt-5">{children}</div>
     </section>
   );

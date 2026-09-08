@@ -20,7 +20,6 @@ export function ArchifyEmbed({ work }: { work: Work }) {
   return (
     <section className="mt-12">
       <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800">
-        <span className={cn("block h-1 w-full", work.theme.accentBar)} aria-hidden />
         <iframe
           src={a.src}
           title={a.title}
@@ -34,15 +33,12 @@ export function ArchifyEmbed({ work }: { work: Work }) {
       </div>
 
       <div className="mt-3 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
-        {a.caption ? <p className="font-mono text-xs text-zinc-500">{a.caption}</p> : null}
+        {a.caption ? <p className="font-mono text-xs text-zinc-500 dark:text-zinc-400">{a.caption}</p> : null}
         <a
           href={a.src}
           target="_blank"
           rel="noreferrer"
-          className={cn(
-            "inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-wider transition-opacity hover:opacity-70",
-            work.theme.accent,
-          )}
+          className="inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-wider text-zinc-600 transition-opacity hover:opacity-70 dark:text-zinc-400"
         >
           Open full size
           <IconArrowUpRight className="size-3.5" />

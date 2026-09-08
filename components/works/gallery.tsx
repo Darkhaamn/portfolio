@@ -3,15 +3,16 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-import { IconChevronLeft, IconChevronRight, IconPhoto, IconX, IconZoomIn, IconZoomOut } from '@tabler/icons-react';
+import { IconChevronLeft, IconChevronRight, IconX, IconZoomIn, IconZoomOut } from '@tabler/icons-react';
 
+import { H2 } from '@/lib/typography';
 import { cn } from '@/lib/utils';
 
 export type GalleryImage = { src: string; alt: string };
 
 const ZOOM = 2.4;
 
-export function WorkGallery({ images, accentBar }: { images: GalleryImage[]; accentBar: string }) {
+export function WorkGallery({ images }: { images: GalleryImage[] }) {
   const [index, setIndex] = useState<number | null>(null);
   const [zoomed, setZoomed] = useState(false);
   const [origin, setOrigin] = useState('50% 50%');
@@ -70,14 +71,10 @@ export function WorkGallery({ images, accentBar }: { images: GalleryImage[]; acc
 
   return (
     <section className="mt-12">
-      <h2 className="mb-4 flex items-center gap-2 text-sm font-medium text-zinc-950 dark:text-zinc-100">
-        <IconPhoto className="size-4 text-zinc-500" aria-hidden />
-        Screenshots
-        <span className="font-mono text-[11px] font-normal text-zinc-400">{images.length}</span>
-      </h2>
+      <h2 className={cn(H2, 'mb-4')}>{images.length === 1 ? 'Screenshot' : 'Screenshots'}</h2>
 
       {/* grid: no horizontal scrolling — the page simply gets taller */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div className={cn('grid grid-cols-1 gap-4', images.length > 1 && 'sm:grid-cols-2')}>
         {images.map((img, i) => (
           <button
             key={img.src}
@@ -86,7 +83,6 @@ export function WorkGallery({ images, accentBar }: { images: GalleryImage[]; acc
             className="group relative aspect-16/10 w-full overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50 transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-700"
             aria-label={`Open image ${i + 1}: ${img.alt}`}
           >
-            <span className={cn('absolute inset-x-0 top-0 z-10 h-0.5', accentBar)} aria-hidden />
             <Image
               src={img.src}
               alt={img.alt}

@@ -3,6 +3,9 @@ export type WorkId = 'cloudmn' | 'ttc' | 'ufe_aws' | 'mobilife_aws' | 'easysim' 
 export type WorkLink = {
   label: string;
   href: string;
+  /** Header call-to-action text. Defaults to `Visit {label}`, which is correct
+   *  for the entries whose first label is a bare domain. */
+  cta?: string;
 };
 
 export type WorkMetric = {
@@ -24,7 +27,7 @@ export type WorkTheme = {
   label: string;
 };
 
-/** Each project gets a signature layout matching the shape of its engineering story. */
+/** Selects the bespoke diagram for a project. It no longer affects page order. */
 export type WorkLayout =
   | 'stack' // layered platform (Cloud.mn)
   | 'regions' // same platform, second country (TTC)
@@ -38,7 +41,7 @@ export type WorkNode = { label: string; sub?: string };
 
 /** How the detail page opens. */
 export type WorkHero =
-  | { kind: 'browser'; url: string; tabs?: string[] }
+  | { kind: 'browser'; url: string }
   | { kind: 'split'; panes: { src: string; alt: string; url: string; caption: string }[] }
   | { kind: 'numeral'; value: string; unit: string; note: string; url: string }
   | { kind: 'none' };
@@ -81,6 +84,19 @@ export type WorkCloudArch = {
   dr?: { label: string; items: string[] };
 };
 
+/** A titled section of the write-up; renders as an h2 with prose and an optional list. */
+export type WorkSection = {
+  heading: string;
+  /** A short pull-quote shown before the paragraphs. */
+  quote?: string;
+  paragraphs?: string[];
+  /** Rendered as a numbered list when `ordered`, otherwise bulleted. */
+  list?: string[];
+  ordered?: boolean;
+  /** Pull one of the page blocks inline, after this section's text. */
+  embed?: 'archify' | 'diagram' | 'metrics' | 'gallery';
+};
+
 export type Work = {
   id: WorkId;
   title: string;
@@ -92,8 +108,13 @@ export type Work = {
   thumbnail: { src: string; alt: string; objectPosition?: string };
   summary: string;
   metrics?: WorkMetric[];
+  /** Small print under the metric band — where the numbers come from. */
+  metricsNote?: string;
   architecture?: WorkArchitecture;
+  /** Untitled opening paragraphs. */
   paragraphs: string[];
+  /** Titled sections that follow the opening. */
+  sections?: WorkSection[];
   highlights?: string[];
   stack?: string;
   links?: WorkLink[];
@@ -103,7 +124,10 @@ export type Work = {
   /** Tile weight on the /works index — drives the editorial rhythm. */
   size?: 'feature' | 'half' | 'third';
   layout?: WorkLayout;
-  /** Overrides the layout diagram's built-in heading when a layout is reused. */
+  /** Overrides the layout diagram's built-in heading when a layout is reused.
+   *  IGNORED when `archify` is set — archify wins (work-detail.tsx), so this and
+   *  the layout data (pipeline / hub / regions / beforeAfter / topology / cloud)
+   *  are dead on that project. Set one or the other. */
   diagram?: { title?: string; caption?: string };
   /** An Archify-authored diagram, delivered as a self-contained viewer under /diagrams. */
   archify?: {
@@ -129,16 +153,15 @@ export const works: Work[] = [
     size: 'feature',
     layout: 'stack',
     title: 'Cloud.mn',
-    role: 'Frontend Engineer → CTO',
+    role: 'System Architect',
     period: '2019–2024',
-    status: 'Completed',
     launched: '2019',
     featured: true,
     thumbnail: { src: '/works/live/cloudmn.webp', alt: 'Cloud.mn — self-service public cloud portal' },
     theme: {
-      accent: 'text-sky-500',
-      accentMuted: 'bg-sky-500/10 border-sky-500/20',
-      accentBar: 'bg-sky-500',
+      accent: 'text-zinc-900 dark:text-zinc-100',
+      accentMuted: 'bg-zinc-50 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800',
+      accentBar: 'bg-zinc-200 dark:bg-zinc-800',
       label: 'Public Cloud',
     },
     summary: "Mongolia's first public cloud platform — self-service virtual machines, storage, and networking built from the ground up.",
@@ -162,16 +185,16 @@ export const works: Work[] = [
     paragraphs: [
       "Cloud.mn is Mongolia's first public cloud service, enabling users to register and create virtual machines, disks, networks, and other resources on demand — essentially a smaller-scale AWS for Mongolia.",
       'The goal was to establish a public cloud where none existed before. Our company built the first solution, and I was involved from day one — contributing across frontend, backend, DevOps, and integrations, then leading a team of 10+ engineers to scale it.',
-      "The platform grew to serve 300+ of Mongolia's top companies, maintaining 99.95% uptime and cutting manual provisioning time by 90% through infrastructure automation.",
+      "The platform grew to serve 300+ of Mongolia's top companies, with Ansible-driven host provisioning replacing the manual build steps behind every new customer environment.",
     ],
     highlights: [
       'Self-service portal for provisioning virtual machines, storage disks, and private networks.',
       'Built-in billing, user management, and resource monitoring.',
       'API and dashboard for automation and integration.',
-      'Production infrastructure on OpenStack, KVM, and Ansible at 99.95% uptime.',
+      'Production infrastructure on OpenStack, KVM, and Ansible.',
       'Contributed across the stack: frontend (React), backend (Python, Go), DevOps (OpenStack, KVM, Ansible), and integrations (payment, SMS, monitoring).',
     ],
-    stack: 'React, TypeScript, Python, Go, OpenStack, Docker, Kubernetes, MariaDB, Redis, RabbitMQ, Nginx, Ansible',
+    stack: 'OpenStack, Kubernetes, Docker, Ansible, Nginx, MariaDB, Redis, RabbitMQ, Python, Go, React, TypeScript',
     links: [{ label: 'cloud.mn', href: 'https://cloud.mn' }],
     gallery: [
       { src: '/works/cloudmn-live.webp', alt: 'Cloud.mn — the public site and enterprise customers' },
@@ -209,15 +232,14 @@ export const works: Work[] = [
       },
     ],
     title: 'TTC Cloud',
-    role: 'CTO',
+    role: 'System Architect',
     period: '2022–2024',
-    status: 'Completed',
     launched: '2021',
     thumbnail: { src: '/works/live/ttc.webp', alt: 'TTC Cloud — Transtelecom public cloud' },
     theme: {
-      accent: 'text-amber-500',
-      accentMuted: 'bg-amber-500/10 border-amber-500/20',
-      accentBar: 'bg-amber-500',
+      accent: 'text-zinc-900 dark:text-zinc-100',
+      accentMuted: 'bg-zinc-50 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800',
+      accentBar: 'bg-zinc-200 dark:bg-zinc-800',
       label: 'Enterprise Cloud',
     },
     summary: 'Public cloud platform for Kazakhstan’s largest data center, Transtelecom — built for enterprise scale and regional compliance.',
@@ -238,7 +260,7 @@ export const works: Work[] = [
       'Localized for Kazakh and Russian users, compliant with regional data regulations.',
       'Led a 20+ person team of engineers, architects, and PMs; built a developer skills framework that raised recruitment efficiency 30%.',
     ],
-    stack: 'React, TypeScript, Python, Go, OpenStack, Docker, Kubernetes, MariaDB, Redis, RabbitMQ, Nginx, Local Payment APIs',
+    stack: 'OpenStack, Kubernetes, Docker, Nginx, MariaDB, Redis, RabbitMQ, Python, Go, React, TypeScript, Local Payment APIs',
     links: [
       { label: 'cloud.ttc.kz', href: 'https://cloud.ttc.kz/' },
       { label: 'ttc.kz', href: 'https://ttc.kz' },
@@ -342,13 +364,12 @@ export const works: Work[] = [
     title: 'UFE Online Learning on AWS',
     role: 'AWS Migration Lead',
     period: '2020',
-    status: 'Completed',
     thumbnail: { src: '/works/live/ufe.webp', alt: 'UFE — online learning platform' },
     theme: {
-      accent: 'text-orange-500',
-      accentMuted: 'bg-orange-500/10 border-orange-500/20',
-      accentBar: 'bg-orange-500',
-      label: 'AWS Migration',
+      accent: 'text-zinc-900 dark:text-zinc-100',
+      accentMuted: 'bg-zinc-50 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800',
+      accentBar: 'bg-zinc-200 dark:bg-zinc-800',
+      label: 'Cloud Migration',
     },
     summary:
       'Migrated one of Mongolia’s oldest universities to AWS in 10 days during the COVID-19 lockdown — delivered with Fibo Cloud as UFE’s AWS Partner, and published as an official AWS case study.',
@@ -377,7 +398,7 @@ export const works: Work[] = [
       'That setup was two servers in a local data center. Past roughly 400 concurrent students the whole learning management system went offline, and an unreliable power supply meant someone had to restart the server manually after every outage.',
       'In late January 2020 the government announced a nationwide lockdown. Every educational institution closed within the space of a week and overseas students were recalled home. UFE decided to move its entire learning management system to AWS.',
       'Fibo Cloud was UFE’s AWS Partner for the migration. University IT engineers and IT professors worked alongside our team through the winter break — content migration alone took three days, and the full cutover landed in 10 days, ahead of the new semester. Procuring on-premises servers would have taken around 48 days.',
-      'After the migration 90% of students used the online services daily and 80% of the university’s workloads ran on AWS, at 99.99% service availability. In October 2020 the Ministry of Education invited UFE — one of five universities — to present its digital transformation.',
+      'After the migration 80% of the university’s workloads ran on AWS. In October 2020 the Ministry of Education invited UFE — one of five universities — to present its digital transformation.',
     ],
     highlights: [
       'Delivered in 10 days, in time for the new semester — bypassing a server procurement cycle that would have taken around 48 days.',
@@ -389,10 +410,11 @@ export const works: Work[] = [
       'Amazon CloudWatch gives departments traffic and usage data on when students are online and how they learn.',
       'Published as an official AWS case study; UFE presented the transformation to Mongolia’s Ministry of Education in October 2020.',
     ],
-    stack: 'AWS (EC2, S3, CloudFront, RDS, ELB, Auto Scaling, Route 53), Nginx, PHP, MySQL, Redis, CloudWatch',
+    stack: 'AWS (EC2, S3, CloudFront, RDS, ELB, Auto Scaling, Route 53), CloudWatch, Nginx, Redis, MySQL, PHP',
     links: [
       {
         label: 'AWS Case Study',
+      cta: 'Read the AWS case study',
         href: 'https://web.archive.org/web/20210116032223/https://aws.amazon.com/solutions/case-studies/ufe-mongolia-case-study/',
       },
       { label: 'UFE Reference', href: 'https://www.ufe.edu.mn/widgetDetail/295' },
@@ -401,7 +423,7 @@ export const works: Work[] = [
   },
   {
     id: 'mobilife_aws',
-    hero: { kind: 'none' },
+    hero: { kind: 'browser', url: 'mobilife.mn' },
     size: 'third',
     layout: 'flow',
     cloud: {
@@ -481,9 +503,9 @@ export const works: Work[] = [
     launched: '2025',
     thumbnail: { src: '/works/live/mobilife.webp', alt: 'Mobilife — production platform on AWS' },
     theme: {
-      accent: 'text-emerald-500',
-      accentMuted: 'bg-emerald-500/10 border-emerald-500/20',
-      accentBar: 'bg-emerald-500',
+      accent: 'text-zinc-900 dark:text-zinc-100',
+      accentMuted: 'bg-zinc-50 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800',
+      accentBar: 'bg-zinc-200 dark:bg-zinc-800',
       label: 'AWS Operations',
     },
     summary: 'Designed a production-grade AWS architecture and operational runbook for Mobilife — scalable, observable, and safe to deploy.',
@@ -549,9 +571,9 @@ export const works: Work[] = [
     launched: '2025',
     thumbnail: { src: '/works/live/easysim.webp', alt: 'EasySim.mn — international eSIM store' },
     theme: {
-      accent: 'text-teal-500',
-      accentMuted: 'bg-teal-500/10 border-teal-500/20',
-      accentBar: 'bg-teal-500',
+      accent: 'text-zinc-900 dark:text-zinc-100',
+      accentMuted: 'bg-zinc-50 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800',
+      accentBar: 'bg-zinc-200 dark:bg-zinc-800',
       label: 'eSIM Platform',
     },
     summary: 'International eSIM service for travelers — instant data in 100+ countries, distributed through a Mongolian super app.',
@@ -563,13 +585,13 @@ export const works: Work[] = [
     paragraphs: [
       'EasySim Data Provider LLC is a technology company offering international eSIM services tailored for travelers.',
       'The core project was a digital platform that lets users instantly purchase and activate eSIM data packages — no physical SIM card required.',
-      'Launched inside a popular Mongolian super app, the platform makes mobile internet more convenient, affordable, and accessible across 100+ countries.',
+      'Launched inside a popular Mongolian super app, the platform makes mobile internet more convenient, affordable, and accessible wherever travelers land.',
       'Customer support runs itself. An OpenAI-backed agent answers on social channels with retrieval over the product knowledge base and custom tools that can act on a real order — so the common questions resolve end to end without a human in the loop.',
     ],
     highlights: [
       'Seamless eSIM purchase and instant activation, with no physical SIM required.',
       'Integrated into a major Mongolian super app for maximum reach.',
-      'Coverage in 100+ countries with affordable roaming data packages.',
+      'Roaming data packages priced per destination, activated without a physical SIM.',
       'Automated QR code generation and delivery for eSIM installation.',
       'Secure payment integration and real-time order processing.',
       'User-friendly dashboard for managing eSIMs and tracking usage.',
@@ -577,7 +599,7 @@ export const works: Work[] = [
       'Custom tools give the agent real capability — it can look things up and act on an order rather than only answering from text.',
     ],
     stack:
-      'React, TypeScript, Golang, PostgreSQL, Redis, Docker, Nginx, REST API, OpenAI API, RAG, Function calling, QR Code Automation, Payment Gateway Integration, Super App SDK',
+      'Docker, Nginx, PostgreSQL, Redis, Golang, React, TypeScript, REST API, OpenAI API, RAG, Function calling, Super App SDK',
     links: [{ label: 'easysim.mn', href: 'https://easysim.mn' }],
     gallery: [
       { src: '/works/easysim-live.webp', alt: 'EasySim.mn — data plans priced per destination country' },
@@ -587,7 +609,7 @@ export const works: Work[] = [
   },
   {
     id: 'medtech',
-    hero: { kind: 'browser', url: 'mrp.mn', tabs: ['mrp.mn', 'admin.mrp.mn', 'supplier.mrp.mn'] },
+    hero: { kind: 'browser', url: 'mrp.mn' },
     size: 'third',
     layout: 'topology',
     topology: {
@@ -602,12 +624,11 @@ export const works: Work[] = [
     title: 'MedOrder — MedTech Partner',
     role: 'Lead Engineer',
     period: '2021–2025',
-    status: 'Completed',
     thumbnail: { src: '/works/live/medtech.webp', alt: 'MedOrder — pharmaceutical wholesale platform' },
     theme: {
-      accent: 'text-blue-500',
-      accentMuted: 'bg-blue-500/10 border-blue-500/20',
-      accentBar: 'bg-blue-500',
+      accent: 'text-zinc-900 dark:text-zinc-100',
+      accentMuted: 'bg-zinc-50 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800',
+      accentBar: 'bg-zinc-200 dark:bg-zinc-800',
       label: 'Healthcare SaaS',
     },
     summary: 'A pharmaceutical SaaS ecosystem — customer, admin, and supplier portals with real-time order tracking on a microservices backend.',
@@ -627,9 +648,8 @@ export const works: Work[] = [
       'Real-time order tracking with updates and notifications.',
       'Scalable microservice architecture for modular scaling, rapid deployment, and fault tolerance.',
       'Connected to a License Management API for regulatory compliance.',
-      '45,952 orders processed for 1,305 pharmacies across a catalogue of 8,501 medicines and medical supplies.',
     ],
-    stack: 'React, TypeScript, Golang, PostgreSQL, Redis, Docker, Kubernetes, Microservices, REST API, License Management API',
+    stack: 'Kubernetes, Docker, PostgreSQL, Redis, Golang, Microservices, REST API, React, TypeScript, License Management API',
     links: [
       { label: 'mrp.mn', href: 'https://mrp.mn' },
       { label: 'admin.mrp.mn', href: 'https://admin.mrp.mn' },
@@ -684,12 +704,12 @@ export const works: Work[] = [
     title: 'iTrip Travel Platform',
     role: 'Backend Architect',
     period: '2023',
-    status: 'Launched & Ongoing',
+    status: 'Live',
     thumbnail: { src: '/works/live/itrip.webp', alt: 'iTrip — all-in-one travel platform' },
     theme: {
-      accent: 'text-violet-500',
-      accentMuted: 'bg-violet-500/10 border-violet-500/20',
-      accentBar: 'bg-violet-500',
+      accent: 'text-zinc-900 dark:text-zinc-100',
+      accentMuted: 'bg-zinc-50 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800',
+      accentBar: 'bg-zinc-200 dark:bg-zinc-800',
       label: 'Travel Platform',
     },
     summary: 'Mongolia’s all-in-one travel platform — flights, hotels, and tours in one place, powered by 8+ integrated third-party APIs.',
@@ -714,7 +734,7 @@ export const works: Work[] = [
       'Unit and integration testing for stability.',
     ],
     stack:
-      'React, Golang, .NET, Microservices, AWS, Docker, Kubernetes, Nginx, MySQL, Redis, Amadeus API, Route24 API, Viator API, Trip.com API, Ihotel.mn API, Payment Gateways, RabbitMQ',
+      'AWS, Kubernetes, Docker, Nginx, RabbitMQ, MySQL, Redis, Golang, .NET, Microservices, React, Supplier APIs (Amadeus, Route24, Viator, Trip.com, Ihotel.mn), Payment Gateways',
     links: [{ label: 'itrip.mn', href: 'https://itrip.mn/' }],
     gallery: [
       { src: '/works/itrip-live.webp', alt: 'iTrip — unified search across flights, hotels and tours' },
@@ -724,29 +744,9 @@ export const works: Work[] = [
   },
   {
     id: 'streamkeep',
-    hero: { kind: 'browser', url: 'streamkeep.live', tabs: ['streamkeep.live', 'streamkeep.live/live', 'streamkeep.live/channels'] },
+    hero: { kind: 'browser', url: 'streamkeep.live' },
     size: 'half',
     layout: 'topology',
-    diagram: {
-      title: 'System topology',
-      caption: 'Three public surfaces over one Go API, with video served straight off the CDN',
-    },
-    topology: {
-      clients: [
-        { label: 'Stream library', sub: 'public · no sign-in' },
-        { label: 'Live multiview', sub: 'many channels at once' },
-        { label: 'Channel stats', sub: 'rankings + history' },
-      ],
-      core: { label: 'Go API + worker queue', sub: 'Docker Compose · PostgreSQL · single VM' },
-      services: [
-        'Kick OAuth (PKCE)',
-        'VOD archive queue',
-        'R2 object storage + CDN',
-        'Chat capture + replay',
-        'Live directory recorder',
-        'QPay subscriptions',
-      ],
-    },
     archify: {
       src: '/diagrams/streamkeep.html',
       title: 'Archive and playback architecture',
@@ -760,41 +760,90 @@ export const works: Work[] = [
     launched: '2026',
     thumbnail: { src: '/works/live/streamkeep.webp', alt: 'StreamKeep — Kick VOD archive and live multiview' },
     theme: {
-      accent: 'text-lime-500',
-      accentMuted: 'bg-lime-500/10 border-lime-500/20',
-      accentBar: 'bg-lime-500',
+      accent: 'text-zinc-900 dark:text-zinc-100',
+      accentMuted: 'bg-zinc-50 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800',
+      accentBar: 'bg-zinc-200 dark:bg-zinc-800',
       label: 'Streaming Infrastructure',
     },
     summary:
-      'Kick deletes a broadcast 30 days after it airs. StreamKeep catches the ones worth keeping — source quality, chat replay intact — and serves them back from object storage.',
+      'Kick deletes every broadcast 30 days after it airs — not even the streamer can get it back. StreamKeep archives the nights that matter and serves them from object storage.',
     metrics: [
-      { value: '30 days', label: 'before Kick deletes it' },
-      { value: '71.6K', label: 'hours watched measured' },
+      { value: '116', label: 'Mongolian channels tracked' },
+      { value: '71.6K', label: 'hours watched' },
       { value: '154.5K', label: 'chat lines captured' },
     ],
+    metricsNote: 'Public counters from streamkeep.live, first weeks of open beta.',
     paragraphs: [
-      'Kick — kick.com — is a live-streaming platform, the younger rival to Twitch, and it has a real Mongolian scene: StreamKeep currently tracks 116 channels broadcasting in Mongolian. It also deletes every broadcast thirty days after it airs. A streamer who has gone live four nights a week for a year has nothing to show for it — no back catalogue, no clips they did not think to cut at the time, no record that the night happened at all. Once the window closes the file is gone for good, and not even the streamer can ask for it back.',
-      'I built StreamKeep because that felt like the wrong default. The aim is not to hoard everything a channel has ever broadcast; it is to let a streamer keep the handful of nights that actually mattered — with the chat that made them — and still have those years from now.',
-      'A streamer signs in with their own Kick account, sees their own past broadcasts, and hand-picks the ones worth keeping. A background worker pulls each VOD at source quality and writes the original file to object storage — no transcode, no re-encode, no quality loss. Ownership is enforced rather than assumed: the request history still records who asked for an archive, but that record grants no write access, and only the broadcast’s owner can create, retry or enrich one. Nothing is ever archived automatically.',
-      'Watching is public and needs no account: the library, the video, and the chat replaying exactly as it scrolled during the broadcast. Media is served from a Cloudflare R2 bucket behind its own CDN domain, so the API never sits in the path of a byte of video. Even the MP4 export is assembled in the browser from the HLS segments, which keeps the server out of the remux entirely.',
-      'Two more surfaces grew out of the same data. A live page lists every Mongolian channel currently on air and plays any selection side by side with chat — only the master playlist is proxied, because that is the one file whose CORS policy is limited to Kick’s own origins; variant playlists and segments stream straight from Kick’s CDN. A statistics page samples the live directory every minute and turns it into the history Kick does not publish: hours watched, peak and average viewers, follower and subscriber curves, category share, and a weekly schedule heatmap.',
-      'The public counters are the honest measure of it so far — 8 streamers, 28 broadcasts and 116 hours of video kept, against 116 channels tracked, 71.6K hours of viewing measured and 154.5K chat lines counted.',
-      'I run the whole thing solo: Go API and worker, a bilingual Next.js front end, PostgreSQL, Docker Compose on a single VM, a health-gated deploy that polls container health and fails rather than reporting a broken release green, and QPay billing on hours-based plans.',
+      'Kick is a live-streaming platform in the same market as Twitch, and Mongolia has an active scene on it — more than a hundred channels. Nothing that scene broadcasts survives past a month: Kick\u2019s retention window is the entire archive, and the streamers have no say in it.',
+      'StreamKeep is a selective archive for that scene. A streamer signs in with their own Kick account, picks the broadcasts worth keeping, and StreamKeep stores the original video together with the chat that ran alongside it — then serves it back to anyone, with no account required. I designed and built it alone, and I am the one who runs it in production.',
     ],
-    highlights: [
-      'Kick OAuth (PKCE) sign-in — a streamer can only archive broadcasts they actually own.',
-      'Background worker queue downloads each VOD at source quality; the original file is what gets stored.',
-      'Originals kept in Cloudflare R2 and served from a dedicated CDN domain, keeping video off the API path.',
-      'Chat captured during the broadcast and replayed in sync with playback.',
-      'Live multiview — every Mongolian Kick channel on air, several playable side by side with a chat panel; only the CORS-restricted master playlist is proxied.',
-      'Channel statistics built from minute-by-minute sampling: hours watched, viewer, follower and subscriber history, category share, schedule heatmap. Kick publishes none of it.',
-      'MP4 export assembled in the browser from HLS segments, so the server never re-muxes a file.',
-      'Bilingual UI (English / Mongolian) selected by cookie and read server-side, so the first paint already matches.',
-      'Health-gated CI deploy: the pipeline polls container health and fails rather than reporting a broken release as green.',
-      'QPay subscriptions on hours-based plans — the streamer pays, so there is no viewer paywall and no ads.',
+    sections: [
+      {
+        heading: 'What gets lost in 30 days',
+        quote: 'The scene had 116 channels and no way to keep a single night.',
+        paragraphs: [
+          'Kick\u2019s 30-day retention means the moments that matter to a streamer and their community — a first big raid, a tournament win, a night the chat will not stop talking about — are deleted on a schedule. There is no export, no \u201ckeep this one\u201d button, and no way to ask for a file after the window closes. For a growing scene with no local tooling, the history of Mongolian streaming was simply disappearing month by month.',
+        ],
+      },
+      {
+        heading: 'Three surfaces, one dataset',
+        paragraphs: [
+          'StreamKeep does not try to hoard everything a channel has ever broadcast. It lets the streamer keep the handful of nights that mattered, at source quality, with the chat replay intact, and makes them watchable years from now. Three public surfaces grew out of the same data:',
+        ],
+        list: [
+          'Stream library — every archived broadcast, public and free to watch, with chat replaying in sync and a one-click MP4 export.',
+          'Live multiview — every Mongolian Kick channel currently on air, several playable side by side with a shared chat panel.',
+          'Channel stats — hours watched, peak and average viewers, follower and subscriber curves, category share and a weekly schedule heatmap. Kick publishes none of this.',
+        ],
+      },
+      {
+        heading: 'How a broadcast gets archived',
+        paragraphs: [
+          'One Go binary serves both the REST API and the live recorder that samples Kick every minute; a second process, the archive worker, runs the downloads. Go for one static binary and one runtime to deploy, watch and restart instead of two — the deciding factor when the on-call rotation is one person. Video never passes through the API: originals live in Cloudflare R2 and are served from a dedicated CDN domain, so the server only ever handles metadata, auth and the job queue.',
+          'The three surfaces are bilingual, English and Mongolian, with the language cookie read on the server so the first paint already matches the reader\u2019s choice. For live multiview only Kick\u2019s CORS-restricted master playlist is proxied — variant playlists and segments stream straight from Kick\u2019s CDN. The numbered steps below are the archive path; the interactive diagram traces both it and playback.',
+        ],
+        ordered: true,
+        list: [
+          'The streamer signs in through Kick OAuth (PKCE) and sees only broadcasts they own.',
+          'They select a broadcast — nothing is archived automatically.',
+          'The worker pulls the VOD at source quality with yt-dlp and ffmpeg — no transcode, no re-encode, no quality loss, and no lower-bitrate rendition either.',
+          'The original file is written to R2; playback is HLS through hls.js straight from the CDN.',
+          'Chat captured during the broadcast is stored with it and replayed in sync with the video.',
+          'MP4 export is assembled in the browser from the HLS segments, so the server never re-muxes a file and export capacity scales with the viewer\u2019s device, not my one VM.',
+        ],
+        embed: 'archify',
+      },
+      {
+        heading: 'Running it in production',
+        paragraphs: [
+          'Five containers on one VM: Postgres, Redis, the API, the worker and the web front end. That ceiling is deliberate — the operational surface is sized so a single engineer can deploy it, tell when it broke, and repair it without a platform team behind him. What follows is what the pipeline actually does on every push to the default branch.',
+        ],
+        list: [
+          'Deploys — GitLab CI on a self-hosted runner on the production host. A resource group plus a file lock means two deployments can never overlap, and the job is marked non-interruptible so a newer pipeline cannot kill a release mid-rollout.',
+          'Release safety — every deploy takes a compressed pg_dump before it touches a running container, writes it outside the CI checkout so the next checkout cannot delete it, and aborts if the dump comes back empty. A rollback has a database to roll back to, not just an older image.',
+          'Ordered rollout — all three images build before anything is replaced. Postgres and Redis come up first, then the old worker is stopped so it cannot race the migration, then the API starts and applies its 16 embedded SQL migrations, then worker and web follow.',
+          'Health gates — three of them, in order: Compose waits on each container\u2019s health check with a timeout, then the API is probed on its internal readiness endpoint, then the public API health URL and the site itself must both answer 200. Any one failing fails the pipeline, so a broken release is never reported green.',
+          'Observability — every job\u2019s status and failure reason is a row in Postgres, so a broken archive is something I query rather than a log line I hunt for. Container health checks cover the services, log rotation is capped per container so a runaway process cannot fill the disk, and Cloudflare analytics cover delivery — the one layer I do not run myself.',
+          'Secrets — injected as a protected CI file variable, written with a restrictive umask and removed in the job\u2019s cleanup step, so credentials never reach the repository or survive the build.',
+          'Known limits — one VM and one database mean a host failure is downtime, not a failover, and Kick sits upstream of everything: when their API or CDN is unavailable, archiving stops until it returns. Both are accepted at this scale rather than overlooked.',
+          'Cost — the bill is one small VM plus R2 storage by the gigabyte, and R2 charges no egress, so a broadcast watched a thousand times costs the same to serve as one watched once. That is why plans are sold in hours of retained video: the unit the streamer buys is the unit I pay for.',
+        ],
+      },
+      {
+        heading: 'Who can archive what',
+        paragraphs: [
+          'Ownership is enforced rather than assumed. Every archive request is recorded with the account that made it, but that record grants no write access: only the broadcast\u2019s owner can create, retry or enrich an archive. Viewing is public by design — the streamer pays for storage, so there is no viewer paywall and no advertising.',
+        ],
+      },
+      {
+        heading: 'What it has archived so far',
+        paragraphs: [
+          'StreamKeep is in open beta at streamkeep.live. Streamers have archived 28 broadcasts from 8 channels so far, kept at source quality with the chat replay intact. Measurement runs wider than the archive — the live recorder samples every Mongolian channel on Kick, whether anyone has archived that channel or not, which is why the counters at the top of this page are so much larger than the archive itself.',
+        ],
+      },
     ],
     stack:
-      'Go, Next.js, TypeScript, PostgreSQL, Docker Compose, Cloudflare R2, Cloudflare CDN, HLS, hls.js, ffmpeg, yt-dlp, Kick OAuth (PKCE), Pusher, QPay, Oracle Cloud, GitHub Actions',
+      'Oracle Cloud, Docker Compose, GitLab CI, Cloudflare R2, Cloudflare CDN, PostgreSQL, Redis, Go, Next.js, TypeScript, HLS (hls.js), ffmpeg, yt-dlp, OAuth 2.0 (PKCE), Pusher, QPay',
     links: [{ label: 'streamkeep.live', href: 'https://streamkeep.live' }],
     gallery: [
       { src: '/works/streamkeep-multiview.webp', alt: 'StreamKeep — live multiview of Mongolian Kick channels' },
@@ -807,17 +856,6 @@ export const works: Work[] = [
     hero: { kind: 'browser', url: 'duutaa.online' },
     size: 'half',
     layout: 'pipeline',
-    diagram: {
-      title: 'Reveal ladder',
-      caption: 'Every wrong guess buys more of the song — and costs you the round’s score',
-    },
-    pipeline: [
-      { label: '0.1 seconds', sub: 'one transient — name it here and take the round' },
-      { label: '0.5 seconds', sub: 'enough for the hook to start' },
-      { label: '2 seconds', sub: 'the phrase lands' },
-      { label: '8 seconds', sub: 'chorus territory' },
-      { label: '15 seconds', sub: 'last chance before the round is lost' },
-    ],
     archify: {
       src: '/diagrams/duutaa.html',
       title: 'System architecture',
@@ -831,9 +869,9 @@ export const works: Work[] = [
     launched: '2026',
     thumbnail: { src: '/works/duutaa-home.png', alt: 'Duutaa — a round in play: the waveform, the clip-length ladder and the round filters' },
     theme: {
-      accent: 'text-yellow-500',
-      accentMuted: 'bg-yellow-500/10 border-yellow-500/20',
-      accentBar: 'bg-yellow-500',
+      accent: 'text-zinc-900 dark:text-zinc-100',
+      accentMuted: 'bg-zinc-50 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800',
+      accentBar: 'bg-zinc-200 dark:bg-zinc-800',
       label: 'Music Game',
     },
     summary:
@@ -864,7 +902,7 @@ export const works: Work[] = [
       'Single Docker container on a health-gated deploy, running alongside my other services on one VM.',
       'Running costs covered by a QPay donation page — no paywall on any part of the game.',
     ],
-    stack: 'Next.js, React, TypeScript, Node 24, Web Audio API, Docker, GitHub Actions, iTunes Search API, GA4',
+    stack: 'Docker, GitHub Actions, Node 24, Next.js, React, TypeScript, Web Audio API, iTunes Search API, GA4',
     links: [{ label: 'duutaa.online', href: 'https://duutaa.online' }],
     gallery: [
       { src: '/works/duutaa-guess.png', alt: 'Duutaa — a solved round: cover art, artist, year and a link to the full track on Apple Music' },
