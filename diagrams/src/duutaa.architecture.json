@@ -1,0 +1,241 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Architecture",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "play",
+        "label": "Playing a round",
+        "focus": [
+          "players",
+          "web",
+          "applecdn",
+          "browserstore"
+        ],
+        "note": "Audio streams from Apple straight to the player; the server never touches a byte of it."
+      },
+      {
+        "id": "rooms",
+        "label": "Rooms and catalogue",
+        "focus": [
+          "web",
+          "api",
+          "catalog",
+          "itunes"
+        ],
+        "note": "Two POST-only API routes carry multiplayer rooms and donations."
+      },
+      {
+        "id": "money",
+        "label": "Keeping it running",
+        "focus": [
+          "api",
+          "qpay"
+        ],
+        "note": "A QPay donation page covers the server; nothing in the game is paywalled."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "applecdn",
+      "type": "external",
+      "label": "Apple preview CDN",
+      "sublabel": "30s AAC clips",
+      "pos": [
+        300,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "itunes",
+      "type": "external",
+      "label": "iTunes Search API",
+      "sublabel": "catalogue audit",
+      "pos": [
+        780,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "players",
+      "type": "external",
+      "label": "Players",
+      "sublabel": "browser · no account",
+      "pos": [
+        60,
+        250
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "web",
+      "type": "frontend",
+      "label": "Next.js app",
+      "sublabel": "game UI · Web Audio",
+      "pos": [
+        300,
+        250
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "EN / МН"
+    },
+    {
+      "id": "api",
+      "type": "backend",
+      "label": "API routes",
+      "sublabel": "Node 24 · POST only",
+      "pos": [
+        540,
+        250
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "catalog",
+      "type": "database",
+      "label": "Song catalogue",
+      "sublabel": "3,322 songs · 116 artists",
+      "pos": [
+        780,
+        250
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "ga",
+      "type": "external",
+      "label": "Google Analytics",
+      "sublabel": "GA4 measurement",
+      "pos": [
+        60,
+        420
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "browserstore",
+      "type": "database",
+      "label": "Browser storage",
+      "sublabel": "settings · streak · stats",
+      "pos": [
+        300,
+        420
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "qpay",
+      "type": "external",
+      "label": "QPay",
+      "sublabel": "donations",
+      "pos": [
+        540,
+        420
+      ],
+      "size": [
+        150,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Single Docker container · Cloudflare in front",
+      "wraps": [
+        "web",
+        "api",
+        "catalog"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "play",
+      "from": "players",
+      "to": "web",
+      "label": "HTTPS",
+      "variant": "emphasis"
+    },
+    {
+      "id": "clip",
+      "from": "applecdn",
+      "to": "web",
+      "label": "30s clip",
+      "variant": "emphasis",
+      "labelDy": 24
+    },
+    {
+      "id": "routes",
+      "from": "web",
+      "to": "api",
+      "label": "room · donate"
+    },
+    {
+      "id": "songs",
+      "from": "api",
+      "to": "catalog",
+      "label": "read songs"
+    },
+    {
+      "id": "audit",
+      "from": "itunes",
+      "to": "catalog",
+      "label": "metadata",
+      "variant": "dashed",
+      "labelDy": 24
+    },
+    {
+      "id": "local",
+      "from": "web",
+      "to": "browserstore",
+      "label": "local state",
+      "labelDy": 24
+    },
+    {
+      "id": "invoice",
+      "from": "api",
+      "to": "qpay",
+      "label": "invoice",
+      "variant": "dashed",
+      "labelDy": 24
+    },
+    {
+      "id": "measure",
+      "from": "players",
+      "to": "ga",
+      "label": "analytics",
+      "variant": "dashed",
+      "labelDy": 24
+    }
+  ]
+}

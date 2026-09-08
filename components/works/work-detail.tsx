@@ -7,6 +7,7 @@ import {
   IconExternalLink,
 } from "@tabler/icons-react";
 
+import { ArchifyEmbed } from "@/components/works/archify-embed";
 import { WorkDiagram } from "@/components/works/diagrams";
 import { WorkHeroBlock } from "@/components/works/hero";
 import { WorkGallery as GalleryCarousel } from "@/components/works/gallery";
@@ -107,17 +108,17 @@ function WorkHighlights({ work }: WorkDetailProps) {
 /** Each layout tells its story in a different order. */
 const SECTION_ORDER: Record<string, string[]> = {
   // the emergency is the story: lead with the clock, then before/after
-  migration: ["hero", "diagram", "metrics", "body", "gallery"],
+  migration: ["hero", "diagram", "archify", "metrics", "body", "gallery"],
   // the integration surface *is* the product
-  hub: ["diagram", "hero", "metrics", "body", "gallery"],
+  hub: ["diagram", "archify", "hero", "metrics", "body", "gallery"],
   // the second market is the point; show the comparison first
-  regions: ["diagram", "metrics", "hero", "body", "gallery"],
+  regions: ["diagram", "archify", "metrics", "hero", "body", "gallery"],
   // consumer product: show it, then how it fulfils itself
-  pipeline: ["hero", "diagram", "metrics", "body", "gallery"],
-  topology: ["hero", "diagram", "metrics", "body", "gallery"],
+  pipeline: ["hero", "diagram", "archify", "metrics", "body", "gallery"],
+  topology: ["hero", "diagram", "archify", "metrics", "body", "gallery"],
   // platform work: scale numbers first, then the stack underneath
-  stack: ["hero", "metrics", "diagram", "body", "gallery"],
-  flow: ["hero", "metrics", "diagram", "body", "gallery"],
+  stack: ["hero", "metrics", "diagram", "archify", "body", "gallery"],
+  flow: ["hero", "metrics", "diagram", "archify", "body", "gallery"],
 };
 
 export function WorkDetail({ work }: WorkDetailProps) {
@@ -130,7 +131,10 @@ export function WorkDetail({ work }: WorkDetailProps) {
         <MetricBand work={work} />
       </div>
     ),
-    diagram: <WorkDiagram key="diagram" work={work} />,
+    // A project either tells its story through the bespoke diagram or through
+    // an Archify artifact — never both, or the page states the same system twice.
+    diagram: work.archify ? null : <WorkDiagram key="diagram" work={work} />,
+    archify: <ArchifyEmbed key="archify" work={work} />,
     body: (
       <div key="body" className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-[1fr_280px]">
         <div className="space-y-5">
@@ -167,9 +171,9 @@ export function WorkDetail({ work }: WorkDetailProps) {
           size="sm"
           className="-ml-2 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
         >
-          <Link href="/works">
+          <Link href="/projects">
             <IconArrowLeft data-icon="inline-start" />
-            All works
+            All projects
           </Link>
         </Button>
       </div>

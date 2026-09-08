@@ -56,11 +56,11 @@ export const employment: Employment[] = [
     range: 'MAR 2025 — JUN 2026',
     start: '2025-03',
     end: '2026-06',
-    title: 'Founder & Platform Engineer',
+    title: 'Platform Engineer',
     company: 'EasySim.mn',
     companyUrl: 'https://easysim.mn',
     location: 'Remote · Ulaanbaatar, Mongolia',
-    note: 'Independent venture, built and operated solo alongside full-time engineering work.',
+    note: 'Built and operated solo alongside full-time engineering work.',
     highlights: [
       'Ran the entire production platform single-handed — containerized services behind Nginx with TLS termination, centralized logging, health checks, and uptime monitoring. No ops team, no downtime budget.',
       'Integrated multiple international eSIM supplier APIs for catalog sync, ordering, QR-code delivery, and activation tracking, enabling fully automated 24/7 fulfillment with zero manual steps in the purchase path.',

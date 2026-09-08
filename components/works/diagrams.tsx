@@ -251,8 +251,11 @@ export function PipelineDiagram({ work }: Props) {
 
   return (
     <DiagramSection
-      title="Order pipeline"
-      caption="Purchase to working data connection — no manual step anywhere in the path"
+      title={work.diagram?.title ?? "Order pipeline"}
+      caption={
+        work.diagram?.caption ??
+        "Purchase to working data connection — no manual step anywhere in the path"
+      }
     >
       <Canvas>
         <ol className="relative pl-10">
@@ -298,7 +301,10 @@ export function TopologyDiagram({ work }: Props) {
   if (!t) return null;
 
   return (
-    <DiagramSection title="System topology" caption="Three portals, one service layer">
+    <DiagramSection
+      title={work.diagram?.title ?? "System topology"}
+      caption={work.diagram?.caption ?? "Three portals, one service layer"}
+    >
       <Canvas>
         <div className="mx-auto max-w-[620px]">
           <div

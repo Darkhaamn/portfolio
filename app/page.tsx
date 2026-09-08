@@ -66,10 +66,10 @@ export default function Page() {
 
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <Link
-            href="/works"
+            href="/projects"
             className="group inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-zinc-950 dark:bg-zinc-100 text-white dark:text-zinc-950 text-sm font-medium transition-opacity hover:opacity-90"
           >
-            View Works
+            View Projects
             <IconArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
           <Link
@@ -93,10 +93,10 @@ export default function Page() {
         <div className="flex items-end justify-between gap-4 mb-3">
           <h2 className="text-lg font-medium text-zinc-950 dark:text-zinc-100">Case Studies</h2>
           <Link
-            href="/works"
+            href="/projects"
             className="group flex items-center gap-1.5 text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-950 dark:hover:text-zinc-100 transition-colors shrink-0"
           >
-            All works
+            All projects
             <IconArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
         </div>
@@ -107,7 +107,7 @@ export default function Page() {
             return (
               <Link
                 key={id}
-                href={`/works/${id}`}
+                href={`/projects/${id}`}
                 className="group flex flex-col rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 transition-colors hover:border-zinc-300 dark:hover:border-zinc-700"
               >
                 <div className="flex flex-1 flex-col p-5">

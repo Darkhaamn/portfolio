@@ -1,0 +1,282 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Architecture",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "archive-path",
+        "label": "Archive path",
+        "focus": [
+          "streamer",
+          "web",
+          "api",
+          "worker",
+          "kickvod",
+          "r2"
+        ],
+        "note": "A streamer picks a broadcast; the worker pulls the original file and writes it to object storage."
+      },
+      {
+        "id": "playback",
+        "label": "Playback path",
+        "focus": [
+          "r2",
+          "cdn",
+          "viewers"
+        ],
+        "note": "Video leaves the CDN directly, so the API never sits in the path of a byte of video."
+      },
+      {
+        "id": "live-data",
+        "label": "Live data",
+        "focus": [
+          "api",
+          "kickdir",
+          "pg"
+        ],
+        "note": "The API samples Kick's live directory every minute to build history Kick does not publish."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "kickoauth",
+      "type": "security",
+      "label": "Kick OAuth 2.0",
+      "sublabel": "PKCE",
+      "pos": [
+        300,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "own broadcasts only"
+    },
+    {
+      "id": "kickdir",
+      "type": "external",
+      "label": "Kick /livestreams",
+      "sublabel": "public directory",
+      "pos": [
+        540,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "kickvod",
+      "type": "external",
+      "label": "Kick VOD source",
+      "sublabel": "30-day window",
+      "pos": [
+        780,
+        80
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "streamer",
+      "type": "external",
+      "label": "Kick streamer",
+      "sublabel": "owns the broadcasts",
+      "pos": [
+        60,
+        230
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "web",
+      "type": "frontend",
+      "label": "Next.js web",
+      "sublabel": "library · live · stats",
+      "pos": [
+        300,
+        230
+      ],
+      "size": [
+        150,
+        64
+      ],
+      "tag": "EN / МН"
+    },
+    {
+      "id": "api",
+      "type": "backend",
+      "label": "Go API",
+      "sublabel": "REST + live recorder",
+      "pos": [
+        540,
+        230
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "worker",
+      "type": "backend",
+      "label": "Archive worker",
+      "sublabel": "yt-dlp · ffmpeg",
+      "pos": [
+        780,
+        230
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "r2",
+      "type": "cloud",
+      "label": "Cloudflare R2",
+      "sublabel": "bucket kick",
+      "pos": [
+        1020,
+        230
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "pg",
+      "type": "database",
+      "label": "PostgreSQL",
+      "sublabel": "archives · chat · stats",
+      "pos": [
+        540,
+        380
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "cdn",
+      "type": "cloud",
+      "label": "Cloudflare CDN",
+      "sublabel": "cdn2 custom domain",
+      "pos": [
+        1020,
+        380
+      ],
+      "size": [
+        150,
+        64
+      ]
+    },
+    {
+      "id": "viewers",
+      "type": "external",
+      "label": "Public viewers",
+      "sublabel": "watch · no sign-in",
+      "pos": [
+        1020,
+        530
+      ],
+      "size": [
+        150,
+        64
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Single VM · Docker Compose",
+      "wraps": [
+        "web",
+        "api",
+        "worker",
+        "pg"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "streamer-signs-in",
+      "from": "streamer",
+      "to": "web",
+      "label": "sign in",
+      "variant": "emphasis"
+    },
+    {
+      "id": "oauth-grant",
+      "from": "kickoauth",
+      "to": "web",
+      "label": "PKCE",
+      "variant": "security",
+      "labelDy": 24
+    },
+    {
+      "id": "web-to-api",
+      "from": "web",
+      "to": "api",
+      "label": "REST"
+    },
+    {
+      "id": "live-directory-poll",
+      "from": "api",
+      "to": "kickdir",
+      "label": "poll · 60s"
+    },
+    {
+      "id": "api-sql",
+      "from": "api",
+      "to": "pg",
+      "label": "SQL",
+      "labelDy": 24
+    },
+    {
+      "id": "enqueue-archive",
+      "from": "api",
+      "to": "worker",
+      "label": "enqueue job"
+    },
+    {
+      "id": "pull-vod",
+      "from": "worker",
+      "to": "kickvod",
+      "label": "pull source"
+    },
+    {
+      "id": "write-original",
+      "from": "worker",
+      "to": "r2",
+      "label": "write original"
+    },
+    {
+      "id": "r2-custom-domain",
+      "from": "r2",
+      "to": "cdn",
+      "label": "custom domain",
+      "labelDy": 24
+    },
+    {
+      "id": "media-playback",
+      "from": "cdn",
+      "to": "viewers",
+      "label": "video + chat",
+      "variant": "emphasis",
+      "labelDy": 24
+    }
+  ]
+}

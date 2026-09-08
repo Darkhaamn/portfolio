@@ -17,9 +17,9 @@ export function SiteHeader() {
         </Link>
         <div className="flex items-center gap-2">
           <Button asChild size="sm" className="cursor-pointer">
-            <Link href="/works">
+            <Link href="/projects">
               <IconBriefcase data-icon="inline-start" />
-              Works
+              Projects
             </Link>
           </Button>
           <Button asChild size="sm" variant="outline" className="cursor-pointer">

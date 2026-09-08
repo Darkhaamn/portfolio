@@ -4,10 +4,10 @@ import { WorkCard } from "@/components/works/work-card";
 import { works, type Work } from "@/lib/works";
 
 export const metadata: Metadata = {
-  title: "Works",
+  title: "Projects",
   description:
     "DevOps and cloud projects by Darkhanbayar Erdenebat: CI/CD pipelines, infrastructure as code, Kubernetes platforms, and public cloud infrastructure.",
-  alternates: { canonical: "/works" },
+  alternates: { canonical: "/projects" },
 };
 
 type Size = NonNullable<Work["size"]>;
@@ -39,7 +39,7 @@ export default function WorksPage() {
     <main className="mx-auto max-w-5xl px-4 pb-28 pt-16 sm:px-6 sm:pt-24">
       <header className="mb-12">
         <p className="mb-3 font-mono text-xs uppercase tracking-widest text-zinc-500">
-          Selected work · {works.length} projects
+          Selected projects · {works.length}
         </p>
         <h1 className="max-w-3xl text-3xl font-medium leading-[1.1] tracking-tight text-zinc-950 dark:text-zinc-100 sm:text-4xl">
           Delivery pipelines, cloud platforms, and the systems behind them.

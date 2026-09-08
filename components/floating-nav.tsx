@@ -11,7 +11,7 @@ import { IconBriefcase, IconFileText, IconHome } from "@tabler/icons-react";
 
 const navItems = [
   { href: "/", label: "Home", icon: IconHome },
-  { href: "/works", label: "Works", icon: IconBriefcase },
+  { href: "/projects", label: "Projects", icon: IconBriefcase },
 ] as const;
 
 const socialLinks = [

@@ -15,11 +15,11 @@ export function generateMetadata({
     return {
       title: work.title,
       description: work.summary,
-      alternates: { canonical: `/works/${work.id}` },
+      alternates: { canonical: `/projects/${work.id}` },
       openGraph: {
         title: work.title,
         description: work.summary,
-        url: `/works/${work.id}`,
+        url: `/projects/${work.id}`,
         // JPEG twin: LinkedIn and several other crawlers ignore WebP previews.
         images: [{ url: work.thumbnail.src.replace(/\.webp$/, '.jpg') }],
       },

@@ -83,7 +83,7 @@ export function WorkCard({
   priority?: boolean;
   flip?: boolean;
 }) {
-  const href = `/works/${work.id}`;
+  const href = `/projects/${work.id}`;
 
   /* ---------- feature: editorial split, alternating side ---------- */
   if (size === "feature") {
