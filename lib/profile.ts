@@ -71,7 +71,7 @@ export const employment: Employment[] = [
     range: 'APR 2022 — MAR 2024',
     start: '2022-04',
     end: '2024-03',
-    title: 'Chief Technology Officer',
+    title: 'System Architect',
     company: 'Fibo Cloud',
     companyUrl: 'https://fibo.cloud/',
     location: 'Ulaanbaatar, Mongolia',
