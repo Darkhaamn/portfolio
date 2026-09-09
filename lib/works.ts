@@ -85,6 +85,13 @@ export type WorkCloudArch = {
 };
 
 /** A titled section of the write-up; renders as an h2 with prose and an optional list. */
+/** A labelled block inside a section; renders as an h3 with its own prose and list. */
+export type WorkSectionGroup = {
+  label: string;
+  paragraphs?: string[];
+  list?: string[];
+};
+
 export type WorkSection = {
   heading: string;
   /** A short pull-quote shown before the paragraphs. */
@@ -93,7 +100,13 @@ export type WorkSection = {
   /** Rendered as a numbered list when `ordered`, otherwise bulleted. */
   list?: string[];
   ordered?: boolean;
-  /** Pull one of the page blocks inline, after this section's text. */
+  /** Sub-sections, for a section that covers several distinct decisions. */
+  groups?: WorkSectionGroup[];
+  /** A comparison table. Rendered full width of the reading column. */
+  table?: { head: string[]; rows: string[][] };
+  /** Closing paragraphs, after any list, groups or table. */
+  outro?: string[];
+  /** Pull one of the page blocks inline, after this section's content. */
   embed?: 'archify' | 'diagram' | 'metrics' | 'gallery';
 };
 
@@ -768,77 +781,324 @@ export const works: Work[] = [
     summary:
       'Kick deletes every broadcast 30 days after it airs — not even the streamer can get it back. StreamKeep archives the nights that matter and serves them from object storage.',
     metrics: [
-      { value: '116', label: 'Mongolian channels tracked' },
-      { value: '71.6K', label: 'hours watched' },
-      { value: '154.5K', label: 'chat lines captured' },
+      { value: '140', label: 'Mongolian channels tracked' },
+      { value: '201.3K', label: 'hours watched' },
+      { value: '246K', label: 'chat lines captured' },
     ],
-    metricsNote: 'Public counters from streamkeep.live, first weeks of open beta.',
+    metricsNote: 'Live counters from streamkeep.live. The recorder samples Kick\u2019s Mongolian directory every minute; hours watched and viewer peaks count only sampled time.',
     paragraphs: [
-      'Kick is a live-streaming platform in the same market as Twitch, and Mongolia has an active scene on it — more than a hundred channels. Nothing that scene broadcasts survives past a month: Kick\u2019s retention window is the entire archive, and the streamers have no say in it.',
-      'StreamKeep is a selective archive for that scene. A streamer signs in with their own Kick account, picks the broadcasts worth keeping, and StreamKeep stores the original video together with the chat that ran alongside it — then serves it back to anyone, with no account required. I designed and built it alone, and I am the one who runs it in production.',
+      'StreamKeep is a livestream archive for the Mongolian community on Kick. Kick removes a broadcast 30 days after it airs, and the streamer who made it has no way to recover the file. StreamKeep lets a creator sign in with their own Kick account, select the broadcasts worth preserving, and keep the original video at source quality together with a synchronised chat replay. Playback is public and requires no account.',
+      'It is a personal project, designed and built end to end, and running in production under my own operation. The engineering goals were reliability, predictable cost, and an operational surface small enough for one engineer to own. What follows is the architecture, the decisions behind it, and the trade-offs I accepted.',
     ],
     sections: [
       {
-        heading: 'What gets lost in 30 days',
-        quote: 'The scene had 116 channels and no way to keep a single night.',
+        heading: '1. Project overview',
         paragraphs: [
-          'Kick\u2019s 30-day retention means the moments that matter to a streamer and their community — a first big raid, a tournament win, a night the chat will not stop talking about — are deleted on a schedule. There is no export, no \u201ckeep this one\u201d button, and no way to ask for a file after the window closes. For a growing scene with no local tooling, the history of Mongolian streaming was simply disappearing month by month.',
-        ],
-      },
-      {
-        heading: 'Three surfaces, one dataset',
-        paragraphs: [
-          'StreamKeep does not try to hoard everything a channel has ever broadcast. It lets the streamer keep the handful of nights that mattered, at source quality, with the chat replay intact, and makes them watchable years from now. Three public surfaces grew out of the same data:',
+          'Livestreaming platforms treat past broadcasts as cache, not as archive. Kick applies a fixed 30-day retention window: after it closes the video object is deleted and cannot be restored on request. For a creator this means the work disappears on a schedule they do not control, and any moment they did not clip at the time is unrecoverable.',
+          'StreamKeep addresses this narrowly and deliberately. It does not mirror an entire platform. It gives a creator a way to mark specific broadcasts for preservation before the retention window closes, stores the original rendition rather than a re-encode, and preserves the chat transcript alongside the video so the recording keeps its context.',
         ],
         list: [
-          'Stream library — every archived broadcast, public and free to watch, with chat replaying in sync and a one-click MP4 export.',
-          'Live multiview — every Mongolian Kick channel currently on air, several playable side by side with a shared chat panel.',
-          'Channel stats — hours watched, peak and average viewers, follower and subscriber curves, category share and a weekly schedule heatmap. Kick publishes none of this.',
+          'Scope — a personal project, built end to end: product, backend, infrastructure, deployment and on-call.',
+          'Current state — open beta. 32 broadcasts preserved across 8 channels, 158 hours of video retained.',
+          'Design priorities — reliability first, then cost predictability, then capacity. Capacity last, because the workload does not yet justify paying for elasticity.',
         ],
       },
       {
-        heading: 'How a broadcast gets archived',
+        heading: '2. Problem and motivation',
         paragraphs: [
-          'One Go binary serves both the REST API and the live recorder that samples Kick every minute; a second process, the archive worker, runs the downloads. Go for one static binary and one runtime to deploy, watch and restart instead of two — the deciding factor when the on-call rotation is one person. Video never passes through the API: originals live in Cloudflare R2 and are served from a dedicated CDN domain, so the server only ever handles metadata, auth and the job queue.',
-          'The three surfaces are bilingual, English and Mongolian, with the language cookie read on the server so the first paint already matches the reader\u2019s choice. For live multiview only Kick\u2019s CORS-restricted master playlist is proxied — variant playlists and segments stream straight from Kick\u2019s CDN. The numbered steps below are the archive path; the interactive diagram traces both it and playback.',
+          'Before building anything I measured the scale of the problem. A recorder samples Kick’s Mongolian live directory once a minute and records viewership, airtime and chat volume per channel. Over a three-day window it produced the figures below, all of which sit inside the same 30-day deletion window.',
+        ],
+        embed: 'metrics',
+        outro: [
+          'That measurement framed four engineering constraints, and those constraints drove every decision that follows.',
+        ],
+        groups: [
+          {
+            label: 'Storage efficiency',
+            paragraphs: [
+              'Broadcasts are multi-hour source-quality video. Retaining them on compute-attached disk would mean growing the instance for storage rather than for load, and paying for provisioned capacity whether or not it is used. Storage had to be billed by consumption and decoupled from the application host.',
+            ],
+          },
+          {
+            label: 'Delivery must not touch the application',
+            paragraphs: [
+              'If video is streamed through the API, every concurrent viewer consumes an application connection and host bandwidth. A single popular archive would then degrade sign-in, browsing and job submission for everyone. Read traffic had to be served by infrastructure that scales independently of the API.',
+            ],
+          },
+          {
+            label: 'Long-running work cannot run in a request',
+            paragraphs: [
+              'Fetching and storing a multi-hour broadcast takes far longer than any acceptable HTTP timeout, and it is subject to upstream failures outside my control. This work had to be asynchronous, durable across restarts, and safely retryable.',
+            ],
+          },
+          {
+            label: 'Cost has to stay predictable',
+            paragraphs: [
+              'The project is funded by its users on hours-based plans. A cost model that grows with viewership rather than with stored hours would break that relationship, so the unit customers pay for and the unit I am billed for had to match.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: '3. High-level architecture',
+        paragraphs: [
+          'The system separates three paths that have very different characteristics: a synchronous request path, an asynchronous archive path, and a delivery path that bypasses the application entirely. The diagram below traces all three and can be panned and stepped through.',
+        ],
+        embed: 'archify',
+        groups: [
+          {
+            label: 'Component responsibilities',
+            list: [
+              'Next.js frontend — the three public surfaces: stream library, live multiview and channel statistics. Bilingual, with the language cookie read server-side so the first paint already matches the reader.',
+              'Go API — authentication through Kick OAuth 2.0 with PKCE, authorisation, archive submission, and the live recorder that polls the public directory every 60 seconds. It serves metadata only; no video passes through it.',
+              'PostgreSQL — the system of record: archives and their state, chat transcripts, channel statistics, and the migration ledger. Job status and failure reasons live here, which makes a broken archive a row I can query rather than a log line I have to find.',
+              'Redis — the job broker and coordination layer, running Asynq. It holds queued and in-flight tasks, live per-archive progress snapshots, and rate-limiting counters.',
+              'Archive worker — a separate process that consumes the queue and performs the long-running work: fetching the source rendition with yt-dlp and ffmpeg, writing it to object storage, and capturing the chat transcript.',
+              'Cloudflare R2 — object storage for the original video files. Chosen for consumption-based pricing and, critically, zero egress charges.',
+              'Cloudflare CDN — delivery on a dedicated domain, in front of R2. Viewers stream HLS from here; the API is never in the path of a byte of video.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: '4. Technology stack',
+        table: {
+          head: ['Layer', 'Technology', 'Why'],
+          rows: [
+            ['Frontend', 'Next.js, TypeScript', 'Server rendering for first-paint correctness on a bilingual UI'],
+            ['Backend', 'Go', 'One static binary per service; low memory footprint on a small VM'],
+            ['Database', 'PostgreSQL 16', 'Transactional job state, relational statistics, versioned migrations'],
+            ['Queue & cache', 'Redis 7, Asynq', 'Durable background jobs, retry semantics, live progress snapshots'],
+            ['Object storage', 'Cloudflare R2', 'Consumption-based pricing with no egress fees'],
+            ['Delivery', 'Cloudflare CDN, HLS, hls.js', 'Video served at the edge, independent of the application'],
+            ['Media pipeline', 'yt-dlp, ffmpeg', 'Source-quality fetch with no transcode step'],
+            ['Runtime', 'Docker Compose, Linux, Oracle Cloud', 'One host, one declarative file, no control plane to operate'],
+            ['CI/CD', 'GitLab CI, self-hosted runner', 'Build, migrate and health-gate a release from a single pipeline'],
+          ],
+        },
+        outro: [
+          'Every choice here optimises for a single operator. Go and Compose keep the number of moving parts low; R2 and the CDN move the expensive, high-volume work onto managed infrastructure that needs no attention from me.',
+        ],
+      },
+      {
+        heading: '5. Production deployment',
+        paragraphs: [
+          'Production is five containers on one Linux VM, declared in a single Compose file and rolled out by the pipeline. Each service has a health check and a restart policy; container logs are capped so a runaway process cannot fill the disk.',
+        ],
+        list: [
+          'Frontend — the Next.js application.',
+          'Go API — REST surface plus the live directory recorder.',
+          'Archive worker — the Asynq consumer that performs archive jobs.',
+          'PostgreSQL — persistent state, on a named volume.',
+          'Redis — the job broker and progress cache.',
+        ],
+        groups: [
+          {
+            label: 'Why this shape',
+            paragraphs: [
+              'An orchestrated cluster was the obvious alternative and I decided against it. At this workload it would add a control plane to patch, upgrade and debug, and it would buy elasticity the traffic does not need. The relevant question was not which architecture is most scalable, but which one a single engineer can operate correctly at 3am.',
+            ],
+            list: [
+              'Operational simplicity — one host to patch, one file to read, no scheduler to reason about during an incident.',
+              'Cost — a small VM plus consumption-priced storage, with no per-cluster or per-node overhead.',
+              'Maintainability — the whole runtime is described in one Compose file that is versioned with the application.',
+              'Sufficient capacity — the API is metadata-only and video is served by the CDN, so the host is not on the critical path for the traffic that actually scales.',
+            ],
+          },
+          {
+            label: 'The trade-off I accepted',
+            paragraphs: [
+              'One host and one database mean a host failure is downtime, not a failover, and a schema migration briefly pauses the worker. Both are acceptable at this stage and both are stated plainly rather than engineered around prematurely. The migration path out is described in section 11.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: '6. Engineering decisions and trade-offs',
+        paragraphs: [
+          'Most production incidents I have seen come from the deployment, not from the code being deployed. The pipeline is therefore built to fail loudly and early rather than to deploy quickly.',
+        ],
+        groups: [
+          {
+            label: 'Deployment safety',
+            paragraphs: [
+              'The pipeline runs only on the default branch, on a self-hosted runner on the production host. A resource group and a file lock together make it impossible for two deployments to overlap, and the job is marked non-interruptible so a newer pipeline cannot terminate a release mid-rollout.',
+            ],
+            list: [
+              'Backup first — every deployment takes a compressed pg_dump before it touches any running container.',
+              'Validate the backup — the dump is checked for content and the deployment aborts if it comes back empty. An unverified backup is not a backup.',
+              'Store it out of reach — dumps are written outside the CI checkout so the next pipeline’s clean checkout cannot delete them.',
+              'Record the release — the commit and pipeline identity tag the images, and the last successful release is recorded on the host.',
+            ],
+          },
+          {
+            label: 'Migration safety',
+            paragraphs: [
+              'Schema migrations are embedded in the API binary, applied in filename order, and tracked in a migrations table so each runs exactly once. Sixteen have been applied so far.',
+              'The ordering of the rollout is the important part. The old worker is stopped before the new API starts, so no process is executing against the old schema while a migration is in flight. Only once the API has started and migrated do the worker and frontend come up. This removes the class of race where a worker writes a row shaped for a schema that no longer exists.',
+            ],
+          },
+          {
+            label: 'Health checks',
+            paragraphs: [
+              'A release passes three independent gates, in order, and failing any one of them fails the pipeline:',
+            ],
+            list: [
+              'Container health — the orchestrator waits on each service’s own health check with a bounded timeout before proceeding.',
+              'Internal readiness — the API is probed on its readiness endpoint from inside the network, which confirms it reached a serving state rather than merely starting.',
+              'External verification — the public API health URL and the site itself must both return HTTP 200 over the real network path, through DNS, TLS and the reverse proxy.',
+            ],
+          },
+          {
+            label: 'Background processing',
+            paragraphs: [
+              'Archive jobs run in a separate process from the API for two reasons: their duration has no relationship to a request lifecycle, and their failure modes are dominated by an upstream I do not control. Isolating them means a stalled download cannot consume an API worker or affect page latency.',
+            ],
+            list: [
+              'Durable queue — jobs are held in Redis through Asynq, so a worker restart does not lose queued work.',
+              'State in Postgres — every archive carries a status and an attempt counter in the database, incremented atomically. Redis holds the transient progress snapshot; the durable truth is relational.',
+              'Retry without duplication — the task identifier is scoped by attempt number, so a retry is never mistaken for a duplicate of the original request, and a re-queued job cannot create a second copy of the same object.',
+              'Independent sub-jobs — chat sync, metadata enrichment and storyboard generation are queued separately from the video fetch, each with its own claim guarded by attempt number, so partial failure degrades one asset instead of the whole archive.',
+              'Upstream backoff — chat pagination applies exponential backoff when the platform throttles, rather than discarding pages already fetched.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: '7. Video storage and delivery',
+        paragraphs: [
+          'This is the decision with the largest effect on both reliability and cost, and it is worth stating explicitly because it is easy to get wrong.',
+        ],
+        groups: [
+          {
+            label: 'The pattern being avoided',
+            paragraphs: [
+              'The naive design routes playback through the application: viewer to API server to storage. It is simple to implement and it fails badly. Every concurrent viewer holds an application connection for the duration of a multi-hour video, host bandwidth becomes the ceiling on audience size, and one popular archive degrades sign-in and job submission for every other user. The blast radius of a traffic spike is the entire product.',
+            ],
+          },
+          {
+            label: 'The pattern used',
+            paragraphs: [
+              'Playback goes viewer to CDN to object storage, on a dedicated domain. The API issues metadata and never touches a byte of video. HLS segments are requested directly from the edge by the player.',
+            ],
+            list: [
+              'Application load is bounded — API concurrency tracks metadata requests, not viewer-hours.',
+              'Bandwidth cost is bounded — R2 charges no egress, so a broadcast watched a thousand times costs the same to serve as one watched once.',
+              'Delivery scales independently — audience growth is absorbed by the CDN, with no change to the host.',
+              'Failure is isolated — a delivery problem does not take down archiving, and an application deploy does not interrupt playback.',
+            ],
+          },
+          {
+            label: 'One necessary exception',
+            paragraphs: [
+              'For live multiview, the master playlist is proxied, because that single file is the one whose CORS policy is restricted to the platform’s own origins. Variant playlists and video segments still stream directly from the upstream CDN. The proxy is scoped to the smallest object that requires it rather than to the whole stream.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: '8. Cost optimisation',
+        paragraphs: [
+          'The cost model was designed alongside the architecture rather than reviewed after it. The requirement was that the unit a customer buys and the unit I am billed for should be the same unit, so that revenue and cost move together.',
+        ],
+        groups: [
+          {
+            label: 'Why object storage rather than instance disk',
+            paragraphs: [
+              'Block storage attached to a VM is provisioned and billed whether or not it is used, and growing it means resizing a host that is not otherwise under pressure. Object storage is billed by what is actually stored, needs no capacity planning, and separates the storage lifecycle from the compute lifecycle: I can rebuild the host without touching a single archived file.',
+            ],
+          },
+          {
+            label: 'Why a CDN, and why this one',
+            paragraphs: [
+              'Serving video from the origin makes bandwidth the dominant and least predictable line item, because it scales with popularity rather than with the catalogue. R2 charges no egress, so the marginal cost of an additional viewer is effectively zero and the bill is a function of hours retained.',
+              'That is what makes hours-based pricing honest: customers pay for retained video, which is exactly the axis on which my cost grows. Viewership, the axis I cannot predict, does not appear on either side.',
+            ],
+          },
+          {
+            label: 'Why not scale the compute tier instead',
+            paragraphs: [
+              'Serving video from compute couples an unbounded, bursty workload to the tier that also handles authentication and job submission. It would require over-provisioning for peak, paying for that headroom continuously, and accepting that a traffic spike degrades the product rather than merely costing more. Moving the volume to managed infrastructure removed the need to buy elasticity at all.',
+            ],
+          },
+        ],
+        outro: [
+          'The result is infrastructure that scales without unnecessary cost: one small VM plus storage billed by the gigabyte, with the high-volume path handled by services that need no capacity planning from me.',
+        ],
+      },
+      {
+        heading: '9. Monitoring and operations',
+        paragraphs: [
+          'Observability here is sized to the system: enough signal for one operator to detect a failure and identify its cause, without a monitoring stack that would itself need operating. I am describing what is actually in place, and naming what is not.',
+        ],
+        list: [
+          'Application health — each service exposes a health check that the runtime evaluates continuously and the deployment pipeline gates on. The API separates liveness from readiness so a starting process is not mistaken for a serving one.',
+          'Container supervision — services carry restart policies, so a crashed process is restarted without intervention while the underlying failure remains visible.',
+          'Job-level visibility — every archive job records its status, attempt count and failure reason in PostgreSQL. A broken archive is a row I can query and re-queue, not a log line I have to search for.',
+          'Logs — container logs use size-capped rotation, which bounds disk usage and prevents a chatty failure loop from filling the host.',
+          'Database — Postgres runs its own readiness probe, and every deployment produces a verified dump, which doubles as a recurring integrity check on the data.',
+          'Delivery — CDN-side analytics cover request volume and cache behaviour for the one layer I do not operate myself.',
+        ],
+        outro: [
+          'What is deliberately absent: there is no metrics time series, no dashboard and no alerting pipeline on this project. At one host and one operator, health checks plus queryable job state answer the questions I actually ask. That is a considered trade-off rather than an oversight, and it is the first thing I would change if the system grew past a single node.',
+        ],
+      },
+      {
+        heading: '10. Challenges and lessons learned',
+        groups: [
+          {
+            label: 'Large media is a storage problem, not an application problem',
+            paragraphs: [
+              'The instinct is to treat video as data the application owns. Treating it as an object the application only references, and keeping it entirely off the request path, removed the majority of the scaling and cost questions before they became problems.',
+            ],
+          },
+          {
+            label: 'Reliable workers need durable state, not just a queue',
+            paragraphs: [
+              'A queue alone does not survive contact with retries. Keeping the authoritative status and attempt count in the database, scoping task identity by attempt, and guarding each sub-job with its own claim is what makes a re-queued job safe instead of merely possible.',
+            ],
+          },
+          {
+            label: 'Most incidents come from the deploy',
+            paragraphs: [
+              'Adding a verified backup, a strict rollout order and three independent health gates cost an afternoon and removed the failure mode I was most likely to cause myself. The gates that matter are the ones that check the real network path, not just the process.',
+            ],
+          },
+          {
+            label: 'Simplicity is a capacity decision, not a shortcut',
+            paragraphs: [
+              'Choosing Compose over an orchestrator was a judgement about what one engineer can operate, not an admission of missing skill. The corresponding obligation is to know exactly which signal would invalidate that choice, and to have the migration path ready before it does.',
+            ],
+          },
+          {
+            label: 'Design the cost model with the architecture',
+            paragraphs: [
+              'Selecting storage with no egress charge was an architectural decision as much as a financial one. It is what allows viewing to be free and unauthenticated without the economics inverting as the audience grows.',
+            ],
+          },
+        ],
+      },
+      {
+        heading: '11. Future improvements',
+        paragraphs: [
+          'These are ordered by the signal that would trigger them, not by preference. Each has a concrete threshold.',
         ],
         ordered: true,
         list: [
-          'The streamer signs in through Kick OAuth (PKCE) and sees only broadcasts they own.',
-          'They select a broadcast — nothing is archived automatically.',
-          'The worker pulls the VOD at source quality with yt-dlp and ffmpeg — no transcode, no re-encode, no quality loss, and no lower-bitrate rendition either.',
-          'The original file is written to R2; playback is HLS through hls.js straight from the CDN.',
-          'Chat captured during the broadcast is stored with it and replayed in sync with the video.',
-          'MP4 export is assembled in the browser from the HLS segments, so the server never re-muxes a file and export capacity scales with the viewer\u2019s device, not my one VM.',
-        ],
-        embed: 'archify',
-      },
-      {
-        heading: 'Running it in production',
-        paragraphs: [
-          'Five containers on one VM: Postgres, Redis, the API, the worker and the web front end. That ceiling is deliberate — the operational surface is sized so a single engineer can deploy it, tell when it broke, and repair it without a platform team behind him. What follows is what the pipeline actually does on every push to the default branch.',
-        ],
-        list: [
-          'Deploys — GitLab CI on a self-hosted runner on the production host. A resource group plus a file lock means two deployments can never overlap, and the job is marked non-interruptible so a newer pipeline cannot kill a release mid-rollout.',
-          'Release safety — every deploy takes a compressed pg_dump before it touches a running container, writes it outside the CI checkout so the next checkout cannot delete it, and aborts if the dump comes back empty. A rollback has a database to roll back to, not just an older image.',
-          'Ordered rollout — all three images build before anything is replaced. Postgres and Redis come up first, then the old worker is stopped so it cannot race the migration, then the API starts and applies its 16 embedded SQL migrations, then worker and web follow.',
-          'Health gates — three of them, in order: Compose waits on each container\u2019s health check with a timeout, then the API is probed on its internal readiness endpoint, then the public API health URL and the site itself must both answer 200. Any one failing fails the pipeline, so a broken release is never reported green.',
-          'Observability — every job\u2019s status and failure reason is a row in Postgres, so a broken archive is something I query rather than a log line I hunt for. Container health checks cover the services, log rotation is capped per container so a runaway process cannot fill the disk, and Cloudflare analytics cover delivery — the one layer I do not run myself.',
-          'Secrets — injected as a protected CI file variable, written with a restrictive umask and removed in the job\u2019s cleanup step, so credentials never reach the repository or survive the build.',
-          'Known limits — one VM and one database mean a host failure is downtime, not a failover, and Kick sits upstream of everything: when their API or CDN is unavailable, archiving stops until it returns. Both are accepted at this scale rather than overlooked.',
-          'Cost — the bill is one small VM plus R2 storage by the gigabyte, and R2 charges no egress, so a broadcast watched a thousand times costs the same to serve as one watched once. That is why plans are sold in hours of retained video: the unit the streamer buys is the unit I pay for.',
+          'Horizontal worker scaling — the queue already supports multiple consumers; the change is running more of them once archive latency, not download bandwidth, becomes the bottleneck.',
+          'Orchestrated deployment — moving to Kubernetes once the system needs more than one node, which would also convert the current downtime-on-host-failure into a genuine failover.',
+          'Event-driven processing — replacing the remaining synchronous fan-out with published events, so new consumers can be added without changing the producer.',
+          'Advanced observability — metrics collection, dashboards and alert routing, which becomes necessary the moment there is more than one instance of anything to compare.',
+          'Multi-region storage — replicating objects across regions for durability and for reader latency outside the current audience.',
+          'AI-assisted highlight detection — using chat velocity and viewer deltas already recorded to propose candidate moments, so a creator is offered clips rather than having to find them.',
         ],
       },
       {
-        heading: 'Who can archive what',
+        heading: '12. Final reflection',
+        quote:
+          'This project represents my engineering approach: build simple systems, automate reliability, optimise cost, and design infrastructure that can evolve with future scale.',
         paragraphs: [
-          'Ownership is enforced rather than assumed. Every archive request is recorded with the account that made it, but that record grants no write access: only the broadcast\u2019s owner can create, retry or enrich an archive. Viewing is public by design — the streamer pays for storage, so there is no viewer paywall and no advertising.',
-        ],
-      },
-      {
-        heading: 'What it has archived so far',
-        paragraphs: [
-          'StreamKeep is in open beta at streamkeep.live. Streamers have archived 28 broadcasts from 8 channels so far, kept at source quality with the chat replay intact. Measurement runs wider than the archive — the live recorder samples every Mongolian channel on Kick, whether anyone has archived that channel or not, which is why the counters at the top of this page are so much larger than the archive itself.',
+          'StreamKeep is deliberately not the most sophisticated architecture I could have built. It is the one I could build correctly, deploy safely, operate alone, and explain honestly, including its limits. Every decision above has a stated reason and a stated cost, and each is reversible along a path I have already thought through.',
         ],
       },
     ],

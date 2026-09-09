@@ -216,6 +216,84 @@ export function WorkDetail({ work }: WorkDetailProps) {
                     </ul>
                   )
                 ) : null}
+
+                {section.groups?.map((g) => (
+                  <div key={g.label} className="mt-8">
+                    <h3 className="text-[19px] font-semibold tracking-tight text-zinc-950 dark:text-zinc-100">
+                      {g.label}
+                    </h3>
+                    {g.paragraphs?.map((p) => (
+                      <p
+                        key={p}
+                        className="mt-3 text-[17px] leading-[1.65] text-zinc-800 dark:text-zinc-200"
+                      >
+                        {p}
+                      </p>
+                    ))}
+                    {g.list?.length ? (
+                      <ul className="mt-3 list-disc space-y-3 pl-6 text-[17px] leading-[1.65] text-zinc-800 dark:text-zinc-200 marker:text-zinc-400">
+                        {g.list.map((item) => (
+                          <li key={item} className="pl-1">
+                            <SpecItem item={item} />
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </div>
+                ))}
+
+                {section.table ? (
+                  /* Scrolls inside its own box: a stack table is wider than the
+                     reading column on a phone, and the page must never scroll. */
+                  <div className="mt-6 overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
+                    <table className="w-full border-collapse text-left text-sm">
+                      <thead>
+                        <tr className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
+                          {section.table.head.map((h) => (
+                            <th
+                              key={h}
+                              scope="col"
+                              className="px-4 py-2.5 font-medium text-zinc-900 dark:text-zinc-100"
+                            >
+                              {h}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {section.table.rows.map((row) => (
+                          <tr
+                            key={row[0]}
+                            className="border-b border-zinc-100 last:border-0 dark:border-zinc-900"
+                          >
+                            {row.map((cell, ci) => (
+                              <td
+                                key={cell + ci}
+                                className={cn(
+                                  "px-4 py-2.5 align-top",
+                                  ci === 0
+                                    ? "whitespace-nowrap font-medium text-zinc-900 dark:text-zinc-100"
+                                    : "text-zinc-700 dark:text-zinc-300",
+                                )}
+                              >
+                                {cell}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : null}
+
+                {section.outro?.map((p) => (
+                  <p
+                    key={p}
+                    className="mt-6 text-[17px] leading-[1.65] text-zinc-800 dark:text-zinc-200"
+                  >
+                    {p}
+                  </p>
+                ))}
               </div>
               {section.embed ? blocks[section.embed] : null}
             </section>
