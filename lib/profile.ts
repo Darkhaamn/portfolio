@@ -1,10 +1,10 @@
 /**
  * Single source of truth for résumé-derived content.
  *
- * Keep this in sync with `resume/resume.html` (which generates
- * `resume/Darkhanbayar-Erdenebat-Resume.pdf` and `public/resume.pdf`).
- * Both the home page and the timeline page read from here, so the two
- * can never drift apart again.
+ * Keep this in sync with `resume/resume.docx`, which is exported to
+ * `resume/resume.pdf` — the file the site serves at /resume.pdf, copied into
+ * `public/` at build time by `scripts/sync-resume.mjs`. Both the home page and
+ * the timeline page read from here, so the two can never drift apart again.
  */
 
 export const identity = {
