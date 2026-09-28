@@ -1,0 +1,515 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Architecture",
+    "quality_profile": "showcase",
+    "locale": "en",
+    "views": [
+      {
+        "id": "signals",
+        "label": "Where the data lives",
+        "focus": [
+          "oracle-apps",
+          "oracle-alloy",
+          "oracle-exporters",
+          "oracle-loki",
+          "oracle-prom",
+          "edge",
+          "ec2-apps",
+          "ec2-exporters",
+          "ec2-promtail",
+          "ec2-prom",
+          "ec2-loki"
+        ],
+        "note": "Each server keeps its own Prometheus and Loki. Nothing is copied off the box."
+      },
+      {
+        "id": "reading",
+        "label": "How the board reads",
+        "focus": [
+          "oracle-grafana",
+          "ec2-grafana",
+          "ga",
+          "betterstack",
+          "board-api",
+          "browser"
+        ],
+        "note": "Vercel Functions query every Grafana at once, then add Better Stack and Google Analytics. No token leaves the function."
+      },
+      {
+        "id": "alerting",
+        "label": "When a box dies",
+        "focus": [
+          "oracle-prom",
+          "oracle-am",
+          "ec2-prom",
+          "ec2-am",
+          "telegram",
+          "betterstack"
+        ],
+        "note": "Alertmanager pages Telegram on its own. If a whole box dies, its alerts die with it, but Better Stack still sees its sites from outside."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "oracle-apps",
+      "type": "backend",
+      "label": "Apps",
+      "sublabel": "three products",
+      "pos": [
+        30,
+        120
+      ],
+      "size": [
+        170,
+        56
+      ]
+    },
+    {
+      "id": "oracle-alloy",
+      "type": "messagebus",
+      "label": "Alloy",
+      "sublabel": "container + nginx logs",
+      "pos": [
+        260,
+        60
+      ],
+      "size": [
+        160,
+        56
+      ]
+    },
+    {
+      "id": "oracle-exporters",
+      "type": "messagebus",
+      "label": "Exporters",
+      "sublabel": "node · cAdvisor · blackbox",
+      "pos": [
+        260,
+        180
+      ],
+      "size": [
+        160,
+        56
+      ]
+    },
+    {
+      "id": "oracle-loki",
+      "type": "database",
+      "label": "Loki",
+      "sublabel": "logs · 14 days",
+      "pos": [
+        490,
+        60
+      ],
+      "size": [
+        130,
+        56
+      ]
+    },
+    {
+      "id": "oracle-prom",
+      "type": "database",
+      "label": "Prometheus",
+      "sublabel": "metrics · rules",
+      "brand": "prometheus",
+      "pos": [
+        490,
+        180
+      ],
+      "size": [
+        130,
+        56
+      ]
+    },
+    {
+      "id": "oracle-grafana",
+      "type": "security",
+      "label": "Grafana",
+      "sublabel": "datasource proxy",
+      "brand": "grafana",
+      "pos": [
+        690,
+        60
+      ],
+      "size": [
+        130,
+        56
+      ]
+    },
+    {
+      "id": "oracle-am",
+      "type": "backend",
+      "label": "Alertmanager",
+      "sublabel": "routes alerts",
+      "pos": [
+        690,
+        180
+      ],
+      "size": [
+        130,
+        56
+      ]
+    },
+    {
+      "id": "edge",
+      "type": "external",
+      "label": "Edge node",
+      "sublabel": "video cache",
+      "pos": [
+        260,
+        330
+      ],
+      "size": [
+        160,
+        56
+      ]
+    },
+    {
+      "id": "telegram",
+      "type": "external",
+      "label": "Telegram",
+      "sublabel": "alerts",
+      "brand": "telegram",
+      "pos": [
+        690,
+        330
+      ],
+      "size": [
+        130,
+        56
+      ]
+    },
+    {
+      "id": "ga",
+      "type": "external",
+      "label": "Google Analytics",
+      "sublabel": "Analytics page",
+      "pos": [
+        900,
+        60
+      ],
+      "size": [
+        130,
+        56
+      ]
+    },
+    {
+      "id": "board-api",
+      "type": "backend",
+      "label": "Board API",
+      "sublabel": "merge · 30 s cache",
+      "tag": "password",
+      "pos": [
+        900,
+        330
+      ],
+      "size": [
+        130,
+        56
+      ]
+    },
+    {
+      "id": "betterstack",
+      "type": "external",
+      "label": "Better Stack",
+      "sublabel": "outside checks",
+      "pos": [
+        900,
+        600
+      ],
+      "size": [
+        130,
+        56
+      ]
+    },
+    {
+      "id": "browser",
+      "type": "frontend",
+      "label": "Ops board",
+      "sublabel": "React SPA · PWA",
+      "pos": [
+        1090,
+        330
+      ],
+      "size": [
+        130,
+        56
+      ]
+    },
+    {
+      "id": "ec2-apps",
+      "type": "backend",
+      "label": "App",
+      "sublabel": "API · admin panels",
+      "pos": [
+        30,
+        540
+      ],
+      "size": [
+        170,
+        56
+      ]
+    },
+    {
+      "id": "ec2-exporters",
+      "type": "messagebus",
+      "label": "Exporters",
+      "sublabel": "node · cAdvisor · blackbox",
+      "pos": [
+        260,
+        480
+      ],
+      "size": [
+        160,
+        56
+      ]
+    },
+    {
+      "id": "ec2-promtail",
+      "type": "messagebus",
+      "label": "Promtail",
+      "sublabel": "container + file logs",
+      "pos": [
+        260,
+        600
+      ],
+      "size": [
+        160,
+        56
+      ]
+    },
+    {
+      "id": "ec2-prom",
+      "type": "database",
+      "label": "Prometheus",
+      "sublabel": "metrics · rules",
+      "brand": "prometheus",
+      "pos": [
+        490,
+        480
+      ],
+      "size": [
+        130,
+        56
+      ]
+    },
+    {
+      "id": "ec2-loki",
+      "type": "database",
+      "label": "Loki",
+      "sublabel": "logs · 30 days",
+      "pos": [
+        490,
+        600
+      ],
+      "size": [
+        130,
+        56
+      ]
+    },
+    {
+      "id": "ec2-am",
+      "type": "backend",
+      "label": "Alertmanager",
+      "sublabel": "routes alerts",
+      "pos": [
+        690,
+        480
+      ],
+      "size": [
+        130,
+        56
+      ]
+    },
+    {
+      "id": "ec2-grafana",
+      "type": "security",
+      "label": "Grafana",
+      "sublabel": "datasource proxy",
+      "brand": "grafana",
+      "pos": [
+        690,
+        600
+      ],
+      "size": [
+        130,
+        56
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Oracle Cloud · A1 ARM",
+      "wraps": [
+        "oracle-apps",
+        "oracle-alloy",
+        "oracle-exporters",
+        "oracle-loki",
+        "oracle-prom",
+        "oracle-grafana",
+        "oracle-am"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "AWS EC2 · Singapore",
+      "wraps": [
+        "ec2-apps",
+        "ec2-exporters",
+        "ec2-promtail",
+        "ec2-prom",
+        "ec2-loki",
+        "ec2-am",
+        "ec2-grafana"
+      ]
+    },
+    {
+      "kind": "region",
+      "label": "Vercel · sin1",
+      "wraps": [
+        "board-api"
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "oracle-logs",
+      "from": "oracle-apps",
+      "to": "oracle-alloy"
+    },
+    {
+      "id": "oracle-watch",
+      "from": "oracle-apps",
+      "to": "oracle-exporters"
+    },
+    {
+      "id": "oracle-push",
+      "from": "oracle-alloy",
+      "to": "oracle-loki",
+      "label": "push"
+    },
+    {
+      "id": "oracle-scrape",
+      "from": "oracle-exporters",
+      "to": "oracle-prom",
+      "label": "scrape"
+    },
+    {
+      "id": "oracle-logql",
+      "from": "oracle-loki",
+      "to": "oracle-grafana",
+      "label": "LogQL"
+    },
+    {
+      "id": "oracle-promql",
+      "from": "oracle-prom",
+      "to": "oracle-grafana",
+      "label": "PromQL",
+      "fromSide": "top",
+      "toSide": "bottom"
+    },
+    {
+      "id": "oracle-rules",
+      "from": "oracle-prom",
+      "to": "oracle-am"
+    },
+    {
+      "id": "oracle-notify",
+      "from": "oracle-am",
+      "to": "telegram",
+      "variant": "dashed"
+    },
+    {
+      "id": "oracle-proxy",
+      "from": "oracle-grafana",
+      "to": "board-api",
+      "label": "Viewer token",
+      "variant": "security"
+    },
+    {
+      "id": "edge-watched",
+      "from": "edge",
+      "to": "oracle-exporters",
+      "label": "node · probe",
+      "variant": "dashed"
+    },
+    {
+      "id": "ec2-logs",
+      "from": "ec2-apps",
+      "to": "ec2-promtail"
+    },
+    {
+      "id": "ec2-watch",
+      "from": "ec2-apps",
+      "to": "ec2-exporters"
+    },
+    {
+      "id": "ec2-push",
+      "from": "ec2-promtail",
+      "to": "ec2-loki",
+      "label": "push"
+    },
+    {
+      "id": "ec2-scrape",
+      "from": "ec2-exporters",
+      "to": "ec2-prom",
+      "label": "scrape"
+    },
+    {
+      "id": "ec2-logql",
+      "from": "ec2-loki",
+      "to": "ec2-grafana",
+      "label": "LogQL"
+    },
+    {
+      "id": "ec2-promql",
+      "from": "ec2-prom",
+      "to": "ec2-grafana",
+      "label": "PromQL",
+      "fromSide": "bottom",
+      "toSide": "top"
+    },
+    {
+      "id": "ec2-rules",
+      "from": "ec2-prom",
+      "to": "ec2-am"
+    },
+    {
+      "id": "ec2-notify",
+      "from": "ec2-am",
+      "to": "telegram",
+      "variant": "dashed"
+    },
+    {
+      "id": "ec2-proxy",
+      "from": "ec2-grafana",
+      "to": "board-api",
+      "label": "Viewer token",
+      "variant": "security"
+    },
+    {
+      "id": "ga-report",
+      "from": "ga",
+      "to": "board-api",
+      "label": "Data API",
+      "labelDy": 110
+    },
+    {
+      "id": "bs-monitors",
+      "from": "betterstack",
+      "to": "board-api",
+      "label": "Uptime API"
+    },
+    {
+      "id": "to-browser",
+      "from": "board-api",
+      "to": "browser",
+      "label": "JSON",
+      "variant": "emphasis"
+    }
+  ]
+}

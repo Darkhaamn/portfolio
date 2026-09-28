@@ -18,7 +18,13 @@ export function ArchifyEmbed({ work }: { work: Work }) {
   if (!a) return null;
 
   return (
-    <section className="mt-12">
+    <section
+      className={cn(
+        "mt-12",
+        // centred on the column, as wide as the viewport allows (16px gutters)
+        a.wide && "relative left-1/2 w-[min(calc(100vw-2rem),80rem)] -translate-x-1/2",
+      )}
+    >
       <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800">
         <iframe
           src={a.src}
