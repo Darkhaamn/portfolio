@@ -1067,7 +1067,10 @@ export const works: Work[] = [
     period: '2026',
     status: 'Beta',
     launched: '2026',
-    thumbnail: { src: '/works/live/streamkeep.webp', alt: 'StreamKeep — Kick VOD archive and live multiview' },
+    thumbnail: {
+      src: '/works/live/streamkeep-home.webp',
+      alt: 'StreamKeep — the library: Mongolian Kick streamers in one place, the archive counters and shorts',
+    },
     theme: {
       accent: 'text-zinc-900 dark:text-zinc-100',
       accentMuted: 'bg-zinc-50 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800',
@@ -1077,11 +1080,11 @@ export const works: Work[] = [
     summary:
       'Kick deletes every broadcast 30 days after it airs — not even the streamer can get it back. StreamKeep archives the nights that matter and serves them from object storage.',
     metrics: [
-      { value: '140', label: 'Mongolian channels tracked' },
-      { value: '201.3K', label: 'hours watched' },
-      { value: '246K', label: 'chat lines captured' },
+      { value: '505', label: 'Mongolian channels tracked' },
+      { value: '1.8M', label: 'hours watched' },
+      { value: '4.7M', label: 'chat lines captured' },
     ],
-    metricsNote: 'Live counters from streamkeep.live. The recorder samples Kick\u2019s Mongolian directory every minute; hours watched and viewer peaks count only sampled time.',
+    metricsNote: 'Counters read from streamkeep.live on 26 October 2026. The recorder samples Kick\u2019s Mongolian directory every minute; hours watched and viewer peaks count only sampled time.',
     paragraphs: [
       'StreamKeep is a livestream archive for the Mongolian community on Kick. Kick removes a broadcast 30 days after it airs, and the streamer who made it has no way to recover the file. StreamKeep lets a creator sign in with their own Kick account, select the broadcasts worth preserving, and keep the original video at source quality together with a synchronised chat replay. Playback is public and requires no account.',
       'It is a personal project, designed and built end to end, and running in production under my own operation. The engineering goals were reliability, predictable cost, and an operational surface small enough for one engineer to own. What follows is the architecture, the decisions behind it, and the trade-offs I accepted.',
@@ -1095,14 +1098,14 @@ export const works: Work[] = [
         ],
         list: [
           'Scope — a personal project, built end to end: product, backend, infrastructure, deployment and on-call.',
-          'Current state — open beta. 32 broadcasts preserved across 8 channels, 158 hours of video retained.',
+          'Current state — open beta. 77 broadcasts preserved across 68 channels, 537 hours of video retained.',
           'Design priorities — reliability first, then cost predictability, then capacity. Capacity last, because the workload does not yet justify paying for elasticity.',
         ],
       },
       {
         heading: '2. Problem and motivation',
         paragraphs: [
-          'Before building anything I measured the scale of the problem. A recorder samples Kick’s Mongolian live directory once a minute and records viewership, airtime and chat volume per channel. Over a three-day window it produced the figures below, all of which sit inside the same 30-day deletion window.',
+          'Before building anything I measured the scale of the problem. A recorder samples Kick’s Mongolian live directory once a minute and records viewership, airtime and chat volume per channel. It still runs: the figures below are its totals since tracking began in September 2026, and every broadcast behind them is deleted 30 days after it airs.',
         ],
         embed: 'metrics',
         outro: [
@@ -1204,64 +1207,13 @@ export const works: Work[] = [
           {
             label: 'The trade-off I accepted',
             paragraphs: [
-              'One host and one database mean a host failure is downtime, not a failover, and a schema migration briefly pauses the worker. Both are acceptable at this stage and both are stated plainly rather than engineered around prematurely. The migration path out is described in section 11.',
+              'One host and one database mean a host failure is downtime, not a failover, and a schema migration briefly pauses the worker. Both are acceptable at this stage and both are stated plainly rather than engineered around prematurely. The way out, once the workload needs it, is a second node under an orchestrator, which turns a host failure into a failover.',
             ],
           },
         ],
       },
       {
-        heading: '6. Engineering decisions and trade-offs',
-        paragraphs: [
-          'Most production incidents I have seen come from the deployment, not from the code being deployed. The pipeline is therefore built to fail loudly and early rather than to deploy quickly.',
-        ],
-        groups: [
-          {
-            label: 'Deployment safety',
-            paragraphs: [
-              'The pipeline runs only on the default branch, on a self-hosted runner on the production host. A resource group and a file lock together make it impossible for two deployments to overlap, and the job is marked non-interruptible so a newer pipeline cannot terminate a release mid-rollout.',
-            ],
-            list: [
-              'Backup first — every deployment takes a compressed pg_dump before it touches any running container.',
-              'Validate the backup — the dump is checked for content and the deployment aborts if it comes back empty. An unverified backup is not a backup.',
-              'Store it out of reach — dumps are written outside the CI checkout so the next pipeline’s clean checkout cannot delete them.',
-              'Record the release — the commit and pipeline identity tag the images, and the last successful release is recorded on the host.',
-            ],
-          },
-          {
-            label: 'Migration safety',
-            paragraphs: [
-              'Schema migrations are embedded in the API binary, applied in filename order, and tracked in a migrations table so each runs exactly once. Sixteen have been applied so far.',
-              'The ordering of the rollout is the important part. The old worker is stopped before the new API starts, so no process is executing against the old schema while a migration is in flight. Only once the API has started and migrated do the worker and frontend come up. This removes the class of race where a worker writes a row shaped for a schema that no longer exists.',
-            ],
-          },
-          {
-            label: 'Health checks',
-            paragraphs: [
-              'A release passes three independent gates, in order, and failing any one of them fails the pipeline:',
-            ],
-            list: [
-              'Container health — the orchestrator waits on each service’s own health check with a bounded timeout before proceeding.',
-              'Internal readiness — the API is probed on its readiness endpoint from inside the network, which confirms it reached a serving state rather than merely starting.',
-              'External verification — the public API health URL and the site itself must both return HTTP 200 over the real network path, through DNS, TLS and the reverse proxy.',
-            ],
-          },
-          {
-            label: 'Background processing',
-            paragraphs: [
-              'Archive jobs run in a separate process from the API for two reasons: their duration has no relationship to a request lifecycle, and their failure modes are dominated by an upstream I do not control. Isolating them means a stalled download cannot consume an API worker or affect page latency.',
-            ],
-            list: [
-              'Durable queue — jobs are held in Redis through Asynq, so a worker restart does not lose queued work.',
-              'State in Postgres — every archive carries a status and an attempt counter in the database, incremented atomically. Redis holds the transient progress snapshot; the durable truth is relational.',
-              'Retry without duplication — the task identifier is scoped by attempt number, so a retry is never mistaken for a duplicate of the original request, and a re-queued job cannot create a second copy of the same object.',
-              'Independent sub-jobs — chat sync, metadata enrichment and storyboard generation are queued separately from the video fetch, each with its own claim guarded by attempt number, so partial failure degrades one asset instead of the whole archive.',
-              'Upstream backoff — chat pagination applies exponential backoff when the platform throttles, rather than discarding pages already fetched.',
-            ],
-          },
-        ],
-      },
-      {
-        heading: '7. Video storage and delivery',
+        heading: '6. Video storage and delivery',
         paragraphs: [
           'This is the decision with the largest effect on both reliability and cost, and it is worth stating explicitly because it is easy to get wrong.',
         ],
@@ -1293,54 +1245,7 @@ export const works: Work[] = [
         ],
       },
       {
-        heading: '8. Cost optimisation',
-        paragraphs: [
-          'The cost model was designed alongside the architecture rather than reviewed after it. The requirement was that the unit a customer buys and the unit I am billed for should be the same unit, so that revenue and cost move together.',
-        ],
-        groups: [
-          {
-            label: 'Why object storage rather than instance disk',
-            paragraphs: [
-              'Block storage attached to a VM is provisioned and billed whether or not it is used, and growing it means resizing a host that is not otherwise under pressure. Object storage is billed by what is actually stored, needs no capacity planning, and separates the storage lifecycle from the compute lifecycle: I can rebuild the host without touching a single archived file.',
-            ],
-          },
-          {
-            label: 'Why a CDN, and why this one',
-            paragraphs: [
-              'Serving video from the origin makes bandwidth the dominant and least predictable line item, because it scales with popularity rather than with the catalogue. R2 charges no egress, so the marginal cost of an additional viewer is effectively zero and the bill is a function of hours retained.',
-              'That is what makes hours-based pricing honest: customers pay for retained video, which is exactly the axis on which my cost grows. Viewership, the axis I cannot predict, does not appear on either side.',
-            ],
-          },
-          {
-            label: 'Why not scale the compute tier instead',
-            paragraphs: [
-              'Serving video from compute couples an unbounded, bursty workload to the tier that also handles authentication and job submission. It would require over-provisioning for peak, paying for that headroom continuously, and accepting that a traffic spike degrades the product rather than merely costing more. Moving the volume to managed infrastructure removed the need to buy elasticity at all.',
-            ],
-          },
-        ],
-        outro: [
-          'The result is infrastructure that scales without unnecessary cost: one small VM plus storage billed by the gigabyte, with the high-volume path handled by services that need no capacity planning from me.',
-        ],
-      },
-      {
-        heading: '9. Monitoring and operations',
-        paragraphs: [
-          'Observability here is sized to the system: enough signal for one operator to detect a failure and identify its cause, without a monitoring stack that would itself need operating. I am describing what is actually in place, and naming what is not.',
-        ],
-        list: [
-          'Application health — each service exposes a health check that the runtime evaluates continuously and the deployment pipeline gates on. The API separates liveness from readiness so a starting process is not mistaken for a serving one.',
-          'Container supervision — services carry restart policies, so a crashed process is restarted without intervention while the underlying failure remains visible.',
-          'Job-level visibility — every archive job records its status, attempt count and failure reason in PostgreSQL. A broken archive is a row I can query and re-queue, not a log line I have to search for.',
-          'Logs — container logs use size-capped rotation, which bounds disk usage and prevents a chatty failure loop from filling the host.',
-          'Database — Postgres runs its own readiness probe, and every deployment produces a verified dump, which doubles as a recurring integrity check on the data.',
-          'Delivery — CDN-side analytics cover request volume and cache behaviour for the one layer I do not operate myself.',
-        ],
-        outro: [
-          'What is deliberately absent: there is no metrics time series, no dashboard and no alerting pipeline on this project. At one host and one operator, health checks plus queryable job state answer the questions I actually ask. That is a considered trade-off rather than an oversight, and it is the first thing I would change if the system grew past a single node.',
-        ],
-      },
-      {
-        heading: '10. Challenges and lessons learned',
+        heading: '7. Challenges and lessons learned',
         groups: [
           {
             label: 'Large media is a storage problem, not an application problem',
@@ -1375,22 +1280,7 @@ export const works: Work[] = [
         ],
       },
       {
-        heading: '11. Future improvements',
-        paragraphs: [
-          'These are ordered by the signal that would trigger them, not by preference. Each has a concrete threshold.',
-        ],
-        ordered: true,
-        list: [
-          'Horizontal worker scaling — the queue already supports multiple consumers; the change is running more of them once archive latency, not download bandwidth, becomes the bottleneck.',
-          'Orchestrated deployment — moving to Kubernetes once the system needs more than one node, which would also convert the current downtime-on-host-failure into a genuine failover.',
-          'Event-driven processing — replacing the remaining synchronous fan-out with published events, so new consumers can be added without changing the producer.',
-          'Advanced observability — metrics collection, dashboards and alert routing, which becomes necessary the moment there is more than one instance of anything to compare.',
-          'Multi-region storage — replicating objects across regions for durability and for reader latency outside the current audience.',
-          'AI-assisted highlight detection — using chat velocity and viewer deltas already recorded to propose candidate moments, so a creator is offered clips rather than having to find them.',
-        ],
-      },
-      {
-        heading: '12. Final reflection',
+        heading: '8. Final reflection',
         quote:
           'This project represents my engineering approach: build simple systems, automate reliability, optimise cost, and design infrastructure that can evolve with future scale.',
         paragraphs: [
@@ -1402,9 +1292,12 @@ export const works: Work[] = [
       'Oracle Cloud, Docker Compose, GitLab CI, Cloudflare R2, Cloudflare CDN, PostgreSQL, Redis, Go, Next.js, TypeScript, HLS (hls.js), ffmpeg, yt-dlp, OAuth 2.0 (PKCE), Pusher, QPay',
     links: [{ label: 'streamkeep.live', href: 'https://streamkeep.live' }],
     gallery: [
-      { src: '/works/streamkeep-multiview.webp', alt: 'StreamKeep — live multiview of Mongolian Kick channels' },
-      { src: '/works/streamkeep-channels.webp', alt: 'StreamKeep — channel rankings built from minute-by-minute sampling' },
-      { src: '/works/streamkeep-about.webp', alt: 'StreamKeep — published archive and measurement counters' },
+      { src: '/works/streamkeep-live-now.webp', alt: 'StreamKeep — Mongolian streams live now, grouped by game, each group one click from multiview' },
+      { src: '/works/streamkeep-rankings.webp', alt: 'StreamKeep — most watched Mongolian streamers, ranked from minute-by-minute sampling' },
+      { src: '/works/streamkeep-stats.webp', alt: 'StreamKeep — all Mongolian streamers added up: viewers now, peak and average concurrent, hours watched, chat lines and a seven-day viewer chart' },
+      { src: '/works/streamkeep-games.webp', alt: 'StreamKeep — games to play along with chat: Dota 2 and CS2 quizzes, How Big? comparisons and more' },
+      { src: '/works/streamkeep-dota-tooltip.webp', alt: 'StreamKeep — Dota tooltip: viewers hover an item or skill on the stream’s HUD to see what it does, its cost and cooldown' },
+      { src: '/works/streamkeep-counters.webp', alt: 'StreamKeep — the about page with the archive and measurement counters' },
     ],
   },
   {
