@@ -244,9 +244,16 @@ export function WorkDetail({ work }: WorkDetailProps) {
 
                 {section.table ? (
                   /* Scrolls inside its own box: a stack table is wider than the
-                     reading column on a phone, and the page must never scroll. */
+                     reading column on a phone, and the page must never scroll.
+                     Three or more columns get a floor, or the last one squeezes
+                     to a word per line instead of scrolling. */
                   <div className="mt-6 overflow-x-auto rounded-xl border border-zinc-200 dark:border-zinc-800">
-                    <table className="w-full border-collapse text-left text-sm">
+                    <table
+                      className={cn(
+                        "w-full border-collapse text-left text-sm",
+                        section.table.head.length > 2 && "min-w-[36rem]",
+                      )}
+                    >
                       <thead>
                         <tr className="border-b border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
                           {section.table.head.map((h) => (

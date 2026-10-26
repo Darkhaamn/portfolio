@@ -8,7 +8,8 @@ export type WorkId =
   | 'itrip'
   | 'streamkeep'
   | 'duutaa'
-  | 'monitoring';
+  | 'monitoring'
+  | 'live_streaming';
 
 export type WorkLink = {
   label: string;
@@ -54,6 +55,9 @@ export type WorkHero =
   | { kind: 'browser'; url: string }
   | { kind: 'split'; panes: { src: string; alt: string; url: string; caption: string }[] }
   | { kind: 'numeral'; value: string; unit: string; note: string; url: string }
+  /** A rendered architecture diagram, wider than the reading column: one file
+   *  per site theme, both `width` × `height`, each linked at full size. */
+  | { kind: 'poster'; light: string; dark: string; alt: string; width: number; height: number; caption?: string }
   | { kind: 'none' };
 export type WorkHub = {
   center: string;
@@ -766,6 +770,115 @@ export const works: Work[] = [
       { src: '/works/itrip-live.webp', alt: 'iTrip — unified search across flights, hotels and tours' },
       { src: '/works/itrip.png', alt: 'iTrip dashboard' },
       { src: '/works/itrip-2.png', alt: 'iTrip dashboard' },
+    ],
+  },
+  {
+    id: 'live_streaming',
+    // Anonymised: the product's name, region and address stay off this entry, its images and alt text.
+    hero: {
+      kind: 'poster',
+      light: '/diagrams/live-streaming-architecture-light.png',
+      dark: '/diagrams/live-streaming-architecture-dark.png',
+      alt: 'Architecture poster: OBS into MediaMTX, a copy-only FFmpeg DVR muxer and an nginx HLS origin, then two regional edge caches and Bunny CDN out to viewers. Cloudflare and an nginx gateway front Next.js and the Go API and chat services, with PostgreSQL and Redis behind them, self-hosted Prometheus, Alertmanager and Grafana, and Better Stack checking from outside.',
+      width: 3840,
+      height: 2000,
+      caption: 'Every connection on the poster was checked against the code',
+    },
+    title: 'Live Streaming Platform',
+    role: 'Sole Engineer',
+    period: '2026',
+    status: 'Live',
+    thumbnail: {
+      src: '/works/live/live_streaming.webp',
+      alt: 'Architecture poster of a live streaming platform: ingest, DVR, HLS origin, regional edge caches and a global CDN',
+    },
+    theme: {
+      accent: 'text-zinc-900 dark:text-zinc-100',
+      accentMuted: 'bg-zinc-50 border-zinc-200 dark:bg-zinc-900 dark:border-zinc-800',
+      accentBar: 'bg-zinc-200 dark:bg-zinc-800',
+      label: 'Infrastructure & DevOps',
+    },
+    summary:
+      'A simple live streaming platform I built and run myself, as a DevOps project: services in Docker Compose, CI/CD on GitHub Actions, CDN delivery, Prometheus monitoring and alerts to Telegram.',
+    paragraphs: [
+      'I built a simple live streaming platform and run its infrastructure myself. A broadcaster streams from OBS, and viewers watch in the browser or on a phone, with chat and the option to rewind. This page is about the DevOps side: how it runs, how it ships, how it is monitored and how it pages me.',
+      'The product stays unnamed here, so there is no link. The poster above shows the whole system, and the screenshots at the end show the multiview page on test data.',
+    ],
+    sections: [
+      {
+        heading: '1. How it works',
+        list: [
+          'Ingest — OBS streams over RTMP to MediaMTX, which asks the Go API to check the stream key.',
+          'Video — FFmpeg copies each stream into HLS without re-encoding, so viewers can rewind while it is live.',
+          'Delivery — an nginx origin feeds two regional edge caches (nginx, DNS round robin) and Bunny CDN for everyone else. Signed URLs act as the paywall.',
+          'App — Next.js for the web, Go services for the API and chat, PostgreSQL and Redis, behind Cloudflare and an nginx gateway.',
+          'Runtime — the origin’s services run as containers in Docker Compose.',
+        ],
+      },
+      {
+        heading: '2. Tech stack',
+        table: {
+          head: ['Area', 'Tools'],
+          rows: [
+            ['Containers', 'Docker, Docker Compose'],
+            ['Reverse proxy and TLS', 'nginx, Cloudflare'],
+            ['CDN and caching', 'Bunny CDN, two regional edge caches (nginx)'],
+            ['Video', 'MediaMTX, FFmpeg, HLS'],
+            ['Backend', 'Go, Next.js, PostgreSQL, Redis'],
+            ['CI/CD', 'GitHub Actions, self-hosted runner'],
+            ['Monitoring', 'Prometheus, Grafana, node_exporter, blackbox_exporter'],
+            ['Alerting', 'Alertmanager, Telegram, Better Stack'],
+            ['Backups', 'pg_dump, cron, Bunny Storage'],
+          ],
+        },
+      },
+      {
+        heading: '3. CI/CD with GitHub Actions',
+        paragraphs: [
+          'Every push to main deploys itself. Tests, linting and type checks run on GitHub’s runners first; then a self-hosted runner on the server builds and restarts what changed.',
+        ],
+        list: [
+          'Only what changed — a first job works out which services the push touched, and only those are tested, built and restarted.',
+          'Stream-safe builds — images build one at a time, with Go capped to one core, and a normal deploy never restarts the database, Redis or the media server.',
+          'Waits for broadcasts — while anyone is live, the rewind service is not restarted; the next deploy that finds no broadcast picks it up.',
+          'Secrets — passwords and keys live in GitHub secrets, and Compose refuses to start if one is missing.',
+          'No overlap — deploys queue up and never run at the same time.',
+        ],
+      },
+      {
+        heading: '4. Monitoring',
+        list: [
+          'Prometheus — scrapes node_exporter for CPU, memory, disk and network, and blackbox_exporter, which probes the video through both CDNs.',
+          'Grafana — dashboards on top of those metrics.',
+          'Player metrics — every viewer’s player reports its delay and stalls, so playback quality is charted per CDN instead of guessed from server logs.',
+        ],
+      },
+      {
+        heading: '5. Alerting',
+        list: [
+          'Alertmanager → Telegram — Prometheus alert rules fire to Alertmanager, which sends them to Telegram.',
+          'Outside check — Better Stack polls one /healthz endpoint that checks the API, PostgreSQL, Redis, chat, mtx-manager, MediaMTX, the DVR and the frontend. It answers 200 or 503, so one monitor covers the whole stack.',
+          'Why both — if the server dies, its own Prometheus dies with it. The outside check still pages.',
+        ],
+      },
+      {
+        heading: '6. Backups',
+        paragraphs: [
+          'A cron job runs pg_dump every night, keeps 14 days on the server and copies each dump to Bunny Storage. A near-empty dump fails the job instead of counting as a backup. The offsite copy is not yet verified in production.',
+        ],
+      },
+    ],
+    stack:
+      'Docker Compose, GitHub Actions, nginx, Cloudflare, Bunny CDN, Prometheus, Grafana, Alertmanager, Telegram, Better Stack, MediaMTX, FFmpeg, HLS, Go, Next.js, PostgreSQL, Redis',
+    gallery: [
+      {
+        src: '/works/live-streaming-multiview-focus.webp',
+        alt: 'Multiview on test data, dark theme, focus mode: two test streams, one large, with the live chat beside them',
+      },
+      {
+        src: '/works/live-streaming-multiview-grid.webp',
+        alt: 'Multiview on test data, light theme, uniform layout: two test streams side by side with the live chat',
+      },
     ],
   },
   {

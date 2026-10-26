@@ -3,6 +3,9 @@ import { IconArrowUpRight } from "@tabler/icons-react";
 import type { Work } from "@/lib/works";
 import { cn } from "@/lib/utils";
 
+/** Centred on the column, as wide as the viewport allows (16px gutters). */
+export const WIDE = "relative left-1/2 w-[min(calc(100vw-2rem),80rem)] -translate-x-1/2";
+
 /**
  * An Archify diagram, authored as a typed JSON spec under `diagrams/src/` and
  * delivered to `public/diagrams/` as a self-contained viewer. It ships its own
@@ -19,11 +22,7 @@ export function ArchifyEmbed({ work }: { work: Work }) {
 
   return (
     <section
-      className={cn(
-        "mt-12",
-        // centred on the column, as wide as the viewport allows (16px gutters)
-        a.wide && "relative left-1/2 w-[min(calc(100vw-2rem),80rem)] -translate-x-1/2",
-      )}
+      className={cn("mt-12", a.wide && WIDE)}
     >
       <div className="overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800">
         <iframe

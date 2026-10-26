@@ -1,5 +1,7 @@
 import Image from "next/image";
+import { IconArrowUpRight } from "@tabler/icons-react";
 
+import { WIDE } from "@/components/works/archify-embed";
 import type { Work } from "@/lib/works";
 import { cn } from "@/lib/utils";
 
@@ -117,6 +119,56 @@ export function WorkHeroBlock({ work }: { work: Work }) {
             className="aspect-16/9 md:aspect-auto md:h-[calc(100%-2.75rem)]"
           />
         </Chrome>
+      </div>
+    );
+  }
+
+  /* ---- no product to show: the architecture poster opens the page ---- */
+  if (hero.kind === "poster") {
+    // One file per theme, swapped on the `.dark` class the toggle sets (a
+    // <picture> media query would follow the OS instead). Both load eagerly:
+    // the poster is the page's largest paint, and lazy-loading it costs more
+    // than the hidden file's small optimized download.
+    const files = [
+      { src: hero.light, show: "dark:hidden" },
+      { src: hero.dark, show: "hidden dark:block" },
+    ];
+    return (
+      <div className={cn("mt-8", WIDE)}>
+        {files.map(({ src, show }) => (
+          <figure key={src} className={show}>
+            <a
+              href={src}
+              target="_blank"
+              rel="noreferrer"
+              className="block cursor-zoom-in overflow-hidden rounded-2xl border border-zinc-200 dark:border-zinc-800"
+            >
+              <Image
+                src={src}
+                alt={hero.alt}
+                width={hero.width}
+                height={hero.height}
+                loading="eager"
+                sizes="(max-width: 1312px) calc(100vw - 2rem), 1280px"
+                className="h-auto w-full"
+              />
+            </a>
+            <figcaption className="mt-3 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+              {hero.caption ? (
+                <span className="font-mono text-xs text-zinc-500 dark:text-zinc-400">{hero.caption}</span>
+              ) : null}
+              <a
+                href={src}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-1 font-mono text-[11px] uppercase tracking-wider text-zinc-600 transition-opacity hover:opacity-70 dark:text-zinc-400"
+              >
+                Open full size
+                <IconArrowUpRight className="size-3.5" />
+              </a>
+            </figcaption>
+          </figure>
+        ))}
       </div>
     );
   }
